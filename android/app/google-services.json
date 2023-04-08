@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "23934801372",
+    "project_id": "medbox-4f5ea",
+    "storage_bucket": "medbox-4f5ea.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:23934801372:android:99ebcc3161298f79582b19",
+        "android_client_info": {
+          "package_name": "com.datasus.medbox"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "23934801372-26sd8itttu587kjjhfk0j4tq444q7be6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.datasus.medbox",
+            "certificate_hash": "778bec3733ddebf200a0ef143f49449bc3dbe892"
+          }
+        },
+        {
+          "client_id": "23934801372-66qdub0losf8ihqa4ho0hom2m06e8inp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC1ZR4jPKRohSDf633c78Yzj7WWj4u7g-I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "23934801372-5ej2j1kt3atdn5fo8vn1gglgfif4f26o.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
