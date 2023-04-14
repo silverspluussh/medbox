@@ -6,6 +6,7 @@ import 'package:MedBox/data/repos/Dbhelpers/medicationdb.dart';
 import 'package:MedBox/utils/extensions/notification.dart';
 import 'package:MedBox/domain/models/medication_model.dart';
 import 'package:MedBox/utils/extensions/photos_extension.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:velocity_x/velocity_x.dart';
 import '../../../constants/colors.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
@@ -166,7 +167,7 @@ class _AddMedicationState extends State<AddMedications> {
           ),
         ),
       ),
-    );
+    ).animate().fadeIn(duration: 100.milliseconds, delay: 100.milliseconds);
   }
 
   thirdpage() {

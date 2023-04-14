@@ -3,6 +3,7 @@ import 'package:MedBox/constants/colors.dart';
 import 'package:MedBox/presentation/providers/vitalsprovider.dart';
 import 'package:MedBox/utils/extensions/photos_extension.dart';
 import 'package:MedBox/main.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:provider/provider.dart';
 
 import '../../data/repos/Dbhelpers/vitalsdb.dart';
@@ -54,13 +55,13 @@ class _DashboardOverviewState extends State<DashboardOverview> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return Container(
-      height: size.height,
-      width: size.width,
-      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-      child: Scaffold(
-          backgroundColor: Colors.white,
-          body: Consumer<VitalsProvider>(builder: (context, val, child) {
+    return Scaffold(
+        backgroundColor: Colors.white,
+        body: Container(
+          height: size.height,
+          width: size.width,
+          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+          child: Consumer<VitalsProvider>(builder: (context, val, child) {
             return SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
               child: Column(
@@ -187,8 +188,10 @@ class _DashboardOverviewState extends State<DashboardOverview> {
                 ],
               ),
             );
-          })),
-    );
+          }),
+        )
+            .animate()
+            .fadeIn(duration: 100.milliseconds, delay: 100.milliseconds));
   }
 
   Column _vitalscol(

@@ -137,6 +137,14 @@ class VitalsDB {
         where: 'id=?', whereArgs: [model.id]);
   }
 
+  Future<int> updateweight({required String? weight}) async {
+    bool google = prefs.getBool('googleloggedin') ?? false;
+
+    return await _database!.update(
+        google == false ? _colname : _gcolname, {'weight': weight},
+        where: 'id=?', whereArgs: [model.id]);
+  }
+
   Future<int> updateolevel({required String? oxygenlevel}) async {
     bool google = prefs.getBool('googleloggedin') ?? false;
 

@@ -5,6 +5,7 @@ import 'package:MedBox/constants/colors.dart';
 import 'package:MedBox/presentation/pages/renderer.dart';
 import 'package:MedBox/utils/extensions/vitalscontroller.dart';
 import 'package:MedBox/domain/models/vitalsmodel.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 import '../../../data/repos/Dbhelpers/vitalsdb.dart';
@@ -17,6 +18,8 @@ class AddVitals extends StatefulWidget {
 }
 
 class _AddVitalsState extends State<AddVitals> {
+  final formkey = GlobalKey<FormState>();
+
   TextEditingController temp = TextEditingController();
   TextEditingController pressure = TextEditingController();
   TextEditingController heartrate = TextEditingController();
@@ -106,7 +109,8 @@ class _AddVitalsState extends State<AddVitals> {
                 ],
               ),
               const SizedBox(height: 40),
-              SizedBox(
+              Form(
+                key: formkey,
                 child: Column(
                   children: [
                     inputformfield(
@@ -166,7 +170,8 @@ class _AddVitalsState extends State<AddVitals> {
                       onTap: () async {
                         await bmical();
 
-                        if (vitals.isEmpty) {
+                        bool validate = formkey.currentState!.validate();
+                        if (validate == true) {
                           final vvmodel = VModel(
                             bloodpressure: pressure.text,
                             heartrate: heartrate.text,
@@ -178,83 +183,37 @@ class _AddVitalsState extends State<AddVitals> {
                             respiration: respiration.text,
                             height: height.text,
                           );
-                          await vController.addvital(vModel: vvmodel).then(
-                              (value) => VxToast.show(context,
-                                  msg: 'Vitals added successfully.',
-                                  bgColor:
-                                      const Color.fromARGB(255, 38, 99, 40),
-                                  textColor: Colors.white,
-                                  pdHorizontal: 30,
-                                  pdVertical: 20));
-                        } else {
-                          final vvmodel = VModel(
-                            bloodpressure: pressure.text.isNotEmpty
-                                ? pressure.text != ''
-                                    ? pressure.text
-                                    : '0'
-                                : vitals[0]['bloodpressure'],
-                            heartrate: heartrate.text.isNotEmpty
-                                ? heartrate.text != ''
-                                    ? heartrate.text
-                                    : '0'
-                                : vitals[0]['heartrate'],
-                            oxygenlevel: oxygen.text.isNotEmpty
-                                ? oxygen.text
-                                : vitals[0]['oxygenlevel'],
-                            temperature: temp.text.isNotEmpty
-                                ? temp.text != ''
-                                    ? temp.text
-                                    : '0'
-                                : vitals[0]['temperature'],
-                            bmi: bmi.text.isNotEmpty
-                                ? bmi.text != ''
-                                    ? bmi.text
-                                    : '0'
-                                : vitals[0]['bmi'],
-                            id: vitals[0]['id'],
-                            respiration: respiration.text.isNotEmpty
-                                ? respiration.text != ''
-                                    ? respiration.text
-                                    : '0'
-                                : vitals[0]['respiration'],
-                            height: height.text.isNotEmpty
-                                ? height.text
-                                : vitals[0]['height'],
-                            datetime:
-                                DateTime.now().toString().split(' ').first,
-                            weight: weight.text.isNotEmpty
-                                ? weight.text != ''
-                                    ? weight.text
-                                    : '0'
-                                : vitals[0]['weight'],
-                          );
-                          VitalsDB.updatedatabase(vvmodel).then((value) {
-                            referesh();
 
-                            return VxToast.show(context,
-                                msg: 'Vitals added successfully.',
-                                bgColor: const Color.fromARGB(255, 38, 99, 40),
-                                textColor: Colors.white,
-                                pdHorizontal: 30,
-                                pdVertical: 20);
-                          });
+                          try {
+                            await vController.addvital(vModel: vvmodel).then(
+                                (value) => VxToast.show(context,
+                                    msg: 'Vitals added successfully.',
+                                    bgColor:
+                                        const Color.fromARGB(255, 38, 99, 40),
+                                    textColor: Colors.white,
+                                    pdHorizontal: 30,
+                                    pdVertical: 20));
+                          } catch (e) {
+                            rethrow;
+                          } finally {
+                            bmi.clear();
+                            respiration.clear();
+                            height.clear();
+                            temp.clear();
+                            pressure.clear();
+                            heartrate.clear();
+                            oxygen.clear();
+                            weight.clear();
+
+                            Future.delayed(const Duration(milliseconds: 700),
+                                () {
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => const Render()));
+                            });
+                          }
                         }
-
-                        bmi.clear();
-                        respiration.clear();
-                        height.clear();
-                        temp.clear();
-                        pressure.clear();
-                        heartrate.clear();
-                        oxygen.clear();
-                        weight.clear();
-
-                        Future.delayed(const Duration(milliseconds: 700), () {
-                          Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const Render()));
-                        });
                       },
                       child: Container(
                           height: 50,
@@ -278,18 +237,15 @@ class _AddVitalsState extends State<AddVitals> {
             ],
           ),
         ),
-      ),
+      ).animate().fadeIn(duration: 100.milliseconds, delay: 100.milliseconds),
     );
   }
 
   Future bmical() async {
     if (vitals.isNotEmpty) {
-      var results = (double.parse(
-              weight.text.isNotEmpty ? weight.text : vitals[0]['weight']) /
-          (double.parse(
-                  height.text.isNotEmpty ? height.text : vitals[0]['height']) *
-              double.parse(
-                  height.text.isNotEmpty ? height.text : vitals[0]['height'])));
+      var results = (double.parse(weight.text.isNotEmpty ? weight.text : '0') /
+          (double.parse(height.text.isNotEmpty ? height.text : '0') *
+              double.parse(height.text.isNotEmpty ? height.text : '0')));
 
       setState(() {
         bmi.text = results.toStringAsFixed(2);
@@ -308,16 +264,6 @@ class _AddVitalsState extends State<AddVitals> {
         });
       }
     }
-  }
-
-  Future updated() async {
-    VitalsDB().updatebmi(bmi: bmi.text);
-    VitalsDB().updateheight(height: height.text);
-    VitalsDB().updateolevel(oxygenlevel: oxygen.text);
-    VitalsDB().updatepressure(bloodpressure: pressure.text);
-    VitalsDB().updaterespiration(respiration: respiration.text);
-    VitalsDB().updateheartrate(heartrate: heartrate.text);
-    VitalsDB().updatetemperature(temp: temp.text);
   }
 
   inputformfield(
@@ -354,6 +300,12 @@ class _AddVitalsState extends State<AddVitals> {
                   width: width! - 67,
                   height: height,
                   child: TextFormField(
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Field cannot be empty';
+                      }
+                      return null;
+                    },
                     autofocus: false,
                     style: const TextStyle(
                         fontWeight: FontWeight.w400, fontSize: 12),

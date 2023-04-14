@@ -1,6 +1,7 @@
 import 'package:MedBox/constants/colors.dart';
 import 'package:MedBox/utils/extensions/notification.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:velocity_x/velocity_x.dart';
 
@@ -242,6 +243,6 @@ class _DrugAlarmsState extends State<DrugAlarms> {
                   }),
             ),
           ])),
-    );
+    ).animate().fadeIn(duration: 100.milliseconds, delay: 100.milliseconds);
   }
 }

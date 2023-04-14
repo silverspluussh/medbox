@@ -1,5 +1,6 @@
 import 'package:MedBox/utils/extensions/notification.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 import '../../../constants/colors.dart';
@@ -134,7 +135,7 @@ class _SetAlarmState extends State<SetAlarm> {
             ),
           ],
         ),
-      ),
+      ).animate().fadeIn(duration: 100.milliseconds, delay: 100.milliseconds),
     );
   }
 }

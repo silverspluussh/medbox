@@ -45,7 +45,6 @@ Future<void> main() async {
   await ReminderDB.initDatabase();
   await _configureLocalTimeZone();
   await NotifConsole().initnotifs();
-
   await FirebaseAppCheck.instance.activate(
     androidProvider: AndroidProvider.playIntegrity,
   );

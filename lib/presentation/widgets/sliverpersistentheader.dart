@@ -4,7 +4,8 @@ class HeaderBar extends SliverPersistentHeaderDelegate {
   final Widget widget;
   final double maxextent;
   final double minextent;
-  HeaderBar(this.widget, this.maxextent, this.minextent);
+  HeaderBar(
+      {required this.widget, required this.maxextent, required this.minextent});
 
   @override
   Widget build(

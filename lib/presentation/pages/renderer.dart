@@ -68,7 +68,7 @@ class _RenderState extends State<Render> with SingleTickerProviderStateMixin {
             } else if (vale.navEnum.name == 'settings') {
               return const Settings();
             } else if (vale.navEnum.name == 'vitals') {
-              return const VitalsScreen();
+              return const VitalsMain();
             } else if (vale.navEnum.name == 'medications') {
               return const Medications();
             } else if (vale.navEnum.name == 'Profile') {}
