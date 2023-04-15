@@ -2,8 +2,6 @@ import 'package:MedBox/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:velocity_x/velocity_x.dart';
-
-import '../../widgets/barchart.dart';
 import '../../widgets/fl_linechart.dart';
 
 class Vitalshistory extends StatelessWidget {
@@ -34,10 +32,7 @@ class Vitalshistory extends StatelessWidget {
                     title: 'title',
                     value: '123'),
                 const SliverToBoxAdapter(
-                  child: Positioned(
-                    bottom: 0,
-                    child: Linechart(),
-                  ),
+                  child: Linechart(),
                 )
               ],
             ),
@@ -50,10 +45,7 @@ class Vitalshistory extends StatelessWidget {
                     title: 'title',
                     value: '123'),
                 const SliverToBoxAdapter(
-                  child: Positioned(
-                    bottom: 0,
-                    child: BarChartSample3(),
-                  ),
+                  child: Linechart(),
                 )
               ],
             ),
@@ -66,10 +58,7 @@ class Vitalshistory extends StatelessWidget {
                     title: 'title',
                     value: '123'),
                 const SliverToBoxAdapter(
-                  child: Positioned(
-                    bottom: 0,
-                    child: Linechart(),
-                  ),
+                  child: Linechart(),
                 )
               ],
             ),
@@ -82,10 +71,7 @@ class Vitalshistory extends StatelessWidget {
                     title: 'title',
                     value: '123'),
                 const SliverToBoxAdapter(
-                  child: Positioned(
-                    bottom: 0,
-                    child: Linechart(),
-                  ),
+                  child: Linechart(),
                 )
               ],
             ),
@@ -98,10 +84,7 @@ class Vitalshistory extends StatelessWidget {
                     title: 'title',
                     value: '123'),
                 const SliverToBoxAdapter(
-                  child: Positioned(
-                    bottom: 0,
-                    child: Linechart(),
-                  ),
+                  child: Linechart(),
                 )
               ],
             ),
@@ -114,20 +97,29 @@ class Vitalshistory extends StatelessWidget {
     return SliverToBoxAdapter(
       child: SizedBox(
         width: size.width - 20,
-        height: size.height * 0.26,
+        height: size.height * 0.24,
         child: HStack(
           [
             minmaxavgelement(
-                    title: title, tcolor: color, vcolor: color2, value: value)
-                .p12(),
+                title: title, tcolor: color, vcolor: color2, value: value),
+            const SizedBox(width: 40),
+            Container(
+                padding: const EdgeInsets.only(left: 34, right: 34),
+                decoration: BoxDecoration(
+                  border: Border(
+                    right: BorderSide(
+                        width: 4,
+                        color: AppColors.primaryColor.withOpacity(0.5)),
+                    left: BorderSide(
+                        width: 4,
+                        color: AppColors.primaryColor.withOpacity(0.5)),
+                  ),
+                ),
+                child: minmaxavgelement(
+                    title: title, tcolor: color, vcolor: color2, value: value)),
             const SizedBox(width: 40),
             minmaxavgelement(
-                    title: title, tcolor: color, vcolor: color2, value: value)
-                .p12(),
-            const SizedBox(width: 40),
-            minmaxavgelement(
-                    title: title, tcolor: color, vcolor: color2, value: value)
-                .p12(),
+                title: title, tcolor: color, vcolor: color2, value: value),
           ],
           alignment: MainAxisAlignment.center,
         ),
@@ -135,7 +127,7 @@ class Vitalshistory extends StatelessWidget {
     );
   }
 
-  VStack minmaxavgelement(
+  minmaxavgelement(
       {required Color tcolor,
       required Color vcolor,
       required title,

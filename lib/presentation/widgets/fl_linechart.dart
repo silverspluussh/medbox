@@ -12,7 +12,7 @@ class Linechart extends StatefulWidget {
 
 class _LineChartState extends State<Linechart> {
   List<Color> gradientColors = [
-    AppColors.scaffoldColor,
+    const Color.fromARGB(255, 124, 102, 247).withOpacity(0.8),
     AppColors.primaryColor.withOpacity(0.5),
   ];
 
@@ -24,7 +24,9 @@ class _LineChartState extends State<Linechart> {
           aspectRatio: 1.20,
           child: Padding(
             padding: const EdgeInsets.only(
-              top: 15,
+              top: 10,
+              bottom: 25,
+              right: 2,
             ),
             child: LineChart(
               mainData(),
@@ -32,6 +34,45 @@ class _LineChartState extends State<Linechart> {
           ),
         ),
       ],
+    );
+  }
+
+  Widget bottomTitleWidgets(double value, TitleMeta meta) {
+    const style = TextStyle(
+      fontWeight: FontWeight.bold,
+      fontSize: 12,
+    );
+    Widget text;
+    switch (value.toInt()) {
+      case 1:
+        text = const Text('MON', style: style);
+        break;
+      case 2:
+        text = const Text('TUE', style: style);
+        break;
+      case 3:
+        text = const Text('WED', style: style);
+        break;
+      case 4:
+        text = const Text('THU', style: style);
+        break;
+      case 5:
+        text = const Text('FRI', style: style);
+        break;
+      case 6:
+        text = const Text('SAT', style: style);
+        break;
+      case 7:
+        text = const Text('SUN', style: style);
+        break;
+      default:
+        text = const Text('', style: style);
+        break;
+    }
+
+    return SideTitleWidget(
+      axisSide: meta.axisSide,
+      child: text,
     );
   }
 
@@ -65,7 +106,10 @@ class _LineChartState extends State<Linechart> {
         ),
         bottomTitles: AxisTitles(
           sideTitles: SideTitles(
-            showTitles: false,
+            showTitles: true,
+            reservedSize: 20,
+            interval: 1,
+            getTitlesWidget: bottomTitleWidgets,
           ),
         ),
         leftTitles: AxisTitles(
@@ -79,19 +123,20 @@ class _LineChartState extends State<Linechart> {
         border: Border.all(color: const Color(0xff37434d)),
       ),
       minX: 0,
-      maxX: 11,
+      maxX: 7,
       minY: 0,
-      maxY: 6,
+      maxY: 100,
       lineBarsData: [
         LineChartBarData(
           spots: const [
-            FlSpot(0, 3),
-            FlSpot(2.6, 2),
-            FlSpot(4.9, 5),
-            FlSpot(6.8, 3.1),
-            FlSpot(8, 4),
-            FlSpot(9.5, 3),
-            FlSpot(11, 4),
+            FlSpot(0, 0),
+            FlSpot(1, 30),
+            FlSpot(2, 20),
+            FlSpot(3, 50),
+            FlSpot(4, 20),
+            FlSpot(5, 40),
+            FlSpot(6, 75),
+            FlSpot(7, 80),
           ],
           isCurved: true,
           gradient: LinearGradient(

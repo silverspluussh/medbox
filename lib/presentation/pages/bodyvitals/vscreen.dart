@@ -106,8 +106,8 @@ class _VitalsMainState extends State<VitalsMain> {
                                 ],
                               ),
                             ),
-                            maxextent: size.height * 0.24,
-                            minextent: size.height * 0.16)),
+                            maxextent: size.height * 0.16,
+                            minextent: size.height * 0.155)),
                     snapshot.hasData
                         ? SliverGrid.count(
                             crossAxisCount: 2,
