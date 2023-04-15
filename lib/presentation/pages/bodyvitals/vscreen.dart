@@ -1,4 +1,5 @@
 import 'package:MedBox/domain/models/vitalsmodel.dart';
+import 'package:MedBox/presentation/pages/bodyvitals/history_analysis.dart';
 import 'package:MedBox/presentation/widgets/sliverpersistentheader.dart';
 import 'package:flutter/material.dart';
 import 'package:MedBox/data/repos/Dbhelpers/vitalsdb.dart';
@@ -504,7 +505,13 @@ class _VitalsMainState extends State<VitalsMain> {
                             button: true,
                             tooltip: 'Overall vitals history',
                             child: InkWell(
-                              onTap: () {},
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const Vitalshistory()));
+                              },
                               child: Container(
                                 height: 50,
                                 width: 50,
