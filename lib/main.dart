@@ -1,24 +1,32 @@
-import 'dart:io';
+// ignore_for_file: depend_on_referenced_packages
 
-import 'package:MedBox/artifacts/Dbhelpers/remindDb.dart';
+import 'dart:io';
+import 'package:MedBox/constants/colors.dart';
+import 'package:MedBox/data/repos/Dbhelpers/remindDb.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:MedBox/artifacts/Dbhelpers/medicationdb.dart';
-import 'package:MedBox/artifacts/Dbhelpers/profiledb.dart';
-import 'package:MedBox/artifacts/Dbhelpers/vitalsdb.dart';
-import 'package:MedBox/components/dashboard/vitalsprovider.dart';
-import 'package:MedBox/components/landing/navigate.dart';
-import 'package:MedBox/components/notifications/notification.dart';
-import 'package:MedBox/components/patient/medications/medicalstate.dart';
-import 'package:MedBox/components/start/intro.dart';
+import 'package:MedBox/data/repos/Dbhelpers/medicationdb.dart';
+import 'package:MedBox/data/repos/Dbhelpers/profiledb.dart';
+import 'package:MedBox/data/repos/Dbhelpers/vitalsdb.dart';
+import 'package:MedBox/presentation/providers/vitalsprovider.dart';
+import 'package:MedBox/presentation/providers/navigation.dart';
+import 'package:MedBox/utils/extensions/notification.dart';
+import 'package:MedBox/presentation/providers/medications_provider.dart';
+import 'package:MedBox/presentation/pages/intro_page.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'components/landing/landingpage.dart';
+import 'package:velocity_x/velocity_x.dart';
+import 'presentation/providers/localization_state.dart';
+import 'presentation/pages/renderer.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
+import 'package:flutter_gen/gen_l10n/app_localization.dart';
+import 'translation/l10n/l10n.dart';
 
 late SharedPreferences prefs;
 
@@ -26,7 +34,8 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   await Firebase.initializeApp();
   prefs = await SharedPreferences.getInstance();
 
@@ -36,11 +45,11 @@ Future<void> main() async {
   await ReminderDB.initDatabase();
   await _configureLocalTimeZone();
   await NotifConsole().initnotifs();
-
   await FirebaseAppCheck.instance.activate(
     androidProvider: AndroidProvider.playIntegrity,
   );
   runApp(const MedBox());
+  Future.delayed(1.seconds, () => FlutterNativeSplash.remove());
 }
 
 Future<void> _configureLocalTimeZone() async {
@@ -59,7 +68,7 @@ class MedBox extends StatefulWidget {
 class _MedBoxState extends State<MedBox> {
   User? user;
   bool notificationEnabled = false;
-
+  late BuildContext ctx;
   @override
   void initState() {
     super.initState();
@@ -68,6 +77,16 @@ class _MedBoxState extends State<MedBox> {
     FirebaseAuth.instance
         .authStateChanges()
         .listen((event) => updateUserStatus(event));
+
+    Future.delayed(
+        24.hours,
+        () => VxToast.show(
+              ctx,
+              msg:
+                  'It\'s been 24 hours already, please update your vitals to keep Medbox updated with your latest health information',
+              position: VxToastPosition.center,
+              bgColor: AppColors.primaryColor,
+            ));
   }
 
   updateUserStatus(event) {
@@ -107,30 +126,42 @@ class _MedBoxState extends State<MedBox> {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(
-            create: (context) => MedicationState(
-                drugtype: Drugtype.bottle, image: 'image', title: 'title')),
-        ChangeNotifierProvider(
-            create: (context) =>
-                BottomNav(icon: 'icon', navEnum: NavEnum.home, title: '')),
-        ChangeNotifierProvider(
-            create: (context) => VitalsProvider(Vv.pressure)),
-        StreamProvider<User?>.value(
-          value: FirebaseAuth.instance.authStateChanges(),
-          initialData: FirebaseAuth.instance.currentUser,
-        ),
-      ],
-      builder: (context, child) => MaterialApp(
-        title: 'MedBox',
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          useMaterial3: true,
-          primaryColor: const Color.fromARGB(255, 16, 27, 56),
-          brightness: Brightness.light,
-        ),
-        home: user == null ? const Introduction() : const Render(),
-      ),
-    );
+        providers: [
+          ChangeNotifierProvider(
+              create: (context) => MedicationState(
+                  drugtype: Drugtype.bottle, image: 'image', title: 'title')),
+          ChangeNotifierProvider(
+              create: (context) =>
+                  BottomNav(icon: 'icon', navEnum: NavEnum.home, title: '')),
+          ChangeNotifierProvider(create: (context) => LanguageProvider()),
+          ChangeNotifierProvider(
+              create: (context) => VitalsProvider(Vv.pressure)),
+          StreamProvider<User?>.value(
+            value: FirebaseAuth.instance.authStateChanges(),
+            initialData: FirebaseAuth.instance.currentUser,
+          ),
+        ],
+        builder: (context, child) {
+          final langprovider = Provider.of<LanguageProvider>(context);
+
+          return MaterialApp(
+            title: 'Med Box',
+            debugShowCheckedModeBanner: false,
+            locale: langprovider.locale,
+            supportedLocales: L10n.all,
+            localizationsDelegates: const [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+            ],
+            theme: ThemeData(
+              useMaterial3: true,
+              primaryColor: const Color.fromARGB(255, 16, 27, 56),
+              brightness: Brightness.light,
+            ),
+            home: user == null ? const Introduction() : const Render(),
+          );
+        });
   }
 }
