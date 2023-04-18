@@ -6,6 +6,7 @@ import 'package:MedBox/presentation/pages/renderer.dart';
 import 'package:MedBox/utils/extensions/vitalscontroller.dart';
 import 'package:MedBox/domain/models/vitalsmodel.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:intl/intl.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 import '../../../data/repos/Dbhelpers/vitalsdb.dart';
@@ -19,7 +20,7 @@ class AddVitals extends StatefulWidget {
 
 class _AddVitalsState extends State<AddVitals> {
   final formkey = GlobalKey<FormState>();
-
+  var date = DateTime.now();
   TextEditingController temp = TextEditingController();
   TextEditingController pressure = TextEditingController();
   TextEditingController heartrate = TextEditingController();
@@ -172,11 +173,13 @@ class _AddVitalsState extends State<AddVitals> {
 
                         bool validate = formkey.currentState!.validate();
                         if (validate == true) {
+                          print(DateFormat('EEEE').format(date));
                           final vvmodel = VModel(
                             bloodpressure: pressure.text,
                             heartrate: heartrate.text,
                             oxygenlevel: oxygen.text,
                             temperature: temp.text,
+                            datetime: DateFormat('EEEE').format(date),
                             weight: weight.text,
                             bmi: bmi.text,
                             id: Random().nextInt(150),
@@ -242,27 +245,17 @@ class _AddVitalsState extends State<AddVitals> {
   }
 
   Future bmical() async {
-    if (vitals.isNotEmpty) {
-      var results = (double.parse(weight.text.isNotEmpty ? weight.text : '0') /
-          (double.parse(height.text.isNotEmpty ? height.text : '0') *
-              double.parse(height.text.isNotEmpty ? height.text : '0')));
+    if (weight.text.isNotEmpty && height.text.isNotEmpty) {
+      var result = (double.parse(weight.text) /
+          (double.parse(height.text) * double.parse(height.text)));
 
       setState(() {
-        bmi.text = results.toStringAsFixed(2);
+        bmi.text = result.toStringAsFixed(2);
       });
     } else {
-      if (weight.text.isNotEmpty && height.text.isNotEmpty) {
-        var result = (double.parse(weight.text) /
-            (double.parse(height.text) * double.parse(height.text)));
-
-        setState(() {
-          bmi.text = result.toStringAsFixed(3);
-        });
-      } else {
-        setState(() {
-          bmi.text = '0';
-        });
-      }
+      setState(() {
+        bmi.text = '0.00';
+      });
     }
   }
 

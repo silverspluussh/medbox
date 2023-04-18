@@ -14,11 +14,11 @@ class MModel {
   });
 
   MModel.fromJson(Map<String, dynamic> json) {
-    id = json['id'] ?? 'none';
-    medicinename = json['medicinename'] ?? 'none';
-    dose = json['dose'] ?? 'none';
-    medicinetype = json['medicinetype'] ?? 'none';
-    image = json['image'] ?? 'none';
+    id = json['id'];
+    medicinename = json['medicinename'];
+    dose = json['dose'];
+    medicinetype = json['medicinetype'];
+    image = json['image'];
   }
 
   Map<String, dynamic> toJson() {

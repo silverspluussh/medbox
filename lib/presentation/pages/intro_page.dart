@@ -733,7 +733,7 @@ class _IntroductionState extends State<Introduction> {
                                         (route) => false);
                                   });
                                 } catch (e) {
-                                  VxToast.show(_scaffoldKey.currentContext!,
+                                  VxToast.show(context,
                                       msg:
                                           'An error occurred:${e.toString().split(' ').withoutFirst()}',
                                       bgColor: Color.fromARGB(255, 250, 46, 46),

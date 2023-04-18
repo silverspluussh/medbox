@@ -23,16 +23,16 @@ class VModel {
       this.height});
 
   VModel.fromJson(Map<String, dynamic> json) {
-    id = json['id'] ?? '0';
-    temperature = json['temperature'] ?? '0';
-    bloodpressure = json['bloodpressure'] ?? '0';
-    heartrate = json['heartrate'] ?? '0';
-    oxygenlevel = json['oxygenlevel'] ?? '0';
-    weight = json['weight'] ?? '0';
-    bmi = json['bmi'] ?? '0';
-    datetime = json['datetime'];
-    respiration = json['respiration'] ?? '0';
-    height = json['height'] ?? '0';
+    id = json['id'];
+    temperature = json['temperature'];
+    bloodpressure = json['bloodpressure'];
+    heartrate = json['heartrate'];
+    oxygenlevel = json['oxygenlevel'];
+    weight = json['weight'];
+    bmi = json['bmi'];
+    datetime = json['day'];
+    respiration = json['respiration'];
+    height = json['height'];
   }
 
   Map<String, dynamic> toJson() {
@@ -46,7 +46,7 @@ class VModel {
     inputdata['bmi'] = bmi;
     inputdata['respiration'] = respiration;
     inputdata['height'] = height;
-    inputdata['datetime'] = datetime;
+    inputdata['day'] = datetime;
 
     return inputdata;
   }

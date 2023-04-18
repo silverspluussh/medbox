@@ -9,6 +9,8 @@ class VitalsDB {
   static const String _colname = 'vitals';
   static const String _gcolname = 'gvitals';
 
+  bool goog = prefs.getBool('googleloggedin') ?? false;
+
   static Future<void> initDatabase() async {
     if (_database != null) {
       return;
@@ -27,7 +29,7 @@ class VitalsDB {
             return db.execute('''
               CREATE TABLE $_gcolname (
               id INTEGER PRIMARY KEY AUTOINCREMENT,
-              temperature TEXT, oxygenlevel TEXT, heartrate TEXT, bloodpressure TEXT,
+              temperature TEXT, oxygenlevel TEXT, heartrate TEXT, bloodpressure TEXT,day STRING,
               weight TEXT,height TEXT,bmi TEXT,respiration TEXT
               )''');
           },
@@ -43,7 +45,7 @@ class VitalsDB {
             return db.execute('''
               CREATE TABLE $_colname (
               id INTEGER PRIMARY KEY AUTOINCREMENT,
-              temperature TEXT, oxygenlevel TEXT, heartrate TEXT, bloodpressure TEXT,
+              temperature TEXT, oxygenlevel TEXT, heartrate TEXT, bloodpressure TEXT,day TEXT,
               weight TEXT,height TEXT,bmi TEXT,respiration TEXT
               )''');
           },
@@ -159,5 +161,33 @@ class VitalsDB {
     return await _database!.update(google == false ? _colname : _gcolname,
         {'bloodpressure': bloodpressure},
         where: 'id=?', whereArgs: [model.id]);
+  }
+
+  Future<List<Map<String, dynamic>>> avgquery() async {
+    return _database!.rawQuery(
+        'SELECT AVG(temperature) AS temperature, AVG(bloodpressure) AS bloodpressure, AVG(heartrate) AS heartrate,  AVG(oxygenlevel) AS oxygenlevel  FROM ${goog == true ? _gcolname : _colname};');
+  }
+
+  Future<List<Map<String, dynamic>>> maxquery() async {
+    return _database!.rawQuery(
+        'SELECT MAX(temperature) AS temperature, MAX(bloodpressure) AS bloodpressure, MAX(heartrate) AS heartrate,  MAX(oxygenlevel) AS oxygenlevel  FROM ${goog == true ? _gcolname : _colname};');
+  }
+
+  Future<List<Map<String, dynamic>>> minquery() async {
+    return _database!.rawQuery(
+        'SELECT MIN(temperature) AS temperature, MIN(bloodpressure) AS bloodpressure, MIN(heartrate) AS heartrate,  MIN(oxygenlevel) AS oxygenlevel  FROM ${goog == true ? _gcolname : _colname};');
+  }
+
+  Future<List<Map<String, dynamic>>> weeklyreadings({required day}) async {
+    return _database!.rawQuery(
+      '''
+       SELECT 
+          temperature,bloodpressure,oxygenlevel,respiration,heartrate,day
+       FROM 
+          $_colname
+       WHERE
+          day = '$day';
+       ''',
+    );
   }
 }

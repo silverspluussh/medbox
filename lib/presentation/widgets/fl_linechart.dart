@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import '../../constants/colors.dart';
 
 class Linechart extends StatefulWidget {
-  const Linechart({super.key});
+  Linechart({super.key, required this.flspots});
+
+  final List<FlSpot> flspots;
 
   @override
   State<Linechart> createState() => _LineChartState();
@@ -29,7 +31,7 @@ class _LineChartState extends State<Linechart> {
               right: 2,
             ),
             child: LineChart(
-              mainData(),
+              mainData(flspots: widget.flspots),
             ),
           ),
         ),
@@ -76,7 +78,7 @@ class _LineChartState extends State<Linechart> {
     );
   }
 
-  LineChartData mainData() {
+  LineChartData mainData({required List<FlSpot> flspots}) {
     return LineChartData(
       gridData: FlGridData(
         show: true,
@@ -125,19 +127,10 @@ class _LineChartState extends State<Linechart> {
       minX: 0,
       maxX: 7,
       minY: 0,
-      maxY: 100,
+      maxY: 200,
       lineBarsData: [
         LineChartBarData(
-          spots: const [
-            FlSpot(0, 0),
-            FlSpot(1, 30),
-            FlSpot(2, 20),
-            FlSpot(3, 50),
-            FlSpot(4, 20),
-            FlSpot(5, 40),
-            FlSpot(6, 75),
-            FlSpot(7, 80),
-          ],
+          spots: flspots,
           isCurved: true,
           gradient: LinearGradient(
             colors: gradientColors,
