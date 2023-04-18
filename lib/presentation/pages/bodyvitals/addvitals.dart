@@ -169,11 +169,10 @@ class _AddVitalsState extends State<AddVitals> {
                     const SizedBox(height: 20),
                     GestureDetector(
                       onTap: () async {
-                        await bmical();
-
                         bool validate = formkey.currentState!.validate();
                         if (validate == true) {
-                          print(DateFormat('EEEE').format(date));
+                          await bmical();
+
                           final vvmodel = VModel(
                             bloodpressure: pressure.text,
                             heartrate: heartrate.text,

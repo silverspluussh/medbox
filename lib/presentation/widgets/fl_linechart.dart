@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import '../../constants/colors.dart';
 
 class Linechart extends StatefulWidget {
-  Linechart({super.key, required this.flspots});
+  const Linechart({super.key, required this.flspots});
 
   final List<FlSpot> flspots;
 
@@ -27,7 +27,7 @@ class _LineChartState extends State<Linechart> {
           child: Padding(
             padding: const EdgeInsets.only(
               top: 10,
-              bottom: 25,
+              bottom: 15,
               right: 2,
             ),
             child: LineChart(

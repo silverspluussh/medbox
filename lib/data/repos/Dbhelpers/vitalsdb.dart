@@ -165,17 +165,17 @@ class VitalsDB {
 
   Future<List<Map<String, dynamic>>> avgquery() async {
     return _database!.rawQuery(
-        'SELECT AVG(temperature) AS temperature, AVG(bloodpressure) AS bloodpressure, AVG(heartrate) AS heartrate,  AVG(oxygenlevel) AS oxygenlevel  FROM ${goog == true ? _gcolname : _colname};');
+        'SELECT AVG(temperature) AS temperature, AVG(bloodpressure) AS bloodpressure, AVG(heartrate) AS heartrate,  AVG(oxygenlevel) AS oxygenlevel,AVG(respiration) AS respiration  FROM ${goog == true ? _gcolname : _colname};');
   }
 
   Future<List<Map<String, dynamic>>> maxquery() async {
     return _database!.rawQuery(
-        'SELECT MAX(temperature) AS temperature, MAX(bloodpressure) AS bloodpressure, MAX(heartrate) AS heartrate,  MAX(oxygenlevel) AS oxygenlevel  FROM ${goog == true ? _gcolname : _colname};');
+        'SELECT MAX(temperature) AS temperature, MAX(bloodpressure) AS bloodpressure, MAX(heartrate) AS heartrate,  MAX(oxygenlevel) AS oxygenlevel,MAX(respiration) AS respiration  FROM ${goog == true ? _gcolname : _colname};');
   }
 
   Future<List<Map<String, dynamic>>> minquery() async {
     return _database!.rawQuery(
-        'SELECT MIN(temperature) AS temperature, MIN(bloodpressure) AS bloodpressure, MIN(heartrate) AS heartrate,  MIN(oxygenlevel) AS oxygenlevel  FROM ${goog == true ? _gcolname : _colname};');
+        'SELECT MIN(temperature) AS temperature, MIN(bloodpressure) AS bloodpressure, MIN(heartrate) AS heartrate,  MIN(oxygenlevel) AS oxygenlevel,MIN(respiration) AS respiration  FROM ${goog == true ? _gcolname : _colname};');
   }
 
   Future<List<Map<String, dynamic>>> weeklyreadings({required day}) async {
