@@ -17,7 +17,6 @@ import 'package:MedBox/utils/extensions/notification.dart';
 import 'package:MedBox/presentation/providers/medications_provider.dart';
 import 'package:MedBox/presentation/pages/intro_page.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -34,8 +33,7 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
 Future<void> main() async {
-  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   prefs = await SharedPreferences.getInstance();
 
@@ -49,7 +47,6 @@ Future<void> main() async {
     androidProvider: AndroidProvider.playIntegrity,
   );
   runApp(const MedBox());
-  Future.delayed(1.seconds, () => FlutterNativeSplash.remove());
 }
 
 Future<void> _configureLocalTimeZone() async {
