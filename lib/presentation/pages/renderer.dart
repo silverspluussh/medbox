@@ -2,11 +2,15 @@ import 'package:MedBox/presentation/pages/myprofile/myprofile.dart';
 import 'package:flutter/material.dart';
 import 'package:MedBox/presentation/providers/navigation.dart';
 import 'package:MedBox/presentation/pages/medication/medication_main.dart';
-import 'package:MedBox/presentation/pages/bodyvitals/vscreen.dart';
 import 'package:provider/provider.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 import '../../constants/colors.dart';
+import '../../data/repos/Dbhelpers/medicationdb.dart';
+import '../../data/repos/Dbhelpers/profiledb.dart';
+import '../../data/repos/Dbhelpers/remindDb.dart';
+import '../../data/repos/Dbhelpers/vitalsdb.dart';
+import '../../utils/extensions/notification.dart';
 import 'main_dashboard.dart';
 import 'settings_main.dart';
 
@@ -17,33 +21,15 @@ class Render extends StatefulWidget {
   State<Render> createState() => _RenderState();
 }
 
-class _RenderState extends State<Render> with SingleTickerProviderStateMixin {
-  bool drawerclised = true;
-
-  late AnimationController animationController;
-  late Animation<double> animation;
-  late Animation<double> scanimation;
-
+class _RenderState extends State<Render> {
   @override
-  void initState() {
-    animationController = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 200))
-      ..addListener(() {
-        setState(() {});
-      });
-
-    animation = Tween<double>(begin: 0, end: 1).animate(CurvedAnimation(
-        parent: animationController, curve: Curves.fastOutSlowIn));
-
-    scanimation = Tween<double>(begin: 1, end: 0.8).animate(CurvedAnimation(
-        parent: animationController, curve: Curves.fastOutSlowIn));
+  void initState() async {
+    await VitalsDB.initDatabase();
+    await MedicationsDB.initDatabase();
+    await ProfileDB.initDatabase();
+    await ReminderDB.initDatabase();
+    await NotifConsole().initnotifs();
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    animationController.dispose();
-    super.dispose();
   }
 
   @override
