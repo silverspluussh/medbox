@@ -21,17 +21,13 @@ List<BottomNav> navitems = [
       navEnum: NavEnum.home,
       title: 'Home'),
   BottomNav(
-      icon: 'assets/icons/heart-beat.png',
-      navEnum: NavEnum.vitals,
-      title: 'Vitals'),
-  BottomNav(
       icon: 'assets/icons/capsules.png',
       navEnum: NavEnum.medications,
-      title: 'Meds'),
+      title: 'Medications'),
   BottomNav(
       icon: 'assets/icons/profile-35-64.png',
       navEnum: NavEnum.profile,
-      title: 'Profile'),
+      title: 'My Profile'),
   BottomNav(
       icon: 'assets/icons/set-up-950-512.png',
       navEnum: NavEnum.settings,

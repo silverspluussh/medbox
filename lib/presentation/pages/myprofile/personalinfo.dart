@@ -3,22 +3,25 @@ import 'dart:typed_data';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:MedBox/data/repos/Dbhelpers/profiledb.dart';
-import 'package:MedBox/constants/colors.dart';
-import 'package:MedBox/domain/models/pmodel.dart';
-import 'package:MedBox/data/datasource/fbasehelper.dart';
-import 'package:MedBox/main.dart';
+import 'package:velocity_x/velocity_x.dart';
 
-import '../../utils/extensions/photos_extension.dart';
+import '../../../constants/colors.dart';
+import '../../../data/datasource/fbasehelper.dart';
+import '../../../data/repos/Dbhelpers/profiledb.dart';
+import '../../../domain/models/pmodel.dart';
+import '../../../main.dart';
+import '../../../utils/extensions/photos_extension.dart';
 
-class ProfileScren extends StatefulWidget {
-  const ProfileScren({super.key});
+class PersonalProfile extends StatefulWidget {
+  const PersonalProfile({
+    super.key,
+  });
 
   @override
-  State<ProfileScren> createState() => _ProfileScrenState();
+  State<PersonalProfile> createState() => _PersonalProfileState();
 }
 
-class _ProfileScrenState extends State<ProfileScren> {
+class _PersonalProfileState extends State<PersonalProfile> {
   bool editprofileoff = true;
   TextEditingController username = TextEditingController();
   TextEditingController fname = TextEditingController();
@@ -73,52 +76,50 @@ class _ProfileScrenState extends State<ProfileScren> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return Container(
-        width: size.width,
-        height: size.height,
-        color: Colors.white,
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: Column(
-            children: [
-              const SizedBox(height: 30),
-              Stack(
-                children: [
-                  Container(
-                    height: 120,
-                    width: 100,
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.white,
-                        image: DecorationImage(
-                            fit: BoxFit.fill,
-                            image: google == true
-                                ? NetworkImage(prefs.getString('googleimage')!)
-                                : pfp != null
-                                    ? MemoryImage(
-                                        Utility().dataFromBase64String(pfp))
-                                    : const AssetImage(
-                                            'assets/icons/profile-35-64.png')
-                                        as ImageProvider)),
-                  ),
-                  google == false
-                      ? Positioned(
-                          bottom: -10,
-                          right: -10,
-                          child: IconButton(
-                              iconSize: 25,
-                              onPressed: () {
-                                pickImageFromLocal().then((value) {});
-                              },
-                              icon: const Icon(
-                                Icons.edit,
-                                color: Colors.black,
-                              )))
-                      : const SizedBox()
-                ],
-              ),
-              const SizedBox(height: 40),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      child: CustomScrollView(
+        slivers: [
+          SliverToBoxAdapter(
+            child: Stack(
+              children: [
+                Container(
+                  height: 80,
+                  width: 80,
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.white,
+                      border: Border.all(width: 2, color: Colors.black12),
+                      image: DecorationImage(
+                          fit: BoxFit.fill,
+                          image: google == true
+                              ? NetworkImage(prefs.getString('googleimage')!)
+                              : pfp != null
+                                  ? MemoryImage(
+                                      Utility().dataFromBase64String(pfp))
+                                  : const AssetImage(
+                                          'assets/icons/profile-35-64.png')
+                                      as ImageProvider)),
+                ),
+                google == false
+                    ? Positioned(
+                        bottom: -12,
+                        right: -12,
+                        child: IconButton(
+                            iconSize: 25,
+                            onPressed: () {
+                              pickImageFromLocal().then((value) {});
+                            },
+                            icon: const Icon(
+                              Icons.edit,
+                              color: AppColors.primaryColor,
+                            )))
+                    : const SizedBox()
+              ],
+            ).centered(),
+          ),
+          SliverList(
+            delegate: SliverChildListDelegate([
               inputformfield(
                   controller: username,
                   widget: const Icon(Icons.person_4_outlined,
@@ -191,7 +192,6 @@ class _ProfileScrenState extends State<ProfileScren> {
                       hinttext: '***********',
                       width: size.width)
                   : const SizedBox(),
-              const SizedBox(height: 20),
               Visibility(
                 visible: !editprofileoff,
                 child: InkWell(
@@ -293,9 +293,12 @@ class _ProfileScrenState extends State<ProfileScren> {
                       ],
                     ),
               const SizedBox(height: 100)
-            ],
+            ]),
+            key: const ValueKey('silverlist'),
           ),
-        ));
+        ],
+      ),
+    );
   }
 
   Future updatedetails() async {
