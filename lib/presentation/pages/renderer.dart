@@ -1,8 +1,8 @@
+import 'package:MedBox/presentation/pages/myprofile/myprofile.dart';
 import 'package:flutter/material.dart';
 import 'package:MedBox/presentation/providers/navigation.dart';
 import 'package:MedBox/presentation/pages/medication/medication_main.dart';
 import 'package:MedBox/presentation/pages/bodyvitals/vscreen.dart';
-import 'package:MedBox/presentation/pages/profilescreen.dart';
 import 'package:provider/provider.dart';
 import 'package:velocity_x/velocity_x.dart';
 
@@ -67,12 +67,10 @@ class _RenderState extends State<Render> with SingleTickerProviderStateMixin {
               return const DashboardOverview();
             } else if (vale.navEnum.name == 'settings') {
               return const Settings();
-            } else if (vale.navEnum.name == 'vitals') {
-              return const VitalsMain();
             } else if (vale.navEnum.name == 'medications') {
               return const Medications();
             } else if (vale.navEnum.name == 'Profile') {}
-            return const ProfileScren();
+            return const MyProfile();
           }),
           backgroundColor: Colors.white,
           extendBody: true,

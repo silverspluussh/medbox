@@ -174,8 +174,15 @@ class VitalsDB {
   }
 
   Future<List<Map<String, dynamic>>> minquery() async {
-    return _database!.rawQuery(
-        'SELECT MIN(temperature) AS temperature, MIN(bloodpressure) AS bloodpressure, MIN(heartrate) AS heartrate,  MIN(oxygenlevel) AS oxygenlevel,MIN(respiration) AS respiration  FROM ${goog == true ? _gcolname : _colname};');
+    return _database!.rawQuery('''SELECT 
+              MIN(temperature) AS temperature,
+              MIN(bloodpressure) AS bloodpressure, 
+              MIN(heartrate) AS heartrate,  
+              MIN(oxygenlevel) AS oxygenlevel,
+              MIN(respiration) AS respiration  
+           FROM 
+              ${goog == true ? _gcolname : _colname};
+        ''');
   }
 
   Future<List<Map<String, dynamic>>> weeklyreadings({required day}) async {
