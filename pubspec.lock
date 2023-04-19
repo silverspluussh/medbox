@@ -445,14 +445,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.6.3"
-  internet_connection_checker:
-    dependency: "direct main"
-    description:
-      name: internet_connection_checker
-      sha256: "1c683e63e89c9ac66a40748b1b20889fd9804980da732bf2b58d6d5456c8e876"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.0+1"
   intl:
     dependency: "direct main"
     description:
@@ -746,22 +738,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.0"
-  syncfusion_flutter_core:
-    dependency: transitive
-    description:
-      name: syncfusion_flutter_core
-      sha256: "05b079cb1be26a8d5c1afe714172d2eed9178049f4a7dc773b2cbb8b053eff8d"
-      url: "https://pub.dev"
-    source: hosted
-    version: "21.1.41"
-  syncfusion_flutter_pdf:
-    dependency: "direct main"
-    description:
-      name: syncfusion_flutter_pdf
-      sha256: "1cab71bdd661b816f8082ce922d58843d1ab323fef5ab1105830e9955c18b98a"
-      url: "https://pub.dev"
-    source: hosted
-    version: "21.1.41"
   synchronized:
     dependency: transitive
     description:

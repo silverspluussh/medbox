@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:MedBox/constants/colors.dart';
 import 'package:MedBox/data/repos/Dbhelpers/vitalsdb.dart';
+import 'package:MedBox/presentation/pages/bodyvitals/vitalstable.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
@@ -56,6 +57,8 @@ class _VitalshistoryState extends State<Vitalshistory> {
 
       await VitalsDB().maxquery().then((value) {
         maxQuery = value;
+
+        print(value);
       });
 
       await VitalsDB().weeklyreadings(day: 'Monday').then((value) {
@@ -101,6 +104,20 @@ class _VitalshistoryState extends State<Vitalshistory> {
         length: 5,
         child: Scaffold(
           appBar: AppBar(
+            actions: [
+              IconButton(
+                tooltip: 'View table chart for all health vitals',
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const VitalsTable()));
+                },
+                icon: const Icon(Icons.grid_on_sharp),
+                iconSize: 25,
+                color: AppColors.primaryColor,
+              )
+            ],
             centerTitle: true,
             title: const Text('Health Overview',
                 style: TextStyle(
@@ -109,17 +126,6 @@ class _VitalshistoryState extends State<Vitalshistory> {
                   fontFamily: 'Popb',
                   color: Colors.black,
                 )),
-            actions: [
-              IconButton(
-                  tooltip: 'share vitals history with health personnel.',
-                  onPressed: () {},
-                  icon: const ImageIcon(
-                    AssetImage(
-                        'assets/icons/sharing-wireless-bluetooth-sharing-4-512.png'),
-                    size: 25,
-                    color: AppColors.primaryColor,
-                  ))
-            ],
             bottom: TabBar(
               key: const ObjectKey('tabbar'),
               tabs: [
@@ -145,7 +151,8 @@ class _VitalshistoryState extends State<Vitalshistory> {
                         color2: Colors.black,
                         color: AppColors.primaryColor,
                         avgtitle: 'AVG',
-                        avgvalue: "${avgQuery[0]['temperature']}",
+                        avgvalue:
+                            "${avgQuery[0]['temperature'].toStringAsFixed(2)}",
                         maxtitle: 'MAX',
                         maxvalue: "${maxQuery[0]['temperature']}",
                         mintitle: 'MIN',
@@ -212,7 +219,8 @@ class _VitalshistoryState extends State<Vitalshistory> {
                         color2: Colors.black,
                         color: AppColors.primaryColor,
                         avgtitle: 'AVG',
-                        avgvalue: "${avgQuery[0]['bloodpressure']}",
+                        avgvalue:
+                            "${avgQuery[0]['bloodpressure'].toStringAsFixed(2)}",
                         maxtitle: 'MAX',
                         maxvalue: "${maxQuery[0]['bloodpressure']}",
                         mintitle: 'MIN',
@@ -279,7 +287,8 @@ class _VitalshistoryState extends State<Vitalshistory> {
                         color2: Colors.black,
                         color: AppColors.primaryColor,
                         avgtitle: 'AVG',
-                        avgvalue: "${avgQuery[0]['heartrate']}",
+                        avgvalue:
+                            "${avgQuery[0]['heartrate'].toStringAsFixed(2)}",
                         maxtitle: 'MAX',
                         maxvalue: "${maxQuery[0]['heartrate']}",
                         mintitle: 'MIN',
@@ -346,7 +355,8 @@ class _VitalshistoryState extends State<Vitalshistory> {
                         color2: Colors.black,
                         color: AppColors.primaryColor,
                         avgtitle: 'AVG',
-                        avgvalue: "${avgQuery[0]['oxygenlevel']}",
+                        avgvalue:
+                            "${avgQuery[0]['oxygenlevel'].toStringAsFixed(2)}",
                         maxtitle: 'MAX',
                         maxvalue: "${maxQuery[0]['oxygenlevel']}",
                         mintitle: 'MIN',
@@ -413,7 +423,8 @@ class _VitalshistoryState extends State<Vitalshistory> {
                         color2: Colors.black,
                         color: AppColors.primaryColor,
                         avgtitle: 'AVG',
-                        avgvalue: "${avgQuery[0]['respiration']}",
+                        avgvalue:
+                            "${avgQuery[0]['respiration'].toStringAsFixed(2)}",
                         maxtitle: 'MAX',
                         maxvalue: "${maxQuery[0]['respiration']}",
                         mintitle: 'MIN',
@@ -503,7 +514,7 @@ class _VitalshistoryState extends State<Vitalshistory> {
               [
                 minmaxavgelement(
                   title: mintitle,
-                  tcolor: color,
+                  tcolor: Colors.blue,
                   vcolor: color2,
                   value: minvalue,
                 ),
@@ -517,7 +528,7 @@ class _VitalshistoryState extends State<Vitalshistory> {
                 const SizedBox(width: 40),
                 minmaxavgelement(
                   title: maxtitle,
-                  tcolor: color,
+                  tcolor: Colors.red,
                   vcolor: color2,
                   value: maxvalue,
                 ),
@@ -609,9 +620,9 @@ class _VitalshistoryState extends State<Vitalshistory> {
 }
 
 List icons = [
-  'assets/icons/blood-pressure.png',
-  'assets/icons/health-12-512.png',
   'assets/icons/temperature.png',
-  'assets/icons/heart-beat.png',
+  'assets/icons/blood-pressure.png',
+  'assets/icons/heartbeat.png',
   'assets/icons/6-medical-blood-oxygen.png',
+  'assets/icons/heart-beat.png',
 ];
