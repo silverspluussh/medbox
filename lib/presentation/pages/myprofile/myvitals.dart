@@ -1,9 +1,11 @@
 import 'package:MedBox/data/repos/Dbhelpers/vitalsdb.dart';
 import 'package:MedBox/domain/models/vitalsmodel.dart';
+import 'package:MedBox/presentation/pages/bodyvitals/addvitals.dart';
 import 'package:MedBox/presentation/pages/bodyvitals/vscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:velocity_x/velocity_x.dart';
+import '../../../constants/colors.dart';
 import '../../widgets/radialbarchart.dart';
 import '../../widgets/vitalsbuttons.dart';
 
@@ -60,14 +62,14 @@ class MyVitals extends StatelessWidget {
                         const SliverToBoxAdapter(child: SizedBox(height: 80))
                       ],
                     )
-                  : nodata(size);
+                  : nodata(size, context);
             }
             return const SizedBox();
           }),
     );
   }
 
-  nodata(Size size) {
+  nodata(Size size, BuildContext context) {
     return Center(
       child: Column(
         children: [
@@ -85,6 +87,30 @@ class MyVitals extends StatelessWidget {
                 fontFamily: 'Pop',
                 fontSize: 12,
                 fontWeight: FontWeight.w600),
+          ),
+          const SizedBox(height: 50),
+          SizedBox(
+            width: size.width * 0.6,
+            height: 50,
+            child: Semantics(
+              button: true,
+              child: InkWell(
+                onTap: () => Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => const AddVitals())),
+                child: Card(
+                  color: AppColors.primaryColor,
+                  elevation: 5,
+                  child: const Text(
+                    'ADD VITALS',
+                    style: TextStyle(
+                        fontSize: 13,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: 'Pop'),
+                  ).centered().px16(),
+                ),
+              ),
+            ),
           ),
         ],
       ),

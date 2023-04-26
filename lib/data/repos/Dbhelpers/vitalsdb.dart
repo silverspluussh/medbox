@@ -57,6 +57,7 @@ class VitalsDB {
   }
 
   static Future<int> insertvitals(VModel? vmodel) async {
+    await initDatabase();
     bool google = prefs.getBool('googleloggedin') ?? false;
 
     return await _database?.insert(
@@ -65,6 +66,7 @@ class VitalsDB {
   }
 
   static Future<int> updatedatabase(VModel? vmodel) async {
+    await initDatabase();
     bool google = prefs.getBool('googleloggedin') ?? false;
 
     return await _database?.update(
@@ -74,6 +76,7 @@ class VitalsDB {
   }
 
   static Future<List<Map<String, dynamic>>> queryvital() async {
+    await initDatabase();
     bool google = prefs.getBool('googleloggedin') ?? false;
 
     log('retrieving vitals');
@@ -81,6 +84,7 @@ class VitalsDB {
   }
 
   Future<List<VModel>> getvitals() async {
+    await initDatabase();
     bool google = prefs.getBool('googleloggedin') ?? false;
 
     var result = await _database!.query(google == false ? _colname : _gcolname);

@@ -46,7 +46,7 @@ class RapidTests extends StatelessWidget {
     return SliverToBoxAdapter(
       child: SizedBox(
         width: size.width,
-        height: 60,
+        height: 50,
         child: HStack([
           const Text(
             'All Test Results',
@@ -85,7 +85,7 @@ class RapidTests extends StatelessWidget {
               items: [],
               onChanged: (c) {})
         ]).px12(),
-      ),
+      ).py12(),
     );
   }
 }

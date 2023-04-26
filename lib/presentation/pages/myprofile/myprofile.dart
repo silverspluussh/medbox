@@ -36,33 +36,19 @@ class _MyProfileState extends State<MyProfile> {
     return AppBar(
         scrolledUnderElevation: 5,
         automaticallyImplyLeading: false,
+        toolbarHeight: 0,
         bottom: PreferredSize(
-            preferredSize: const Size.fromHeight(68.0),
+            preferredSize: const Size.fromHeight(45.0),
             child: Card(
                 elevation: 5,
-                margin: const EdgeInsets.all(10),
+                margin: const EdgeInsets.only(left: 10, right: 10),
                 child: TabBar(tabs: [
                   ...tabs.map((e) => Text(
                         e,
-                        style: const TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w500,
-                            fontFamily: 'Popb'),
+                        style:
+                            const TextStyle(fontSize: 12, fontFamily: 'Popb'),
                       ))
-                ]).px8().py12())),
-        actions: [
-          VxBadge(
-              size: 10,
-              color: Colors.green,
-              position: VxBadgePosition.leftTop,
-              child: IconButton(
-                  onPressed: () {},
-                  icon: Icon(
-                    Icons.notifications,
-                    size: 30,
-                    color: AppColors.primaryColor.withOpacity(0.5),
-                  ))).p16()
-        ],
+                ]).py12())),
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(30),
@@ -70,4 +56,4 @@ class _MyProfileState extends State<MyProfile> {
   }
 }
 
-List tabs = ['Personal Info', 'Vitals', 'Rapid tests'];
+List tabs = ['Personal', 'Vitals', 'Rapid tests'];

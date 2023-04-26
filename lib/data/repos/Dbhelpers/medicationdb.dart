@@ -56,6 +56,7 @@ class MedicationsDB {
   }
 
   static Future<int> insertmedication(MModel? mmodel) async {
+    await initDatabase();
     bool google = prefs.getBool('googleloggedin') ?? false;
 
     return await _database?.insert(
@@ -64,6 +65,7 @@ class MedicationsDB {
   }
 
   Future<int> updatemedicine(MModel mmodel) async {
+    await initDatabase();
     bool google = prefs.getBool('googleloggedin') ?? false;
 
     return await _database!.update(
@@ -72,6 +74,7 @@ class MedicationsDB {
   }
 
   Future<int> deletemedication(int id) async {
+    await initDatabase();
     bool google = prefs.getBool('googleloggedin') ?? false;
 
     return await _database!.delete(google == false ? _colname : _googlecolname,
@@ -79,6 +82,7 @@ class MedicationsDB {
   }
 
   static Future<List<Map<String, dynamic>>> querymedication() async {
+    await initDatabase();
     bool google = prefs.getBool('googleloggedin') ?? false;
 
     log('retrieving medicine');
@@ -86,6 +90,7 @@ class MedicationsDB {
   }
 
   Future<List<MModel>> getmeds() async {
+    await initDatabase();
     bool google = prefs.getBool('googleloggedin') ?? false;
 
     var result =
@@ -96,6 +101,7 @@ class MedicationsDB {
   }
 
   Future<int> addmedController({MModel? mModel}) async {
+    await initDatabase();
     return await MedicationsDB.insertmedication(mModel);
   }
 }

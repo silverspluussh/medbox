@@ -57,8 +57,6 @@ class _VitalshistoryState extends State<Vitalshistory> {
 
       await VitalsDB().maxquery().then((value) {
         maxQuery = value;
-
-        print(value);
       });
 
       await VitalsDB().weeklyreadings(day: 'Monday').then((value) {
@@ -71,8 +69,6 @@ class _VitalshistoryState extends State<Vitalshistory> {
         setState(() {
           weeklyQuery2 = value;
         });
-
-        print('monday: ${weeklyQuery2[0]['temperature']}');
       });
 
       await VitalsDB().weeklyreadings(day: 'Wednesday').then((value) {

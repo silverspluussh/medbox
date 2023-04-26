@@ -207,7 +207,7 @@ class _PersonalProfileState extends State<PersonalProfile> {
                     );
 
                     if (profile.isEmpty) {
-                      await ProfileDB.insertmedication(pModel);
+                      await ProfileDB.insertProfile(pModel);
                     } else {
                       PModel pModel = PModel(
                         id: profile[0]['id'],

@@ -325,3 +325,7 @@ class _AddVitalsState extends State<AddVitals> {
     );
   }
 }
+
+extension on double {
+  double get bmi => bmi;
+}

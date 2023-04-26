@@ -2,19 +2,12 @@
 
 import 'dart:io';
 import 'package:MedBox/constants/colors.dart';
-import 'package:MedBox/data/repos/Dbhelpers/remindDb.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:MedBox/data/repos/Dbhelpers/medicationdb.dart';
-import 'package:MedBox/data/repos/Dbhelpers/profiledb.dart';
-import 'package:MedBox/data/repos/Dbhelpers/vitalsdb.dart';
 import 'package:MedBox/presentation/providers/vitalsprovider.dart';
-import 'package:MedBox/presentation/providers/navigation.dart';
-import 'package:MedBox/utils/extensions/notification.dart';
-import 'package:MedBox/presentation/providers/medications_provider.dart';
 import 'package:MedBox/presentation/pages/intro_page.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
@@ -36,23 +29,14 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   prefs = await SharedPreferences.getInstance();
-
-  await VitalsDB.initDatabase();
-  await MedicationsDB.initDatabase();
-  await ProfileDB.initDatabase();
-  await ReminderDB.initDatabase();
   await _configureLocalTimeZone();
-  await NotifConsole().initnotifs();
+
   await FirebaseAppCheck.instance.activate(
     androidProvider: AndroidProvider.playIntegrity,
   );
   //
-  //
 
   runApp(const MedBox());
-
-  //
-  //
 }
 
 Future<void> _configureLocalTimeZone() async {
@@ -130,12 +114,6 @@ class _MedBoxState extends State<MedBox> {
   Widget build(BuildContext context) {
     return MultiProvider(
         providers: [
-          ChangeNotifierProvider(
-              create: (context) => MedicationState(
-                  drugtype: Drugtype.bottle, image: 'image', title: 'title')),
-          ChangeNotifierProvider(
-              create: (context) =>
-                  BottomNav(icon: 'icon', navEnum: NavEnum.home, title: '')),
           ChangeNotifierProvider(create: (context) => LanguageProvider()),
           ChangeNotifierProvider(
               create: (context) => VitalsProvider(Vv.pressure)),
