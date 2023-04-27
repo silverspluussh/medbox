@@ -164,7 +164,7 @@ class _PersonalProfileState extends State<PersonalProfile> {
                       color: AppColors.primaryColor),
                   title: 'Email address',
                   hinttext: google == true
-                      ? prefs.getString('googleid')
+                      ? prefs.getString('googleemail')
                       : profile.isNotEmpty
                           ? profile[0]['email'] != ''
                               ? profile[0]['email']
@@ -302,12 +302,10 @@ class _PersonalProfileState extends State<PersonalProfile> {
   }
 
   Future updatedetails() async {
-    email.text.isNotEmpty
-        ? await FirestoreAuth().updateEmail(email.text)
-        : null;
+    email.text.isNotEmpty ? await FireBaseCLi().updateEmail(email.text) : null;
 
     password.text.isNotEmpty
-        ? await FirestoreAuth().updatepassword(password.text)
+        ? await FireBaseCLi().updatepassword(password.text)
         : null;
   }
 

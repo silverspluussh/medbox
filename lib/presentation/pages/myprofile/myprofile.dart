@@ -18,15 +18,17 @@ class _MyProfileState extends State<MyProfile> {
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 3,
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        appBar: _appBar(),
-        body: const TabBarView(
-          children: [
-            PersonalProfile(),
-            MyVitals(),
-            RapidTests(),
-          ],
+      child: SafeArea(
+        child: Scaffold(
+          backgroundColor: AppColors.scaffoldColor,
+          appBar: _appBar(),
+          body: const TabBarView(
+            children: [
+              PersonalProfile(),
+              MyVitals(),
+              RapidTests(),
+            ],
+          ),
         ),
       ),
     );

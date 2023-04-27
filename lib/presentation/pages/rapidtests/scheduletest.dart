@@ -45,7 +45,7 @@ class _ScheduleRapidTestState extends State<ScheduleRapidTest> {
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.scaffoldColor,
       appBar: AppBar(
         backgroundColor: Colors.white,
         centerTitle: true,

@@ -59,7 +59,7 @@ class _IntroductionState extends State<Introduction> {
 
     return Scaffold(
             key: _scaffoldKey,
-            backgroundColor: Colors.white,
+            backgroundColor: AppColors.scaffoldColor,
             body: SafeArea(
               child: Stack(
                 children: [
@@ -69,38 +69,41 @@ class _IntroductionState extends State<Introduction> {
                     padding: const EdgeInsets.symmetric(
                         vertical: 30, horizontal: 40),
                     decoration: const BoxDecoration(),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        SizedBox(
-                            height: size.height * 0.7,
-                            width: size.width,
-                            child: PageView(
-                              controller: pagecontroller,
-                              children: [
-                                slideritem(
-                                  image: 'assets/icons/heartbeat.png',
-                                  title: 'Manage your\nbody vitals.',
-                                  body:
-                                      'easily add and track your daily body vitals with medbox app and enjoy remote healthcare.',
-                                ),
-                                slideritem(
-                                    image: 'assets/icons/reminder.png',
-                                    title:
-                                        'Set reminders\nfor your medications.',
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.vertical,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          SizedBox(
+                              height: size.height * 0.7,
+                              width: size.width,
+                              child: PageView(
+                                controller: pagecontroller,
+                                children: [
+                                  slideritem(
+                                    image: 'assets/icons/heartbeat.png',
+                                    title: 'Manage your\nbody vitals.',
                                     body:
-                                        'add your medications easily and get alerts on when to take them as well as dosage tracking.'),
-                                slideritem(
-                                    image: 'assets/icons/health-12-512.png',
-                                    title:
-                                        'share your\nhealth information\nwith your doctor.',
-                                    body:
-                                        'easily transfer and share your health information with your doctor or health professional.'),
-                              ],
-                            )),
-                        visiblestart(size),
-                        const SizedBox(height: 40),
-                      ],
+                                        'easily add and track your daily body vitals with medbox app and enjoy remote healthcare.',
+                                  ),
+                                  slideritem(
+                                      image: 'assets/icons/reminder.png',
+                                      title:
+                                          'Set reminders\nfor your medications.',
+                                      body:
+                                          'add your medications easily and get alerts on when to take them as well as dosage tracking.'),
+                                  slideritem(
+                                      image: 'assets/icons/health-12-512.png',
+                                      title:
+                                          'share your\nhealth information\nwith your doctor.',
+                                      body:
+                                          'easily transfer and share your health information with your doctor or health professional.'),
+                                ],
+                              )),
+                          visiblestart(size),
+                          const SizedBox(height: 40),
+                        ],
+                      ),
                     ),
                   ),
                   Positioned(
@@ -504,7 +507,7 @@ class _IntroductionState extends State<Introduction> {
                                           email: semail.text,
                                           password: spassword.text)
                                       .then((value) async {
-                                    await FirestoreAuth()
+                                    await FireBaseCLi()
                                         .sharedpredusername(username.text);
                                     log('username set');
                                     prefs.setString('email', email.text);
@@ -811,7 +814,9 @@ class _IntroductionState extends State<Introduction> {
                                       await prefs.setString(
                                           'googleimage', value.user!.photoURL!);
                                       await prefs.setString(
-                                          'googleid', value.user!.email!);
+                                          'googleemail', value.user!.email!);
+                                      await prefs.setString(
+                                          'googleid', value.user!.uid);
                                       value.user != null
                                           ? Navigator.pushReplacement(
                                               context,

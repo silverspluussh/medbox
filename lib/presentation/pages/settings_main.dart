@@ -1,8 +1,5 @@
-import 'dart:io';
-
 import 'package:MedBox/main.dart';
 import 'package:flutter/material.dart';
-import 'package:MedBox/constants/colors.dart';
 import 'package:MedBox/presentation/pages/intro_page.dart';
 import 'package:MedBox/data/datasource/fbasehelper.dart';
 import 'package:flutter/services.dart';
@@ -54,7 +51,7 @@ class _SettingsState extends State<Settings> {
                     child: Container(
                       height: 150,
                       width: size.width * 0.7,
-                      padding: EdgeInsets.all(20),
+                      padding: const EdgeInsets.all(20),
                       decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(15)),
@@ -87,13 +84,11 @@ class _SettingsState extends State<Settings> {
                               children: [
                                 TextButton(
                                   onPressed: () async {
-                                    FirestoreAuth()
-                                        .signOut()
-                                        .then((value) async {
+                                    FireBaseCLi().signOut().then((value) async {
                                       prefs.remove('googlename');
                                       prefs.remove('googleloggedin');
                                       prefs.remove('googleimage');
-                                      prefs.remove('googleid');
+                                      prefs.remove('googleemail');
                                       Navigator.pushAndRemoveUntil(
                                           context,
                                           MaterialPageRoute(
@@ -145,15 +140,12 @@ class _SettingsState extends State<Settings> {
       {required title, required lead, required VoidCallback callback}) {
     return Container(
       width: size.width,
-      height: 50,
-      margin: const EdgeInsets.all(15),
+      height: 60,
+      margin: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15),
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-                color: AppColors.primaryColor.withOpacity(0.5), blurRadius: 5)
-          ]),
+        borderRadius: BorderRadius.circular(15),
+        color: Colors.white,
+      ),
       child: ListTile(
         onTap: callback,
         leading: Image.asset(

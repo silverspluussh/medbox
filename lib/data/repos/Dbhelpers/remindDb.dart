@@ -1,7 +1,6 @@
 import 'dart:developer';
 import 'package:MedBox/domain/models/reminders_model.dart';
 import 'package:sqflite/sqflite.dart';
-
 import '../../../main.dart';
 
 class ReminderDB {

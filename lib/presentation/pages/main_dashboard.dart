@@ -1,4 +1,6 @@
-import 'package:MedBox/presentation/widgets/sliverpersistentheader.dart';
+// ignore_for_file: use_build_context_synchronously
+import 'package:MedBox/presentation/pages/prescriptions/addprescription.dart';
+import 'package:MedBox/presentation/pages/prescriptions/viewprescription.dart';
 import 'package:flutter/material.dart';
 import 'package:MedBox/constants/colors.dart';
 import 'package:MedBox/presentation/providers/vitalsprovider.dart';
@@ -6,7 +8,7 @@ import 'package:MedBox/utils/extensions/photos_extension.dart';
 import 'package:MedBox/main.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:provider/provider.dart';
-
+import 'package:velocity_x/velocity_x.dart';
 import '../../data/repos/Dbhelpers/vitalsdb.dart';
 import '../../domain/models/emotions.dart';
 
@@ -20,16 +22,8 @@ class DashboardOverview extends StatefulWidget {
 class _DashboardOverviewState extends State<DashboardOverview> {
   String username = '';
   String emoaddress = 'assets/images/exciting.png';
-
   var pfp;
   bool isgoogle = false;
-
-  @override
-  void initState() {
-    setfield();
-    referesh();
-    super.initState();
-  }
 
   late List<Map<String, dynamic>> vitals = [];
 
@@ -54,10 +48,18 @@ class _DashboardOverviewState extends State<DashboardOverview> {
   }
 
   @override
+  void initState() {
+    setfield();
+    referesh();
+
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.scaffoldColor,
         body: SafeArea(
           child: Consumer<VitalsProvider>(builder: (context, val, child) {
             return Padding(
@@ -67,94 +69,37 @@ class _DashboardOverviewState extends State<DashboardOverview> {
                   _pageappbar(),
                   _emojiecontainer(size),
                   SliverToBoxAdapter(
-                    child: Stack(
-                      children: [
-                        Container(
-                          height: 120,
-                          width: size.width - 40,
-                          decoration: BoxDecoration(
-                              color: AppColors.primaryColor.withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(15)),
-                        ),
-                        Container(
-                          width: size.width,
-                          height: 120,
-                          margin: const EdgeInsets.symmetric(vertical: 10),
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 15, vertical: 5),
-                          decoration: BoxDecoration(
-                              gradient: const LinearGradient(
-                                colors: [
-                                  AppColors.primaryColor,
-                                  Color.fromARGB(255, 232, 230, 247),
-                                ],
-                                begin: Alignment.bottomLeft,
-                                end: Alignment.bottomRight,
-                              ),
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(15),
-                              boxShadow: const [
-                                BoxShadow(blurRadius: 5, color: Colors.black26)
-                              ]),
-                          child: val.vv.index == 0
-                              ? _vitalscol(
-                                  image: 'assets/icons/blood-pressure.png',
-                                  label: 'Blood pressure',
-                                  reading: vitals.isNotEmpty
-                                      ? vitals[0]['bloodpressure']
-                                      : '0',
-                                  callback: () {
-                                    if (val.vv.index == 0) {
-                                      val.changevitals(
-                                          VitalsProvider(Vv.heart));
-                                    }
-                                  },
-                                  units: 'mmHg')
-                              : val.vv.index == 1
-                                  ? _vitalscol(
-                                      image: 'assets/icons/heart-beat.png',
-                                      label: 'Heart rate',
-                                      reading: vitals.isNotEmpty
-                                          ? vitals[0]['heartrate']
-                                          : '0',
-                                      callback: () {
-                                        if (val.vv.index == 1) {
-                                          val.changevitals(
-                                              VitalsProvider(Vv.temperature));
-                                        }
-                                      },
-                                      units: 'bpm')
-                                  : val.vv.index == 2
-                                      ? _vitalscol(
-                                          image: 'assets/icons/temperature.png',
-                                          label: 'Body temperature',
-                                          reading: vitals.isNotEmpty
-                                              ? vitals[0]['temperature']
-                                              : '0',
-                                          units: 'deg-celsius',
-                                          callback: () {
-                                            if (val.vv.index == 2) {
-                                              val.changevitals(VitalsProvider(
-                                                  Vv.oxygenlevel));
-                                            }
-                                          })
-                                      : _vitalscol(
-                                          image: 'assets/icons/heart-beat.png',
-                                          label: 'Oxygen level',
-                                          reading: vitals.isNotEmpty
-                                              ? vitals[0]['oxygenlevel']
-                                              : '0',
-                                          units: '%',
-                                          callback: () {
-                                            if (val.vv.index == 3) {
-                                              val.changevitals(
-                                                  VitalsProvider(Vv.pressure));
-                                            }
-                                          }),
-                        ),
-                      ],
+                      child: _labeltext(
+                              label: 'Daily Body Vitals', color: Colors.black)
+                          .py12()),
+                  _vitalscase(size, val),
+                  SliverToBoxAdapter(
+                    child: InkWell(
+                      onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: ((context) => const AddPrescription()))),
+                      child: BoxContainer(
+                          height: size.height * 0.24,
+                          width: size.width - 50,
+                          widget: VStack([
+                            _labeltext(
+                                label: 'Upload Your Prescription',
+                                color: Colors.black),
+                            const SizedBox(height: 5),
+                            Image.asset(
+                              'assets/images/smartphone-rx-prescription.jpg',
+                              height: size.height * 0.12,
+                              width: size.width - 50,
+                            ),
+                            _labeltext(
+                                    label: 'Upload Your Claim Form',
+                                    color: AppColors.primaryColor)
+                                .centered(),
+                          ])),
                     ),
                   ),
+                  _esubscription(size)
                 ],
               ),
             );
@@ -164,11 +109,124 @@ class _DashboardOverviewState extends State<DashboardOverview> {
         ));
   }
 
+  SliverToBoxAdapter _esubscription(Size size) {
+    return SliverToBoxAdapter(
+      child: BoxContainer(
+          height: 90,
+          width: size.width - 60,
+          widget: ListTile(
+            onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: ((context) => const Prescription()))),
+            leading: Image.asset(
+              'assets/images/medical-pr.jpg',
+              width: 45,
+              height: 45,
+            ),
+            title: _labeltext(
+                label: 'View e - Prescriptions', color: Colors.black),
+            subtitle:
+                _labeltext(label: 'Issued by Physician', color: Colors.black12),
+            trailing: const Icon(
+              Icons.keyboard_arrow_right_outlined,
+              size: 25,
+              color: AppColors.primaryColor,
+            ),
+          )),
+    );
+  }
+
+  SliverToBoxAdapter _vitalscase(Size size, VitalsProvider val) {
+    return SliverToBoxAdapter(
+      child: Stack(
+        children: [
+          Container(
+            height: 120,
+            width: size.width - 40,
+            decoration: BoxDecoration(
+                color: AppColors.primaryColor.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(15)),
+          ),
+          Container(
+            width: size.width,
+            height: 120,
+            margin: const EdgeInsets.symmetric(vertical: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+            decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [
+                    AppColors.primaryColor,
+                    Color.fromARGB(255, 232, 230, 247),
+                  ],
+                  begin: Alignment.bottomLeft,
+                  end: Alignment.bottomRight,
+                ),
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(15),
+                boxShadow: const [
+                  BoxShadow(blurRadius: 5, color: Colors.black26)
+                ]),
+            child: val.vv.index == 0
+                ? _vitalscol(
+                    image: 'assets/icons/blood-pressure.png',
+                    label: 'Blood pressure',
+                    reading:
+                        vitals.isNotEmpty ? vitals[0]['bloodpressure'] : '0',
+                    callback: () {
+                      if (val.vv.index == 0) {
+                        val.changevitals(VitalsProvider(Vv.heart));
+                      }
+                    },
+                    units: 'mmHg')
+                : val.vv.index == 1
+                    ? _vitalscol(
+                        image: 'assets/icons/heart-beat.png',
+                        label: 'Heart rate',
+                        reading:
+                            vitals.isNotEmpty ? vitals[0]['heartrate'] : '0',
+                        callback: () {
+                          if (val.vv.index == 1) {
+                            val.changevitals(VitalsProvider(Vv.temperature));
+                          }
+                        },
+                        units: 'bpm')
+                    : val.vv.index == 2
+                        ? _vitalscol(
+                            image: 'assets/icons/temperature.png',
+                            label: 'Body temperature',
+                            reading: vitals.isNotEmpty
+                                ? vitals[0]['temperature']
+                                : '0',
+                            units: 'deg-celsius',
+                            callback: () {
+                              if (val.vv.index == 2) {
+                                val.changevitals(
+                                    VitalsProvider(Vv.oxygenlevel));
+                              }
+                            })
+                        : _vitalscol(
+                            image: 'assets/icons/heart-beat.png',
+                            label: 'Oxygen level',
+                            reading: vitals.isNotEmpty
+                                ? vitals[0]['oxygenlevel']
+                                : '0',
+                            units: '%',
+                            callback: () {
+                              if (val.vv.index == 3) {
+                                val.changevitals(VitalsProvider(Vv.pressure));
+                              }
+                            }),
+          ),
+        ],
+      ),
+    );
+  }
+
   SliverAppBar _pageappbar() {
     return SliverAppBar(
       pinned: true,
-      floating: true,
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.scaffoldColor,
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -238,7 +296,7 @@ class _DashboardOverviewState extends State<DashboardOverview> {
               color: Colors.white,
             ),
             const SizedBox(width: 15),
-            _labeltext(label: label),
+            _labeltext(label: label, color: Colors.white),
             const Spacer(),
             IconButton(
                 onPressed: callback,
@@ -268,14 +326,14 @@ class _DashboardOverviewState extends State<DashboardOverview> {
     );
   }
 
-  Text _labeltext({required String label}) {
+  Text _labeltext({required String label, required color}) {
     return Text(
       label,
-      style: const TextStyle(
+      style: TextStyle(
           fontFamily: 'Popb',
           fontSize: 13,
           fontWeight: FontWeight.w500,
-          color: Colors.white),
+          color: color),
     );
   }
 
@@ -366,10 +424,7 @@ class _DashboardOverviewState extends State<DashboardOverview> {
                                                   mainAxisAlignment:
                                                       MainAxisAlignment.center,
                                                   children: [
-                                                    Hero(
-                                                        tag: 'hero1',
-                                                        child: Image.asset(
-                                                            e.image)),
+                                                    Image.asset(e.image),
                                                     Text(
                                                       e.emojiname,
                                                       style: const TextStyle(
@@ -404,13 +459,11 @@ class _DashboardOverviewState extends State<DashboardOverview> {
               ),
             ),
             const Spacer(),
-            Hero(
-                tag: 'hero1',
-                child: Image.asset(
-                  emoaddress,
-                  height: 50,
-                  width: 50,
-                ))
+            Image.asset(
+              emoaddress,
+              height: 50,
+              width: 50,
+            )
           ],
         ),
       ),
@@ -433,8 +486,8 @@ class BoxContainer extends StatelessWidget {
     return Container(
       width: width,
       height: height,
-      margin: const EdgeInsets.symmetric(vertical: 20),
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+      margin: const EdgeInsets.symmetric(vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
       decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(15),

@@ -2,12 +2,8 @@ import 'package:MedBox/presentation/pages/myprofile/myprofile.dart';
 import 'package:flutter/material.dart';
 import 'package:MedBox/presentation/providers/navigation.dart';
 import 'package:MedBox/presentation/pages/medication/medication_main.dart';
-import 'package:flutter/rendering.dart';
-import 'package:provider/provider.dart';
 import 'package:velocity_x/velocity_x.dart';
-
 import '../../constants/colors.dart';
-
 import 'main_dashboard.dart';
 import 'settings_main.dart';
 
@@ -38,7 +34,7 @@ class _RenderState extends State<Render> with SingleTickerProviderStateMixin {
       const DashboardOverview(),
       const Medications(),
       const MyProfile(),
-      Settings()
+      const Settings()
     ];
   }
 
@@ -64,6 +60,7 @@ class _RenderState extends State<Render> with SingleTickerProviderStateMixin {
         return true;
       },
       child: Scaffold(
+          backgroundColor: AppColors.scaffoldColor,
           body: IndexedStack(
             index: _selectedIndex,
             children: _pages,

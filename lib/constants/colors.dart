@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  static const scaffoldColor = Color(0xFFEEEFEF);
+  static const scaffoldColor = Color.fromARGB(255, 225, 228, 228);
   static const appBtnColor = Color.fromARGB(255, 61, 30, 236);
   static const navbarcolor = Color.fromARGB(255, 61, 30, 236);
   static const redColor = Color.fromARGB(255, 161, 28, 39);

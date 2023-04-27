@@ -138,7 +138,7 @@ class _MedBoxState extends State<MedBox> {
             ],
             theme: ThemeData(
               useMaterial3: true,
-              primaryColor: const Color.fromARGB(255, 16, 27, 56),
+              primaryColor: AppColors.primaryColor,
               brightness: Brightness.light,
             ),
             home: user == null ? const Introduction() : const Render(),
