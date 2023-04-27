@@ -57,6 +57,7 @@ class VitalsDB {
   }
 
   static Future<int> insertvitals(VModel? vmodel) async {
+    await initDatabase();
     bool google = prefs.getBool('googleloggedin') ?? false;
 
     return await _database?.insert(
@@ -65,6 +66,7 @@ class VitalsDB {
   }
 
   static Future<int> updatedatabase(VModel? vmodel) async {
+    await initDatabase();
     bool google = prefs.getBool('googleloggedin') ?? false;
 
     return await _database?.update(
@@ -74,6 +76,7 @@ class VitalsDB {
   }
 
   static Future<List<Map<String, dynamic>>> queryvital() async {
+    await initDatabase();
     bool google = prefs.getBool('googleloggedin') ?? false;
 
     log('retrieving vitals');
@@ -81,6 +84,7 @@ class VitalsDB {
   }
 
   Future<List<VModel>> getvitals() async {
+    await initDatabase();
     bool google = prefs.getBool('googleloggedin') ?? false;
 
     var result = await _database!.query(google == false ? _colname : _gcolname);
@@ -174,8 +178,15 @@ class VitalsDB {
   }
 
   Future<List<Map<String, dynamic>>> minquery() async {
-    return _database!.rawQuery(
-        'SELECT MIN(temperature) AS temperature, MIN(bloodpressure) AS bloodpressure, MIN(heartrate) AS heartrate,  MIN(oxygenlevel) AS oxygenlevel,MIN(respiration) AS respiration  FROM ${goog == true ? _gcolname : _colname};');
+    return _database!.rawQuery('''SELECT 
+              MIN(temperature) AS temperature,
+              MIN(bloodpressure) AS bloodpressure, 
+              MIN(heartrate) AS heartrate,  
+              MIN(oxygenlevel) AS oxygenlevel,
+              MIN(respiration) AS respiration  
+           FROM 
+              ${goog == true ? _gcolname : _colname};
+        ''');
   }
 
   Future<List<Map<String, dynamic>>> weeklyreadings({required day}) async {

@@ -226,12 +226,11 @@ class _AddMedicationState extends State<AddMedications> {
             medicationsDB.addmedController(mModel: mModel).then((value) {
               NotifConsole()
                   .medicationalerts(
-                title: medname.text,
-                body: desc,
-                payload: '${hours.text}:${minutes.text} $meridian',
-                hour: int.parse(hours.text),
-                minute: int.parse(minutes.text),
-              )
+                      title: medname.text,
+                      body: desc,
+                      payload: '${hours.text}:${minutes.text} $meridian',
+                      hour: int.parse(hours.text),
+                      minute: int.parse(minutes.text))
                   .then((value) {
                 setState(() {});
 

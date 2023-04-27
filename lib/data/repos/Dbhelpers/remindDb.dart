@@ -1,7 +1,6 @@
 import 'dart:developer';
 import 'package:MedBox/domain/models/reminders_model.dart';
 import 'package:sqflite/sqflite.dart';
-
 import '../../../main.dart';
 
 class ReminderDB {
@@ -54,6 +53,7 @@ class ReminderDB {
   }
 
   static Future<int> insertreminder(RModel? rmodel) async {
+    await initDatabase();
     bool google = prefs.getBool('googleloggedin') ?? false;
 
     return await _database?.insert(
@@ -62,6 +62,7 @@ class ReminderDB {
   }
 
   static Future<List<Map<String, dynamic>>> qreminder() async {
+    await initDatabase();
     bool google = prefs.getBool('googleloggedin') ?? false;
 
     log('retrieving reminders');
@@ -69,6 +70,7 @@ class ReminderDB {
   }
 
   Future<List<RModel>> getremdinder() async {
+    await initDatabase();
     bool google = prefs.getBool('googleloggedin') ?? false;
 
     var result = await _database!.query(google == false ? _colname : _gcolname);
@@ -78,6 +80,7 @@ class ReminderDB {
   }
 
   Future<int> addremindertroller({RModel? rModel}) async {
+    await initDatabase();
     return await ReminderDB.insertreminder(rModel);
   }
 }

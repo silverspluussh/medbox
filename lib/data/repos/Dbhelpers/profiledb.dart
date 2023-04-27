@@ -33,16 +33,19 @@ class ProfileDB {
     }
   }
 
-  static Future<int> insertmedication(PModel? mmodel) async {
+  static Future<int> insertProfile(PModel? mmodel) async {
+    await initDatabase();
     return await _database?.insert(_colname, mmodel!.toJson()) ?? 1;
   }
 
   static Future<List<Map<String, dynamic>>> querymedication() async {
+    await initDatabase();
     log('retrieving profile');
     return await _database!.query(_colname);
   }
 
   static Future<int> updateprofile(PModel? pmodel) async {
+    await initDatabase();
     return await _database?.update(_colname, pmodel!.toJson(),
             where: 'id=?', whereArgs: [pmodel.id]) ??
         1;
