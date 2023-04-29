@@ -1,7 +1,8 @@
 import 'dart:developer';
 import 'package:MedBox/domain/models/medication_model.dart';
-import 'package:MedBox/main.dart';
 import 'package:sqflite/sqflite.dart';
+
+import '../../../domain/sharedpreferences/profileshared.dart';
 
 class MedicationsDB {
   static Database? _database;
@@ -15,7 +16,7 @@ class MedicationsDB {
       return;
     }
     try {
-      bool google = prefs.getBool('googleloggedin') ?? false;
+      bool google = SharedCli().getgmailstatus() ?? false;
 
       if (google == false) {
         String path = '${await getDatabasesPath()}medications.db';
@@ -57,7 +58,7 @@ class MedicationsDB {
 
   static Future<int> insertmedication(MModel? mmodel) async {
     await initDatabase();
-    bool google = prefs.getBool('googleloggedin') ?? false;
+    bool google = SharedCli().getgmailstatus() ?? false;
 
     return await _database?.insert(
             google == false ? _colname : _googlecolname, mmodel!.toJson()) ??
@@ -66,7 +67,7 @@ class MedicationsDB {
 
   Future<int> updatemedicine(MModel mmodel) async {
     await initDatabase();
-    bool google = prefs.getBool('googleloggedin') ?? false;
+    bool google = SharedCli().getgmailstatus() ?? false;
 
     return await _database!.update(
         google == false ? _colname : _googlecolname, mmodel.toJson(),
@@ -75,7 +76,7 @@ class MedicationsDB {
 
   Future<int> deletemedication(int id) async {
     await initDatabase();
-    bool google = prefs.getBool('googleloggedin') ?? false;
+    bool google = SharedCli().getgmailstatus() ?? false;
 
     return await _database!.delete(google == false ? _colname : _googlecolname,
         where: 'id =?', whereArgs: [id]);
@@ -83,7 +84,7 @@ class MedicationsDB {
 
   static Future<List<Map<String, dynamic>>> querymedication() async {
     await initDatabase();
-    bool google = prefs.getBool('googleloggedin') ?? false;
+    bool google = SharedCli().getgmailstatus() ?? false;
 
     log('retrieving medicine');
     return await _database!.query(google == false ? _colname : _googlecolname);
@@ -91,7 +92,7 @@ class MedicationsDB {
 
   Future<List<MModel>> getmeds() async {
     await initDatabase();
-    bool google = prefs.getBool('googleloggedin') ?? false;
+    bool google = SharedCli().getgmailstatus() ?? false;
 
     var result =
         await _database!.query(google == false ? _colname : _googlecolname);

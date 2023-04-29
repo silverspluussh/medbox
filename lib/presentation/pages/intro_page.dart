@@ -2,6 +2,7 @@
 
 import 'dart:developer';
 import 'package:MedBox/constants/colors.dart';
+import 'package:MedBox/domain/sharedpreferences/profileshared.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -505,10 +506,10 @@ class _IntroductionState extends State<Introduction> {
                                           email: semail.text,
                                           password: spassword.text)
                                       .then((value) async {
-                                    await FireBaseCLi()
-                                        .sharedpredusername(username.text);
-                                    log('username set');
-                                    prefs.setString('email', email.text);
+                                    await SharedCli()
+                                        .username(value: username.text);
+
+                                    await SharedCli().email(value: email.text);
                                   }).then((value) {
                                     password.clear();
                                     email.clear();
@@ -708,7 +709,7 @@ class _IntroductionState extends State<Introduction> {
                                           email: email.text,
                                           password: password.text)
                                       .then((value) {
-                                    prefs.setString('email', email.text);
+                                    SharedCli().email(value: email.text);
                                   }).then((value) {
                                     setState(() {
                                       isShowload = false;
@@ -736,7 +737,8 @@ class _IntroductionState extends State<Introduction> {
                                   VxToast.show(context,
                                       msg:
                                           'An error occurred:${e.toString().split(' ').withoutFirst()}',
-                                      bgColor: Color.fromARGB(255, 250, 46, 46),
+                                      bgColor: const Color.fromARGB(
+                                          255, 250, 46, 46),
                                       textColor: Colors.white,
                                       pdHorizontal: 30,
                                       pdVertical: 20);
@@ -804,16 +806,16 @@ class _IntroductionState extends State<Introduction> {
                                     await FirebaseAuth.instance
                                         .signInWithCredential(credential)
                                         .then((value) async {
-                                      await prefs.setString('googlename',
-                                          value.user!.displayName!);
-                                      await prefs.setBool(
-                                          'googleloggedin', true);
-                                      await prefs.setString(
-                                          'googleimage', value.user!.photoURL!);
-                                      await prefs.setString(
-                                          'googleemail', value.user!.email!);
-                                      await prefs.setString(
-                                          'googleid', value.user!.uid);
+                                      await SharedCli().username(
+                                          value: value.user!.displayName!);
+                                      await SharedCli()
+                                          .email(value: value.user!.email!);
+
+                                      await SharedCli()
+                                          .setgmailstatus(value: true);
+                                      await SharedCli().setgpfp(
+                                          value: value.user!.photoURL!);
+
                                       value.user != null
                                           ? Navigator.pushReplacement(
                                               context,

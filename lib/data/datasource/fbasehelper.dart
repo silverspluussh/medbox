@@ -1,7 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:MedBox/main.dart';
-
 import '../../domain/models/pharmacymodel.dart';
 
 class FireBaseCLi {
@@ -15,14 +13,6 @@ class FireBaseCLi {
     if (email.isNotEmpty) {
       await FirebaseAuth.instance.currentUser?.updateEmail(email);
     }
-  }
-
-  Future sharedpredusername(String username) async {
-    await prefs.setString('username', username);
-  }
-
-  Future addusername(String usrname) async {
-    await FirebaseAuth.instance.currentUser?.updateDisplayName(usrname);
   }
 
   Future signOut() async {
@@ -39,7 +29,7 @@ class FireBaseCLi {
   }
 
   // crud for prescription
-  static Stream<List<PharmacyModel>> pharmcies() => FirebaseFirestore.instance
+  static Stream<List<PharmacyModel>> pharmacies() => FirebaseFirestore.instance
       .collection('pharmacies')
       .snapshots()
       .map((snapshot) => snapshot.docs

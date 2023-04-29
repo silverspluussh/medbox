@@ -1,7 +1,7 @@
 import 'dart:developer';
 import 'package:sqflite/sqflite.dart';
 import '../../../domain/models/vitalsmodel.dart';
-import '../../../main.dart';
+import '../../../domain/sharedpreferences/profileshared.dart';
 
 class VitalsDB {
   static Database? _database;
@@ -9,14 +9,14 @@ class VitalsDB {
   static const String _colname = 'vitals';
   static const String _gcolname = 'gvitals';
 
-  bool goog = prefs.getBool('googleloggedin') ?? false;
+  bool goog = SharedCli().getgmailstatus() ?? false;
 
   static Future<void> initDatabase() async {
     if (_database != null) {
       return;
     }
     try {
-      bool google = prefs.getBool('googleloggedin') ?? false;
+      bool google = SharedCli().getgmailstatus() ?? false;
 
       if (google == true) {
         String path = '${await getDatabasesPath()}gvitals.db';
@@ -58,7 +58,7 @@ class VitalsDB {
 
   static Future<int> insertvitals(VModel? vmodel) async {
     await initDatabase();
-    bool google = prefs.getBool('googleloggedin') ?? false;
+    bool google = SharedCli().getgmailstatus() ?? false;
 
     return await _database?.insert(
             google == false ? _colname : _gcolname, vmodel!.toJson()) ??
@@ -67,7 +67,7 @@ class VitalsDB {
 
   static Future<int> updatedatabase(VModel? vmodel) async {
     await initDatabase();
-    bool google = prefs.getBool('googleloggedin') ?? false;
+    bool google = SharedCli().getgmailstatus() ?? false;
 
     return await _database?.update(
             google == false ? _colname : _gcolname, vmodel!.toJson(),
@@ -77,7 +77,7 @@ class VitalsDB {
 
   static Future<List<Map<String, dynamic>>> queryvital() async {
     await initDatabase();
-    bool google = prefs.getBool('googleloggedin') ?? false;
+    bool google = SharedCli().getgmailstatus() ?? false;
 
     log('retrieving vitals');
     return await _database!.query(google == false ? _colname : _gcolname);
@@ -85,7 +85,7 @@ class VitalsDB {
 
   Future<List<VModel>> getvitals() async {
     await initDatabase();
-    bool google = prefs.getBool('googleloggedin') ?? false;
+    bool google = SharedCli().getgmailstatus() ?? false;
 
     var result = await _database!.query(google == false ? _colname : _gcolname);
     return List.generate(result.length, (i) {
@@ -96,7 +96,7 @@ class VitalsDB {
   final model = VModel();
 
   Future<int> updatetemperature({required String? temp}) async {
-    bool google = prefs.getBool('googleloggedin') ?? false;
+    bool google = SharedCli().getgmailstatus() ?? false;
 
     return await _database!.update(
         google == false ? _colname : _gcolname, {'temperature': temp},
@@ -104,7 +104,7 @@ class VitalsDB {
   }
 
   Future<int> updatebmi({required String? bmi}) async {
-    bool google = prefs.getBool('googleloggedin') ?? false;
+    bool google = SharedCli().getgmailstatus() ?? false;
 
     return await _database!.update(
         google == false ? _colname : _gcolname, {'bmi': bmi},
@@ -112,7 +112,7 @@ class VitalsDB {
   }
 
   Future<int> updateglucose({required String? glucose}) async {
-    bool google = prefs.getBool('googleloggedin') ?? false;
+    bool google = SharedCli().getgmailstatus() ?? false;
 
     return await _database!.update(
         google == false ? _colname : _gcolname, {'glucose': glucose},
@@ -120,7 +120,7 @@ class VitalsDB {
   }
 
   Future<int> updaterespiration({required String? respiration}) async {
-    bool google = prefs.getBool('googleloggedin') ?? false;
+    bool google = SharedCli().getgmailstatus() ?? false;
 
     return await _database!.update(
         google == false ? _colname : _gcolname, {'respiration': respiration},
@@ -128,7 +128,7 @@ class VitalsDB {
   }
 
   Future<int> updateheartrate({required String? heartrate}) async {
-    bool google = prefs.getBool('googleloggedin') ?? false;
+    bool google = SharedCli().getgmailstatus() ?? false;
 
     return await _database!.update(
         google == false ? _colname : _gcolname, {'heartrate': heartrate},
@@ -136,7 +136,7 @@ class VitalsDB {
   }
 
   Future<int> updateheight({required String? height}) async {
-    bool google = prefs.getBool('googleloggedin') ?? false;
+    bool google = SharedCli().getgmailstatus() ?? false;
 
     return await _database!.update(
         google == false ? _colname : _gcolname, {'height': height},
@@ -144,7 +144,7 @@ class VitalsDB {
   }
 
   Future<int> updateweight({required String? weight}) async {
-    bool google = prefs.getBool('googleloggedin') ?? false;
+    bool google = SharedCli().getgmailstatus() ?? false;
 
     return await _database!.update(
         google == false ? _colname : _gcolname, {'weight': weight},
@@ -152,7 +152,7 @@ class VitalsDB {
   }
 
   Future<int> updateolevel({required String? oxygenlevel}) async {
-    bool google = prefs.getBool('googleloggedin') ?? false;
+    bool google = SharedCli().getgmailstatus() ?? false;
 
     return await _database!.update(
         google == false ? _colname : _gcolname, {'oxygenlevel': oxygenlevel},
@@ -160,7 +160,7 @@ class VitalsDB {
   }
 
   Future<int> updatepressure({required String? bloodpressure}) async {
-    bool google = prefs.getBool('googleloggedin') ?? false;
+    bool google = SharedCli().getgmailstatus() ?? false;
 
     return await _database!.update(google == false ? _colname : _gcolname,
         {'bloodpressure': bloodpressure},

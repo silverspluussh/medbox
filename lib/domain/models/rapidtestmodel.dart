@@ -3,9 +3,14 @@ class RapidtestModel {
   final String? results;
   final String? testname;
   final String? testdate;
+  final String? patientcontact;
 
   RapidtestModel(
-      {this.testresults, this.results, this.testname, this.testdate});
+      {this.testresults,
+      this.results,
+      this.testname,
+      this.testdate,
+      this.patientcontact});
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> inputdata = <String, dynamic>{};
@@ -13,6 +18,7 @@ class RapidtestModel {
     inputdata['fname'] = results;
     inputdata['lname'] = testname;
     inputdata['dob'] = testdate;
+    inputdata['patientcontact'] = patientcontact;
 
     return inputdata;
   }

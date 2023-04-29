@@ -1,7 +1,8 @@
 import 'dart:developer';
 import 'package:MedBox/domain/models/reminders_model.dart';
 import 'package:sqflite/sqflite.dart';
-import '../../../main.dart';
+
+import '../../../domain/sharedpreferences/profileshared.dart';
 
 class ReminderDB {
   static Database? _database;
@@ -14,7 +15,7 @@ class ReminderDB {
       return;
     }
     try {
-      bool google = prefs.getBool('googleloggedin') ?? false;
+      bool google = SharedCli().getgmailstatus() ?? false;
 
       if (google == false) {
         String path = '${await getDatabasesPath()}reminders.db';
@@ -54,7 +55,7 @@ class ReminderDB {
 
   static Future<int> insertreminder(RModel? rmodel) async {
     await initDatabase();
-    bool google = prefs.getBool('googleloggedin') ?? false;
+    bool google = SharedCli().getgmailstatus() ?? false;
 
     return await _database?.insert(
             google == false ? _colname : _gcolname, rmodel!.toJson()) ??
@@ -63,7 +64,7 @@ class ReminderDB {
 
   static Future<List<Map<String, dynamic>>> qreminder() async {
     await initDatabase();
-    bool google = prefs.getBool('googleloggedin') ?? false;
+    bool google = SharedCli().getgmailstatus() ?? false;
 
     log('retrieving reminders');
     return await _database!.query(google == false ? _colname : _gcolname);
@@ -71,7 +72,7 @@ class ReminderDB {
 
   Future<List<RModel>> getremdinder() async {
     await initDatabase();
-    bool google = prefs.getBool('googleloggedin') ?? false;
+    bool google = SharedCli().getgmailstatus() ?? false;
 
     var result = await _database!.query(google == false ? _colname : _gcolname);
     return List.generate(result.length, (i) {

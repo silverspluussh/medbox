@@ -1,3 +1,4 @@
+import 'package:MedBox/domain/sharedpreferences/profileshared.dart';
 import 'package:MedBox/presentation/pages/myprofile/myprofile.dart';
 import 'package:MedBox/presentation/pages/reminders/reminders_main.dart';
 import 'package:flutter/material.dart';
@@ -5,7 +6,6 @@ import 'package:MedBox/presentation/providers/navigation.dart';
 import 'package:MedBox/presentation/pages/medication/medication_main.dart';
 import 'package:velocity_x/velocity_x.dart';
 import '../../constants/colors.dart';
-import '../../main.dart';
 import '../../utils/extensions/notification.dart';
 import '../../utils/extensions/photos_extension.dart';
 import 'main_dashboard.dart';
@@ -46,8 +46,8 @@ class _RenderState extends State<Render> with SingleTickerProviderStateMixin {
     super.initState();
     referesh();
     setState(() {
-      pfp = prefs.getString('pfp');
-      username = prefs.getString('username') ?? prefs.getString('googlename');
+      pfp = SharedCli().getpfp();
+      username = SharedCli().getusername();
     });
     super.initState();
     animationController = AnimationController(
@@ -220,8 +220,8 @@ List<Widget> _dashboardactions(pfp) {
           shape: BoxShape.circle,
           image: DecorationImage(
               fit: BoxFit.fill,
-              image: prefs.getBool('googleloggedin') == true
-                  ? NetworkImage(prefs.getString('googleimage')!)
+              image: SharedCli().getgmailstatus() == true
+                  ? NetworkImage(SharedCli().getgpfp()!)
                   : pfp != null
                       ? MemoryImage(Utility().dataFromBase64String(pfp))
                       : const AssetImage('assets/icons/profile-35-64.png')

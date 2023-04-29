@@ -4,13 +4,12 @@ import 'package:MedBox/presentation/pages/prescriptions/viewprescription.dart';
 import 'package:flutter/material.dart';
 import 'package:MedBox/constants/colors.dart';
 import 'package:MedBox/presentation/providers/vitalsprovider.dart';
-import 'package:MedBox/utils/extensions/photos_extension.dart';
-import 'package:MedBox/main.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:provider/provider.dart';
 import 'package:velocity_x/velocity_x.dart';
 import '../../data/repos/Dbhelpers/vitalsdb.dart';
 import '../../domain/models/emotions.dart';
+import '../../domain/sharedpreferences/profileshared.dart';
 
 class DashboardOverview extends StatefulWidget {
   const DashboardOverview({super.key});
@@ -36,9 +35,9 @@ class _DashboardOverviewState extends State<DashboardOverview> {
 
   setfield() async {
     setState(() {
-      isgoogle = prefs.getBool('googleloggedin') ?? false;
+      isgoogle = SharedCli().getgmailstatus() ?? false;
 
-      emoaddress = prefs.getString('emotion') ?? 'assets/images/exciting.png';
+      emoaddress = SharedCli().getemoji() ?? 'assets/images/exciting.png';
     });
   }
 
@@ -322,9 +321,8 @@ class _DashboardOverviewState extends State<DashboardOverview> {
                                                 setState(() {
                                                   emoaddress = e.image;
                                                 });
-                                                await prefs
-                                                    .setString(
-                                                        'emotion', emoaddress)
+                                                await SharedCli()
+                                                    .setemo(value: emoaddress)
                                                     .then((value) =>
                                                         Future.delayed(
                                                             const Duration(

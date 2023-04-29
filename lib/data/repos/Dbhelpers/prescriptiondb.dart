@@ -1,7 +1,7 @@
 import 'dart:developer';
 import 'package:MedBox/domain/models/prescribemodel.dart';
-import 'package:MedBox/main.dart';
 import 'package:sqflite/sqflite.dart';
+import '../../../domain/sharedpreferences/profileshared.dart';
 
 class PrescriptionDB {
   static Database? _database;
@@ -15,7 +15,7 @@ class PrescriptionDB {
       return;
     }
     try {
-      bool google = prefs.getBool('googleloggedin') ?? false;
+      bool google = SharedCli().getgmailstatus() ?? false;
 
       if (google == false) {
         String path = '${await getDatabasesPath()}prescriptions.db';
@@ -57,7 +57,7 @@ class PrescriptionDB {
 
   static Future<int> addprescription(PrescModel ppmodel) async {
     await initDatabase();
-    bool google = prefs.getBool('googleloggedin') ?? false;
+    bool google = SharedCli().getgmailstatus() ?? false;
 
     return await _database?.insert(
             google == false ? _colname : _googlecolname, ppmodel.toJSON()) ??
@@ -71,7 +71,7 @@ class PrescriptionDB {
 
   Future<int> removePrescription(int id) async {
     await initDatabase();
-    bool google = prefs.getBool('googleloggedin') ?? false;
+    bool google = SharedCli().getgmailstatus() ?? false;
 
     return await _database!.delete(google == false ? _colname : _googlecolname,
         where: 'id =?', whereArgs: [id]);
@@ -79,7 +79,7 @@ class PrescriptionDB {
 
   static Future<List<Map<String, dynamic>>> getprescribe() async {
     await initDatabase();
-    bool google = prefs.getBool('googleloggedin') ?? false;
+    bool google = SharedCli().getgmailstatus() ?? false;
 
     log('retrieving prescriptions');
     return await _database!.query(google == false ? _colname : _googlecolname);
@@ -87,7 +87,7 @@ class PrescriptionDB {
 
   Future<List<PrescModel>> getprescription() async {
     await initDatabase();
-    bool google = prefs.getBool('googleloggedin') ?? false;
+    bool google = SharedCli().getgmailstatus() ?? false;
 
     var result =
         await _database!.query(google == false ? _colname : _googlecolname);

@@ -33,7 +33,7 @@ class _VitalshistoryState extends State<Vitalshistory> {
   @override
   void initState() {
     overallQuery();
-
+    setState(() {});
     super.initState();
   }
 

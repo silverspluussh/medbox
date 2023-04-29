@@ -1,7 +1,6 @@
 import 'package:MedBox/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:velocity_x/velocity_x.dart';
-
 import '../../../data/repos/Dbhelpers/vitalsdb.dart';
 import '../../../domain/models/vitalsmodel.dart';
 

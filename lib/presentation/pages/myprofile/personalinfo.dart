@@ -1,15 +1,10 @@
-import 'dart:math';
 import 'dart:typed_data';
-
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:velocity_x/velocity_x.dart';
-
 import '../../../constants/colors.dart';
 import '../../../data/datasource/fbasehelper.dart';
-import '../../../data/repos/Dbhelpers/profiledb.dart';
-import '../../../domain/models/pmodel.dart';
-import '../../../main.dart';
+import '../../../domain/sharedpreferences/profileshared.dart';
 import '../../../utils/extensions/photos_extension.dart';
 
 class PersonalProfile extends StatefulWidget {
@@ -28,7 +23,7 @@ class _PersonalProfileState extends State<PersonalProfile> {
   TextEditingController lname = TextEditingController();
   TextEditingController dob = TextEditingController();
   TextEditingController email = TextEditingController();
-  TextEditingController password = TextEditingController();
+  TextEditingController phonenumber = TextEditingController();
 
   @override
   void initState() {
@@ -38,19 +33,13 @@ class _PersonalProfileState extends State<PersonalProfile> {
 
   var pfp;
   bool google = false;
-  String? googleid;
-  late List<Map<String, dynamic>> profile = [];
+  String? usernames;
 
-  bool loading = true;
   void referesh() async {
-    final data1 = await ProfileDB.querymedication();
-    pfp = prefs.getString('pfp');
-    google = prefs.getBool('googleloggedin') ?? false;
-    googleid = prefs.getString('googlename');
-    setState(() {
-      profile = data1;
-      loading = false;
-    });
+    pfp = SharedCli().getpfp();
+    google = SharedCli().getgmailstatus() ?? false;
+    usernames = SharedCli().getusername();
+    setState(() {});
   }
 
   String? imagepath;
@@ -68,7 +57,7 @@ class _PersonalProfileState extends State<PersonalProfile> {
         imagepickedd = result.files.first.bytes;
         imagepath = imagepickedd.toString();
         pfp = Utility.base64String(imagepickedd!);
-        prefs.setString('pfp', pfp!);
+        SharedCli().setpfp(value: pfp);
       });
     } else {}
   }
@@ -95,7 +84,7 @@ class _PersonalProfileState extends State<PersonalProfile> {
                       image: DecorationImage(
                           fit: BoxFit.fill,
                           image: google == true
-                              ? NetworkImage(prefs.getString('googleimage')!)
+                              ? NetworkImage(SharedCli().getgpfp()!)
                               : pfp != null
                                   ? MemoryImage(
                                       Utility().dataFromBase64String(pfp))
@@ -127,51 +116,42 @@ class _PersonalProfileState extends State<PersonalProfile> {
                   widget: const Icon(Icons.person_4_outlined,
                       color: AppColors.primaryColor),
                   title: 'Username',
-                  hinttext: google == true
-                      ? googleid
-                      : profile.isNotEmpty
-                          ? profile[0]['username'] != ''
-                              ? profile[0]['username']
-                              : 'username'
-                          : 'username',
+                  hinttext: usernames != null ? usernames! : 'username',
                   width: size.width),
               inputformfield(
                   controller: fname,
                   widget: const Icon(Icons.details_outlined,
                       color: AppColors.primaryColor),
                   title: 'First name',
-                  hinttext: google == true
-                      ? googleid!.split(' ').first
-                      : profile.isNotEmpty
-                          ? profile[0]['fname'] != ''
-                              ? profile[0]['fname']
-                              : 'first name'
-                          : 'first name',
+                  hinttext: SharedCli().getfname() != null
+                      ? SharedCli().getfname()!
+                      : 'first name',
                   width: size.width),
               inputformfield(
                   widget: const Icon(Icons.details_sharp,
                       color: AppColors.primaryColor),
                   title: 'Last name',
-                  hinttext: google == true
-                      ? googleid!.split(' ').last
-                      : profile.isNotEmpty
-                          ? profile[0]['lname'] != ''
-                              ? profile[0]['lname']
-                              : 'last name'
-                          : 'last name',
+                  hinttext: SharedCli().getemail() != null
+                      ? SharedCli().getemail()!
+                      : 'last name',
+                  width: size.width),
+              inputformfield(
+                  controller: email,
+                  widget: const Icon(Icons.email_outlined,
+                      color: AppColors.primaryColor),
+                  title: 'Phone number',
+                  hinttext: SharedCli().getcontact() != null
+                      ? SharedCli().getcontact()!
+                      : 'contact',
                   width: size.width),
               inputformfield(
                   controller: email,
                   widget: const Icon(Icons.email_outlined,
                       color: AppColors.primaryColor),
                   title: 'Email address',
-                  hinttext: google == true
-                      ? prefs.getString('googleemail')
-                      : profile.isNotEmpty
-                          ? profile[0]['email'] != ''
-                              ? profile[0]['email']
-                              : prefs.getString('email')
-                          : 'email',
+                  hinttext: SharedCli().getemail() != null
+                      ? SharedCli().getemail()!
+                      : 'email',
                   width: size.width),
               google == false
                   ? inputformfield(
@@ -179,62 +159,19 @@ class _PersonalProfileState extends State<PersonalProfile> {
                       widget: const Icon(Icons.date_range_outlined,
                           color: AppColors.primaryColor),
                       title: 'Date of Birth',
-                      hinttext: profile.isNotEmpty
-                          ? profile[0]['dob'] != ''
-                              ? profile[0]['dob']
-                              : 'date of birth'
+                      hinttext: SharedCli().getdob() != null
+                          ? SharedCli().getdob()!
                           : 'date of birth',
-                      width: size.width)
-                  : const SizedBox(),
-              google == false
-                  ? inputformfield(
-                      widget: const Icon(Icons.password_outlined,
-                          color: AppColors.primaryColor),
-                      title: 'Password',
-                      hinttext: '***********',
                       width: size.width)
                   : const SizedBox(),
               Visibility(
                 visible: !editprofileoff,
                 child: InkWell(
                   onTap: () async {
-                    prefs.setString('username', username.text);
-                    PModel pModel = PModel(
-                      dob: dob.text,
-                      fname: fname.text,
-                      lname: lname.text,
-                      email: email.text,
-                      username: username.text,
-                    );
-
-                    if (profile.isEmpty) {
-                      await ProfileDB.insertProfile(pModel);
-                      setState(() {});
-                    } else {
-                      PModel pModel = PModel(
-                        dob: dob.text.isNotEmpty ? dob.text : profile[0]['dob'],
-                        fname: fname.text.isNotEmpty
-                            ? fname.text
-                            : profile[0]['fname'],
-                        lname: lname.text.isNotEmpty
-                            ? lname.text
-                            : profile[0]['lname'],
-                        email: email.text.isNotEmpty
-                            ? email.text
-                            : profile[0]['email'],
-                        username: username.text.isNotEmpty
-                            ? username.text
-                            : profile[0]['username'],
-                      );
-                      await ProfileDB.updateprofile(pModel);
-                      setState(() {});
-                    }
                     await updatedetails().then((value) {
                       setState(() {
                         editprofileoff = !editprofileoff;
                       });
-                    }).then((value) {
-                      setState(() {});
                     });
                   },
                   child: Container(
@@ -304,11 +241,28 @@ class _PersonalProfileState extends State<PersonalProfile> {
   }
 
   Future updatedetails() async {
-    email.text.isNotEmpty ? await FireBaseCLi().updateEmail(email.text) : null;
+    if (lname.text.isNotEmpty) {}
+    if (fname.text.isNotEmpty) {
+      SharedCli().firstname(value: fname.text);
+    }
+    if (dob.text.isNotEmpty) {
+      SharedCli().dob(value: dob.text);
+    }
+    if (email.text.isNotEmpty) {
+      await FireBaseCLi().updateEmail(email.text);
+      SharedCli().email(value: dob.text);
+    }
 
-    password.text.isNotEmpty
-        ? await FireBaseCLi().updatepassword(password.text)
-        : null;
+    if (lname.text.isNotEmpty) {
+      SharedCli().lastname(value: lname.text);
+    }
+    if (username.text.isNotEmpty) {
+      SharedCli().lastname(value: username.text);
+    }
+
+    if (phonenumber.text.isNotEmpty) {
+      SharedCli().contact(value: phonenumber.text);
+    }
   }
 
   inputformfield(

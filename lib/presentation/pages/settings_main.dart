@@ -99,10 +99,8 @@ class _SettingsState extends State<Settings> {
                   TextButton(
                     onPressed: () async {
                       FireBaseCLi().signOut().then((value) async {
-                        prefs.remove('googlename');
                         prefs.remove('googleloggedin');
-                        prefs.remove('googleimage');
-                        prefs.remove('googleemail');
+                        prefs.remove('gpfp');
                         Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(

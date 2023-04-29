@@ -3,8 +3,8 @@ import 'package:MedBox/main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:velocity_x/velocity_x.dart';
+
 import '../../../domain/models/rapidtestmodel.dart';
-import '../rapidtests/scheduletest.dart';
 
 class RapidTests extends StatefulWidget {
   const RapidTests({
@@ -20,16 +20,13 @@ class _RapidTestsState extends State<RapidTests> {
       prefs.getString('username') ??
       'Anonymous';
 
-  Stream? rapidtests;
+  final Stream<QuerySnapshot> tests = FirebaseFirestore.instance
+      .collection('rapidtests')
+      .where('patientcontact', isEqualTo: '0557466718')
+      .snapshots();
 
   @override
   void initState() {
-    rapidtests = FirebaseFirestore.instance
-        .collection('rapidtests')
-        .doc(userID)
-        .snapshots();
-
-    print('rapidtests!.length');
     super.initState();
   }
 
@@ -38,35 +35,73 @@ class _RapidTestsState extends State<RapidTests> {
     Size size = MediaQuery.of(context).size;
 
     return StreamBuilder(
-        stream: rapidtests,
+        stream: FirebaseFirestore.instance
+            .collection('rapidtests')
+            .doc('joojo')
+            .snapshots(),
         builder: ((context, snapshot) => CustomScrollView(
               slivers: [
                 _titlebox(size, context),
+                snapshot.hasData
+                    ? SliverList(
+                        delegate: SliverChildBuilderDelegate((context, index) {
+                        return ListTile(
+                          tileColor: Colors.white,
+                          contentPadding: const EdgeInsets.all(10),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(0),
+                              side: BorderSide(
+                                  color:
+                                      AppColors.primaryColor.withOpacity(0.3))),
+                          leading: const CircleAvatar(
+                              minRadius: 15,
+                              foregroundImage:
+                                  AssetImage('assets/icons/capsules.png'),
+                              maxRadius: 16),
+                          title: Card(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(1)),
+                            color: snapshot.data!.data()!['testresults']
+                                        [index] ==
+                                    true
+                                ? Colors.red
+                                : Colors.green,
+                            child: Text(snapshot.data!
+                                    .data()!['results'][index]
+                                    .toString()
+                                    .trim())
+                                .centered()
+                                .py8(),
+                          ),
+                          subtitle: Text(
+                            snapshot.data!
+                                .data()!['testname'][index]
+                                .toString()
+                                .trim(),
+                            style: const TextStyle(
+                                fontFamily: 'Pop',
+                                fontWeight: FontWeight.w400,
+                                color: Colors.black),
+                          ),
+                          trailing: Text(
+                            snapshot.data!
+                                .data()!['testdate'][index]
+                                .toString()
+                                .trim(),
+                            style: const TextStyle(
+                                fontFamily: 'Pop',
+                                fontWeight: FontWeight.w400,
+                                color: AppColors.primaryColor),
+                          ),
+                        ).p8();
+                      }, childCount: 2))
+                    : const SliverToBoxAdapter(
+                        child: Center(
+                          child: Text('No rapid test available.'),
+                        ),
+                      )
               ],
             )));
-  }
-
-  SliverList _testlists() {
-    return SliverList(
-        delegate: SliverChildBuilderDelegate((context, index) {
-      return ListTile(
-        contentPadding: const EdgeInsets.all(10),
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(0),
-            side: BorderSide(color: AppColors.primaryColor.withOpacity(0.3))),
-        leading: const CircleAvatar(
-            minRadius: 15,
-            foregroundImage: AssetImage('assets/icons/capsules.png'),
-            maxRadius: 16),
-        title: Card(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(1)),
-          color: tests[index].testresults == true ? Colors.red : Colors.green,
-          child: Text(tests[index].results!).centered().py8(),
-        ),
-        subtitle: Text(tests[index].testname!),
-        trailing: Text(tests[index].testdate!),
-      ).p8();
-    }, childCount: tests.length));
   }
 
   SliverToBoxAdapter _titlebox(Size size, BuildContext context) {
@@ -81,27 +116,6 @@ class _RapidTestsState extends State<RapidTests> {
                 fontSize: 14, fontWeight: FontWeight.w500, fontFamily: 'Popb'),
           ),
           const Spacer(),
-          Semantics(
-            button: true,
-            child: InkWell(
-              onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const ScheduleRapidTest())),
-              child: Card(
-                color: AppColors.primaryColor,
-                elevation: 5,
-                child: const Text(
-                  'Schedule Test',
-                  style: TextStyle(
-                      fontSize: 13,
-                      color: Colors.white,
-                      fontWeight: FontWeight.w500,
-                      fontFamily: 'Pop'),
-                ).centered().px12(),
-              ),
-            ),
-          ),
           const SizedBox(width: 30),
           DropdownButton(
               icon: Icon(
@@ -116,46 +130,3 @@ class _RapidTestsState extends State<RapidTests> {
     );
   }
 }
-
-List<RapidtestModel> tests = [
-  RapidtestModel(
-      results: 'Postive',
-      testdate: '26th Jan,2023',
-      testname: 'Malaria',
-      testresults: true),
-  RapidtestModel(
-      results: 'Negative',
-      testdate: '26th Jan,2023',
-      testname: 'Cholestrol',
-      testresults: false),
-  RapidtestModel(
-      results: 'Negative',
-      testdate: '26th Jan,2023',
-      testname: 'Hepatitis B',
-      testresults: false),
-  RapidtestModel(
-      results: 'Postive',
-      testdate: '26th Jan,2023',
-      testname: 'Typhoid',
-      testresults: true),
-  RapidtestModel(
-      results: 'Negative',
-      testdate: '26th Jan,2023',
-      testname: 'Pregnancy',
-      testresults: false),
-  RapidtestModel(
-      results: 'Negative',
-      testdate: '26th Jan,2023',
-      testname: 'Sickle Cell',
-      testresults: false),
-  RapidtestModel(
-      results: 'Postive',
-      testdate: '26th Jan,2023',
-      testname: 'Anaemia',
-      testresults: true),
-  RapidtestModel(
-      results: 'Negative',
-      testdate: '26th Jan,2023',
-      testname: 'Blood Pressure',
-      testresults: false),
-];
