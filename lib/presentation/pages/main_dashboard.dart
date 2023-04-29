@@ -20,9 +20,7 @@ class DashboardOverview extends StatefulWidget {
 }
 
 class _DashboardOverviewState extends State<DashboardOverview> {
-  String username = '';
   String emoaddress = 'assets/images/exciting.png';
-  var pfp;
   bool isgoogle = false;
 
   late List<Map<String, dynamic>> vitals = [];
@@ -38,11 +36,8 @@ class _DashboardOverviewState extends State<DashboardOverview> {
 
   setfield() async {
     setState(() {
-      pfp = prefs.getString('pfp');
       isgoogle = prefs.getBool('googleloggedin') ?? false;
-      username = prefs.getString('username') ??
-          prefs.getString('googlename') ??
-          'No Username set';
+
       emoaddress = prefs.getString('emotion') ?? 'assets/images/exciting.png';
     });
   }
@@ -58,55 +53,43 @@ class _DashboardOverviewState extends State<DashboardOverview> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return Scaffold(
-        backgroundColor: AppColors.scaffoldColor,
-        body: SafeArea(
-          child: Consumer<VitalsProvider>(builder: (context, val, child) {
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-              child: CustomScrollView(
-                slivers: [
-                  _pageappbar(),
-                  _emojiecontainer(size),
-                  SliverToBoxAdapter(
-                      child: _labeltext(
-                              label: 'Daily Body Vitals', color: Colors.black)
-                          .py12()),
-                  _vitalscase(size, val),
-                  SliverToBoxAdapter(
-                    child: InkWell(
-                      onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: ((context) => const AddPrescription()))),
-                      child: BoxContainer(
-                          height: size.height * 0.24,
-                          width: size.width - 50,
-                          widget: VStack([
-                            _labeltext(
-                                label: 'Upload Your Prescription',
-                                color: Colors.black),
-                            const SizedBox(height: 5),
-                            Image.asset(
-                              'assets/images/smartphone-rx-prescription.jpg',
-                              height: size.height * 0.12,
-                              width: size.width - 50,
-                            ),
-                            _labeltext(
-                                    label: 'Upload Your Claim Form',
-                                    color: AppColors.primaryColor)
-                                .centered(),
-                          ])),
+    return Consumer<VitalsProvider>(builder: (context, val, child) {
+      return CustomScrollView(
+        slivers: [
+          _emojiecontainer(size),
+          SliverToBoxAdapter(
+              child: _labeltext(label: 'Daily Body Vitals', color: Colors.black)
+                  .py12()),
+          _vitalscase(size, val),
+          SliverToBoxAdapter(
+            child: InkWell(
+              onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: ((context) => const AddPrescription()))),
+              child: BoxContainer(
+                  height: size.height * 0.24,
+                  width: size.width - 50,
+                  widget: VStack([
+                    _labeltext(
+                        label: 'Upload Your Prescription', color: Colors.black),
+                    const SizedBox(height: 5),
+                    Image.asset(
+                      'assets/images/smartphone-rx-prescription.jpg',
+                      height: size.height * 0.12,
+                      width: size.width - 50,
                     ),
-                  ),
-                  _esubscription(size)
-                ],
-              ),
-            );
-          })
-              .animate()
-              .fadeIn(duration: 100.milliseconds, delay: 100.milliseconds),
-        ));
+                    _labeltext(
+                            label: 'Upload Your Claim Form',
+                            color: AppColors.primaryColor)
+                        .centered(),
+                  ])),
+            ),
+          ),
+          _esubscription(size)
+        ],
+      );
+    }).animate().fadeIn(duration: 100.milliseconds, delay: 100.milliseconds);
   }
 
   SliverToBoxAdapter _esubscription(Size size) {
@@ -220,61 +203,6 @@ class _DashboardOverviewState extends State<DashboardOverview> {
           ),
         ],
       ),
-    );
-  }
-
-  SliverAppBar _pageappbar() {
-    return SliverAppBar(
-      pinned: true,
-      backgroundColor: AppColors.scaffoldColor,
-      title: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Good day, ',
-            style: TextStyle(
-                fontFamily: 'Popb',
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Colors.black26),
-          ),
-          const SizedBox(height: 5),
-          Text(
-            username,
-            style: const TextStyle(
-                fontFamily: 'Popb',
-                fontSize: 15,
-                fontWeight: FontWeight.w500,
-                color: Colors.black),
-          ),
-        ],
-      ),
-      actions: [
-        Container(
-          height: 25,
-          width: 25,
-          margin: const EdgeInsets.only(right: 10),
-          decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              image: DecorationImage(
-                  fit: BoxFit.fill,
-                  image: prefs.getBool('googleloggedin') == true
-                      ? NetworkImage(prefs.getString('googleimage')!)
-                      : pfp != null
-                          ? MemoryImage(Utility().dataFromBase64String(pfp))
-                          : const AssetImage('assets/icons/profile-35-64.png')
-                              as ImageProvider)),
-        ),
-        DropdownButton(
-          items: [],
-          onChanged: (e) {},
-          icon: const Icon(
-            Icons.notifications_none_outlined,
-            size: 25,
-            color: AppColors.primaryColor,
-          ),
-        )
-      ],
     );
   }
 

@@ -47,7 +47,7 @@ class ProfileDB {
   static Future<int> updateprofile(PModel? pmodel) async {
     await initDatabase();
     return await _database?.update(_colname, pmodel!.toJson(),
-            where: 'id=?', whereArgs: [pmodel.id]) ??
+            where: 'id=?', whereArgs: ['id']) ??
         1;
   }
 }

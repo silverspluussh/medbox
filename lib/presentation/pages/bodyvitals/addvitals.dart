@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:MedBox/constants/colors.dart';
 import 'package:MedBox/presentation/pages/renderer.dart';
@@ -8,7 +7,6 @@ import 'package:MedBox/domain/models/vitalsmodel.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:intl/intl.dart';
 import 'package:velocity_x/velocity_x.dart';
-
 import '../../../data/repos/Dbhelpers/vitalsdb.dart';
 
 class AddVitals extends StatefulWidget {
@@ -51,194 +49,148 @@ class _AddVitalsState extends State<AddVitals> {
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
-      body: Container(
-        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
-        width: double.infinity,
-        height: double.infinity,
-        decoration: const BoxDecoration(color: Colors.white),
-        child: SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 30),
-              IconButton(
-                  onPressed: () => Navigator.pop(context),
-                  icon: const ImageIcon(
-                    AssetImage('assets/icons/return-431-512.png'),
-                    size: 25,
-                    color: AppColors.primaryColor,
-                  )),
-              const SizedBox(height: 15),
-              Row(
+      backgroundColor: AppColors.scaffoldColor,
+      appBar: AppBar(
+        toolbarHeight: 40,
+        centerTitle: true,
+        backgroundColor: Colors.white,
+        title: const Text(
+          'Add vitals',
+          style:
+              TextStyle(fontSize: 13, fontFamily: 'Pop', color: Colors.black),
+        ),
+      ),
+      body: CustomScrollView(
+        slivers: [
+          SliverToBoxAdapter(
+            child: Form(
+              key: formkey,
+              child: Column(
                 children: [
-                  Container(
-                    width: size.width * 0.4,
-                    height: 50,
-                    decoration: const BoxDecoration(
-                        color: AppColors.primaryColor,
-                        borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(20),
-                          topLeft: Radius.circular(20),
+                  const SizedBox(height: 10),
+                  inputformfield(
+                      controller: temp,
+                      title: 'Temperature',
+                      hinttext: 'Temperature',
+                      width: size.width - 20,
+                      height: 50),
+                  const SizedBox(height: 15),
+                  inputformfield(
+                      controller: pressure,
+                      title: 'Blood pressure',
+                      hinttext: 'Blood pressure',
+                      width: size.width - 20,
+                      height: 50),
+                  const SizedBox(height: 15),
+                  inputformfield(
+                      controller: heartrate,
+                      title: 'Heart rate',
+                      hinttext: 'Heart rate',
+                      width: size.width - 20,
+                      height: 50),
+                  const SizedBox(height: 15),
+                  inputformfield(
+                      controller: oxygen,
+                      title: 'Oxygen level',
+                      hinttext: 'level of oxygen',
+                      width: size.width - 20,
+                      height: 50),
+                  const SizedBox(height: 15),
+                  inputformfield(
+                      controller: respiration,
+                      title: 'Respiratory rate',
+                      hinttext: 'Rate of respiration',
+                      width: size.width - 20,
+                      height: 50),
+                  const SizedBox(height: 15),
+                  Row(
+                    children: [
+                      inputformfield(
+                          controller: weight,
+                          title: 'Weight',
+                          hinttext: 'weight',
+                          width: size.width * 0.36,
+                          height: 50),
+                      const Spacer(),
+                      inputformfield(
+                          controller: height,
+                          title: 'Height',
+                          hinttext: 'Height',
+                          width: size.width * 0.36,
+                          height: 50),
+                    ],
+                  ).px8(),
+                  const SizedBox(height: 20),
+                  GestureDetector(
+                    onTap: () async {
+                      bool validate = formkey.currentState!.validate();
+                      if (validate == true) {
+                        await bmical();
+
+                        final vvmodel = VModel(
+                          bloodpressure: pressure.text,
+                          heartrate: heartrate.text,
+                          oxygenlevel: oxygen.text,
+                          temperature: temp.text,
+                          datetime: DateFormat('EEEE').format(date),
+                          weight: weight.text,
+                          bmi: bmi.text,
+                          id: Random().nextInt(150),
+                          respiration: respiration.text,
+                          height: height.text,
+                        );
+
+                        try {
+                          await vController.addvital(vModel: vvmodel).then(
+                              (value) => VxToast.show(context,
+                                  msg: 'Vitals added successfully.',
+                                  bgColor:
+                                      const Color.fromARGB(255, 38, 99, 40),
+                                  textColor: Colors.white,
+                                  pdHorizontal: 30,
+                                  pdVertical: 20));
+                        } catch (e) {
+                          rethrow;
+                        } finally {
+                          bmi.clear();
+                          respiration.clear();
+                          height.clear();
+                          temp.clear();
+                          pressure.clear();
+                          heartrate.clear();
+                          oxygen.clear();
+                          weight.clear();
+
+                          Future.delayed(const Duration(milliseconds: 700), () {
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const Render()));
+                          });
+                        }
+                      }
+                    },
+                    child: Container(
+                        height: 50,
+                        width: size.width - 200,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: AppColors.primaryColor),
+                        child: const Center(
+                          child: Text(
+                            'Add vitals',
+                            style: TextStyle(
+                                fontFamily: 'Popb',
+                                color: Colors.white,
+                                fontSize: 12),
+                          ),
                         )),
-                    child: const Center(
-                      child: Text(
-                        'Input manually',
-                        style: TextStyle(
-                            fontFamily: 'Pop',
-                            fontSize: 12,
-                            color: Colors.white),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    width: size.width * 0.42,
-                    height: 50,
-                    decoration: const BoxDecoration(
-                        color: Color.fromARGB(255, 240, 235, 214),
-                        borderRadius: BorderRadius.only(
-                          bottomRight: Radius.circular(20),
-                          topRight: Radius.circular(20),
-                        )),
-                    child: const Center(
-                      child: Text(
-                        'Get from medbox',
-                        style: TextStyle(fontFamily: 'Pop', fontSize: 12),
-                      ),
-                    ),
-                  ),
+                  )
                 ],
               ),
-              const SizedBox(height: 40),
-              Form(
-                key: formkey,
-                child: Column(
-                  children: [
-                    inputformfield(
-                        controller: temp,
-                        title: 'Temperature',
-                        hinttext: 'Temperature',
-                        width: size.width - 20,
-                        height: 50),
-                    const SizedBox(height: 15),
-                    inputformfield(
-                        controller: pressure,
-                        title: 'Blood pressure',
-                        hinttext: 'Blood pressure',
-                        width: size.width - 20,
-                        height: 50),
-                    const SizedBox(height: 15),
-                    inputformfield(
-                        controller: heartrate,
-                        title: 'Heart rate',
-                        hinttext: 'Heart rate',
-                        width: size.width - 20,
-                        height: 50),
-                    const SizedBox(height: 15),
-                    inputformfield(
-                        controller: oxygen,
-                        title: 'Oxygen level',
-                        hinttext: 'level of oxygen',
-                        width: size.width - 20,
-                        height: 50),
-                    const SizedBox(height: 15),
-                    inputformfield(
-                        controller: respiration,
-                        title: 'Respiratory rate',
-                        hinttext: 'Rate of respiration',
-                        width: size.width - 20,
-                        height: 50),
-                    const SizedBox(height: 15),
-                    Row(
-                      children: [
-                        inputformfield(
-                            controller: weight,
-                            title: 'Weight',
-                            hinttext: 'weight',
-                            width: size.width * 0.36,
-                            height: 50),
-                        const Spacer(),
-                        inputformfield(
-                            controller: height,
-                            title: 'Height',
-                            hinttext: 'Height',
-                            width: size.width * 0.36,
-                            height: 50),
-                      ],
-                    ),
-                    const SizedBox(height: 20),
-                    GestureDetector(
-                      onTap: () async {
-                        bool validate = formkey.currentState!.validate();
-                        if (validate == true) {
-                          await bmical();
-
-                          final vvmodel = VModel(
-                            bloodpressure: pressure.text,
-                            heartrate: heartrate.text,
-                            oxygenlevel: oxygen.text,
-                            temperature: temp.text,
-                            datetime: DateFormat('EEEE').format(date),
-                            weight: weight.text,
-                            bmi: bmi.text,
-                            id: Random().nextInt(150),
-                            respiration: respiration.text,
-                            height: height.text,
-                          );
-
-                          try {
-                            await vController.addvital(vModel: vvmodel).then(
-                                (value) => VxToast.show(context,
-                                    msg: 'Vitals added successfully.',
-                                    bgColor:
-                                        const Color.fromARGB(255, 38, 99, 40),
-                                    textColor: Colors.white,
-                                    pdHorizontal: 30,
-                                    pdVertical: 20));
-                          } catch (e) {
-                            rethrow;
-                          } finally {
-                            bmi.clear();
-                            respiration.clear();
-                            height.clear();
-                            temp.clear();
-                            pressure.clear();
-                            heartrate.clear();
-                            oxygen.clear();
-                            weight.clear();
-
-                            Future.delayed(const Duration(milliseconds: 700),
-                                () {
-                              Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => const Render()));
-                            });
-                          }
-                        }
-                      },
-                      child: Container(
-                          height: 50,
-                          width: size.width - 200,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: AppColors.primaryColor),
-                          child: const Center(
-                            child: Text(
-                              'Add vitals',
-                              style: TextStyle(
-                                  fontFamily: 'Popb',
-                                  color: Colors.white,
-                                  fontSize: 12),
-                            ),
-                          )),
-                    )
-                  ],
-                ),
-              )
-            ],
-          ),
-        ),
+            ),
+          )
+        ],
       ).animate().fadeIn(duration: 100.milliseconds, delay: 100.milliseconds),
     );
   }
@@ -324,8 +276,4 @@ class _AddVitalsState extends State<AddVitals> {
       ],
     );
   }
-}
-
-extension on double {
-  double get bmi => bmi;
 }

@@ -76,8 +76,10 @@ class _PersonalProfileState extends State<PersonalProfile> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+    return Container(
+      width: size.width,
+      height: size.height,
+      padding: const EdgeInsets.all(10),
       child: CustomScrollView(
         slivers: [
           SliverToBoxAdapter(
@@ -198,7 +200,6 @@ class _PersonalProfileState extends State<PersonalProfile> {
                   onTap: () async {
                     prefs.setString('username', username.text);
                     PModel pModel = PModel(
-                      id: Random().nextInt(200),
                       dob: dob.text,
                       fname: fname.text,
                       lname: lname.text,
@@ -208,9 +209,9 @@ class _PersonalProfileState extends State<PersonalProfile> {
 
                     if (profile.isEmpty) {
                       await ProfileDB.insertProfile(pModel);
+                      setState(() {});
                     } else {
                       PModel pModel = PModel(
-                        id: profile[0]['id'],
                         dob: dob.text.isNotEmpty ? dob.text : profile[0]['dob'],
                         fname: fname.text.isNotEmpty
                             ? fname.text
@@ -226,6 +227,7 @@ class _PersonalProfileState extends State<PersonalProfile> {
                             : profile[0]['username'],
                       );
                       await ProfileDB.updateprofile(pModel);
+                      setState(() {});
                     }
                     await updatedetails().then((value) {
                       setState(() {

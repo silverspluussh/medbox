@@ -1,8 +1,8 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:MedBox/main.dart';
+
+import '../../domain/models/pharmacymodel.dart';
 
 class FireBaseCLi {
   Future updatepassword(String password) async {
@@ -39,25 +39,10 @@ class FireBaseCLi {
   }
 
   // crud for prescription
-
-  static Future<String> addprescription(
-      {required String userID, required Map<String, dynamic> datum}) async {
-    final document =
-        FirebaseFirestore.instance.collection('prescriptions').doc(userID);
-    String status = '';
-
-    await document.set(datum).then((value) {
-      log("menu is added to firebase cloud store");
-    }).catchError((onError) {
-      log("Adding presciption error: $onError");
-      status = "error";
-    }).whenComplete(() {
-      status = "success";
-    }).timeout(const Duration(seconds: 10), onTimeout: () {
-      log('Menu could not be added. Please try again');
-      status = "timeout";
-    });
-
-    return status;
-  }
+  static Stream<List<PharmacyModel>> pharmcies() => FirebaseFirestore.instance
+      .collection('pharmacies')
+      .snapshots()
+      .map((snapshot) => snapshot.docs
+          .map((doc) => PharmacyModel.fromJson(doc.data()))
+          .toList());
 }

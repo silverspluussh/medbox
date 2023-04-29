@@ -9,20 +9,7 @@ class ScheduleRapidTest extends StatefulWidget {
   State<ScheduleRapidTest> createState() => _ScheduleRapidTestState();
 }
 
-enum Scheduletimes {
-  eigtham,
-  nineam,
-  tenam,
-  elevenam,
-  twelvepm,
-  onepm,
-  twopm,
-  threepm,
-  fourpm,
-  fivepm
-}
-
-List times = [
+List<String> times = [
   '8:00am',
   '9:00am',
   '10:00am',
@@ -38,7 +25,10 @@ List times = [
 class _ScheduleRapidTestState extends State<ScheduleRapidTest> {
   final formkey = GlobalKey<FormState>();
 
-  var time = Scheduletimes.tenam;
+  TextEditingController time = TextEditingController();
+  TextEditingController rapidtest = TextEditingController();
+  TextEditingController location = TextEditingController();
+  TextEditingController note = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -49,73 +39,93 @@ class _ScheduleRapidTestState extends State<ScheduleRapidTest> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         centerTitle: true,
-        title: const Text('Schedule Rapid Test'),
+        title: const Text(
+          'Schedule Rapid Test',
+          style:
+              TextStyle(fontSize: 13, fontFamily: 'Popb', color: Colors.black),
+        ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Container(
-          width: size.width,
-          height: size.height,
-          padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(border: Border.all(width: 1)),
-          child: Center(
-            child: Form(
-                key: formkey,
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.vertical,
-                  physics: const BouncingScrollPhysics(),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _formwidget(size,
-                          label: '*Rapid Test location',
-                          hint: 'eg. espat pharmacy,47 military',
-                          suffix: DropdownButton(
-                            items: [],
-                            onChanged: (e) {},
-                            icon: const Icon(
-                              Icons.arrow_drop_down_circle_outlined,
-                              color: AppColors.primaryColor,
-                            ),
-                          )),
-                      _formwidget(size,
-                          label: '*Rapid Test Type',
-                          hint: 'eg. malaria test,cholesterol test',
-                          suffix: DropdownButton(
-                            items: [],
-                            onChanged: (e) {},
-                            icon: const Icon(
-                              Icons.arrow_drop_down_circle_outlined,
-                              color: AppColors.primaryColor,
-                            ),
-                          )),
-                      _formwidget(size,
-                          label: '*Full name',
-                          hint: 'eg. Francis Ohemeng Amponsah'),
-                      _formwidget(size,
-                          label: '*Contact', hint: 'eg. 0233495568'),
-                      _formwidget(size,
-                          label: '*Email Address',
-                          hint: 'eg. Francis Ohemeng Amponsah'),
-                      _formwidget(size,
-                          label: '*Residential Address',
-                          hint: 'eg. Plt 50, Teshie Tebibiani'),
-                      _formwidget(size, label: '*City', hint: 'eg. Accra'),
-                      _formwidget(size,
-                          label: '*Add note',
-                          hint: 'eg. Have a good day dear sir .',
-                          maxlines: 4),
-                      const Text('What date and time work best for you?'),
-                      const Icon(
-                        Icons.calendar_month_rounded,
-                        size: 25,
-                        color: AppColors.primaryColor,
-                      ),
-                      const SizedBox(height: 15),
-                      _formwidget(size, label: 'Date'),
-                      _formwidget(size, label: 'Date', hint: 'Select time'),
-                      const SizedBox(height: 30),
-                      Card(
+      body: Container(
+        width: size.width,
+        height: size.height,
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(border: Border.all(width: 1)),
+        child: Center(
+          child: Form(
+              key: formkey,
+              child: SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                physics: const BouncingScrollPhysics(),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _formwidget(size,
+                        label: '*Rapid Test location',
+                        hint: 'eg. espat pharmacy,47 military',
+                        suffix: DropdownButton(
+                          items: [],
+                          onChanged: (e) {},
+                          icon: const Icon(
+                            Icons.arrow_drop_down_circle_outlined,
+                            color: AppColors.primaryColor,
+                          ),
+                        )),
+                    _formwidget(size,
+                        label: '*Rapid Test Type',
+                        hint: 'eg. malaria test,cholesterol test',
+                        suffix: DropdownButton(
+                          items: [],
+                          onChanged: (e) {},
+                          icon: const Icon(
+                            Icons.arrow_drop_down_circle_outlined,
+                            color: AppColors.primaryColor,
+                          ),
+                        )),
+                    _formwidget(size,
+                        label: '*Full name',
+                        hint: 'eg. Francis Ohemeng Amponsah'),
+                    _formwidget(size,
+                        label: '*Contact', hint: 'eg. 0233495568'),
+                    _formwidget(size,
+                        label: '*Email Address',
+                        hint: 'eg. Francis Ohemeng Amponsah'),
+                    _formwidget(size,
+                        label: '*Residential Address',
+                        hint: 'eg. Plt 50, Teshie Tebibiani'),
+                    _formwidget(size, label: '*City', hint: 'eg. Accra'),
+                    _formwidget(size,
+                        label: '*Add note',
+                        hint: 'eg. Have a good day dear sir .',
+                        maxlines: 4),
+                    const Text('What date and time work best for you?'),
+                    const Icon(
+                      Icons.calendar_month_rounded,
+                      size: 25,
+                      color: AppColors.primaryColor,
+                    ),
+                    const SizedBox(height: 15),
+                    _formwidget(size, label: 'Date', readonly: true),
+                    _formwidget(size,
+                        label: 'Time',
+                        hint: 'Select time',
+                        readonly: true,
+                        suffix: DropdownButton(
+                          items: [
+                            ...times
+                                .map((e) => DropdownMenuItem(child: Text(e)))
+                          ],
+                          onChanged: (time) {},
+                          icon: const Icon(
+                            Icons.arrow_drop_down_circle_outlined,
+                            color: AppColors.primaryColor,
+                          ),
+                        )),
+                    const SizedBox(height: 30),
+                    InkWell(
+                      onTap: () {
+                        if (formkey.currentState!.validate() == true) {}
+                      },
+                      child: Card(
                         color: AppColors.primaryColor,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10)),
@@ -124,21 +134,18 @@ class _ScheduleRapidTestState extends State<ScheduleRapidTest> {
                           style:
                               TextStyle(color: Colors.white, fontFamily: 'Pop'),
                         ).centered().py12(),
-                      )
-                    ],
-                  ),
-                )),
-          ),
+                      ),
+                    )
+                  ],
+                ),
+              )),
         ),
       ),
     );
   }
 
-// Container(
-//                                             width: size.width * 0.15,
-//                                             color: Colors.blue,
-//                                             height: 30),
-  _formwidget(Size size, {controller, hint, label, maxlines, suffix}) {
+  _formwidget(Size size,
+      {controller, hint, label, maxlines, suffix, readonly}) {
     return SizedBox(
       height: 75,
       width: size.width * 0.72,
@@ -157,6 +164,7 @@ class _ScheduleRapidTestState extends State<ScheduleRapidTest> {
                 }
                 return null;
               },
+              readOnly: readonly,
               controller: controller,
               decoration: InputDecoration(
                   suffix: suffix,

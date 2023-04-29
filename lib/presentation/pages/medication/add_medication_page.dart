@@ -1,3 +1,5 @@
+// ignore_for_file: depend_on_referenced_packages
+
 import 'dart:math';
 import 'dart:typed_data';
 import 'package:file_picker/file_picker.dart';
@@ -106,64 +108,50 @@ class _AddMedicationState extends State<AddMedications> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          scrollDirection: Axis.vertical,
-          child: Container(
-            width: size.width,
-            height: size.height * 1.2,
-            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    IconButton(
-                        onPressed: () => Navigator.pop(context),
-                        icon: const ImageIcon(
-                          AssetImage('assets/icons/return-431-512.png'),
-                          color: AppColors.primaryColor,
-                        ),
-                        iconSize: 25),
-                    const SizedBox(width: 40),
-                    const Text(
-                      'Add new medication',
-                      style: TextStyle(
-                          fontSize: 15,
-                          fontFamily: 'Popb',
-                          color: Colors.black),
-                    ),
-                  ],
+      backgroundColor: AppColors.scaffoldColor,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        title: const Text(
+          'Add new medication',
+          style:
+              TextStyle(fontSize: 13, fontFamily: 'Popb', color: Colors.black),
+        ),
+      ),
+      body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        scrollDirection: Axis.vertical,
+        child: Container(
+          width: size.width,
+          height: size.height * 1.2,
+          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+          child: Column(
+            children: [
+              SizedBox(
+                height: size.height * 0.8,
+                width: size.width,
+                child: PageView(
+                  // physics: const NeverScrollableScrollPhysics(),
+                  controller: pagecontroller,
+                  children: [firstpage(), thirdpage()],
                 ),
-                const SizedBox(height: 20),
-                SizedBox(
-                  height: size.height * 0.8,
-                  width: size.width,
-                  child: PageView(
-                    // physics: const NeverScrollableScrollPhysics(),
-                    controller: pagecontroller,
-                    children: [firstpage(), thirdpage()],
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    _progressindicator(
-                        color: currentPage == 0
-                            ? AppColors.primaryColor
-                            : const Color.fromARGB(31, 44, 44, 44)),
-                    const SizedBox(width: 15),
-                    _progressindicator(
-                        color: currentPage == 1
-                            ? AppColors.primaryColor
-                            : const Color.fromARGB(31, 59, 59, 59)),
-                  ],
-                ),
-                const SizedBox(height: 20)
-              ],
-            ),
+              ),
+              const SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  _progressindicator(
+                      color: currentPage == 0
+                          ? AppColors.primaryColor
+                          : const Color.fromARGB(31, 44, 44, 44)),
+                  const SizedBox(width: 15),
+                  _progressindicator(
+                      color: currentPage == 1
+                          ? AppColors.primaryColor
+                          : const Color.fromARGB(31, 59, 59, 59)),
+                ],
+              ),
+              const SizedBox(height: 20)
+            ],
           ),
         ),
       ),

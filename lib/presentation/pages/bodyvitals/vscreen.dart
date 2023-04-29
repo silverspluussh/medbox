@@ -1,6 +1,5 @@
 import 'package:MedBox/domain/models/vitalsmodel.dart';
 import 'package:flutter/material.dart';
-import 'package:MedBox/constants/colors.dart';
 
 class VitalsMain extends StatelessWidget {
   const VitalsMain({super.key, required this.vitals});
@@ -213,10 +212,8 @@ class VitalBox extends StatelessWidget {
     return Container(
         margin: const EdgeInsets.only(right: 10, left: 10),
         padding: const EdgeInsets.all(5),
-        decoration: BoxDecoration(boxShadow: [
-          BoxShadow(
-              color: AppColors.primaryColor.withOpacity(0.7), blurRadius: 5)
-        ], color: Colors.white, borderRadius: BorderRadius.circular(15)),
+        decoration: BoxDecoration(
+            color: Colors.white, borderRadius: BorderRadius.circular(15)),
         child: widget);
   }
 }

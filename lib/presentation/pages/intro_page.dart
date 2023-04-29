@@ -60,86 +60,84 @@ class _IntroductionState extends State<Introduction> {
     return Scaffold(
             key: _scaffoldKey,
             backgroundColor: AppColors.scaffoldColor,
-            body: SafeArea(
-              child: Stack(
-                children: [
-                  Container(
-                    height: size.height,
-                    width: size.width,
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 30, horizontal: 40),
-                    decoration: const BoxDecoration(),
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.vertical,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          SizedBox(
-                              height: size.height * 0.7,
-                              width: size.width,
-                              child: PageView(
-                                controller: pagecontroller,
-                                children: [
-                                  slideritem(
-                                    image: 'assets/icons/heartbeat.png',
-                                    title: 'Manage your\nbody vitals.',
+            body: Stack(
+              children: [
+                Container(
+                  height: size.height,
+                  width: size.width,
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 30, horizontal: 40),
+                  decoration: const BoxDecoration(),
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.vertical,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        SizedBox(
+                            height: size.height * 0.7,
+                            width: size.width,
+                            child: PageView(
+                              controller: pagecontroller,
+                              children: [
+                                slideritem(
+                                  image: 'assets/icons/heartbeat.png',
+                                  title: 'Manage your\nbody vitals.',
+                                  body:
+                                      'easily add and track your daily body vitals with medbox app and enjoy remote healthcare.',
+                                ),
+                                slideritem(
+                                    image: 'assets/icons/reminder.png',
+                                    title:
+                                        'Set reminders\nfor your medications.',
                                     body:
-                                        'easily add and track your daily body vitals with medbox app and enjoy remote healthcare.',
-                                  ),
-                                  slideritem(
-                                      image: 'assets/icons/reminder.png',
-                                      title:
-                                          'Set reminders\nfor your medications.',
-                                      body:
-                                          'add your medications easily and get alerts on when to take them as well as dosage tracking.'),
-                                  slideritem(
-                                      image: 'assets/icons/health-12-512.png',
-                                      title:
-                                          'share your\nhealth information\nwith your doctor.',
-                                      body:
-                                          'easily transfer and share your health information with your doctor or health professional.'),
-                                ],
-                              )),
-                          visiblestart(size),
-                          const SizedBox(height: 40),
-                        ],
-                      ),
+                                        'add your medications easily and get alerts on when to take them as well as dosage tracking.'),
+                                slideritem(
+                                    image: 'assets/icons/health-12-512.png',
+                                    title:
+                                        'share your\nhealth information\nwith your doctor.',
+                                    body:
+                                        'easily transfer and share your health information with your doctor or health professional.'),
+                              ],
+                            )),
+                        visiblestart(size),
+                        const SizedBox(height: 40),
+                      ],
                     ),
                   ),
-                  Positioned(
-                    top: size.height * 0.25,
-                    bottom: size.height * 0.2,
-                    right: size.width * 0.2,
-                    left: size.width * 0.2,
-                    child: SizedBox(
-                        height: size.height * 0.45,
-                        width: size.width * 0.4,
-                        child: Visibility(
-                          replacement: const SizedBox(),
-                          visible: isShowload,
-                          child: Column(
-                            children: [
-                              Center(
-                                child: Lottie.asset(
-                                    'assets/lottie/99318-hms-loading.json',
-                                    height: size.height * 0.2,
-                                    width: size.width * 0.3),
-                              ),
-                              const SizedBox(height: 10),
-                              const Text(
-                                'Authenticating...',
-                                style: TextStyle(
-                                    fontFamily: "Pop",
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.black),
-                              )
-                            ],
-                          ),
-                        )),
-                  ),
-                ],
-              ),
+                ),
+                Positioned(
+                  top: size.height * 0.25,
+                  bottom: size.height * 0.2,
+                  right: size.width * 0.2,
+                  left: size.width * 0.2,
+                  child: SizedBox(
+                      height: size.height * 0.45,
+                      width: size.width * 0.4,
+                      child: Visibility(
+                        replacement: const SizedBox(),
+                        visible: isShowload,
+                        child: Column(
+                          children: [
+                            Center(
+                              child: Lottie.asset(
+                                  'assets/lottie/99318-hms-loading.json',
+                                  height: size.height * 0.2,
+                                  width: size.width * 0.3),
+                            ),
+                            const SizedBox(height: 10),
+                            const Text(
+                              'Authenticating...',
+                              style: TextStyle(
+                                  fontFamily: "Pop",
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.black),
+                            )
+                          ],
+                        ),
+                      )),
+                ),
+              ],
             ))
         .animate()
         .fadeIn(duration: 100.milliseconds, delay: 100.milliseconds);
@@ -519,13 +517,12 @@ class _IntroductionState extends State<Introduction> {
                                       isShowload = false;
                                     });
                                     Navigator.pushReplacement(
-                                        _scaffoldKy.currentContext!,
+                                        context,
                                         MaterialPageRoute(
                                             builder: (context) =>
                                                 const Render()));
 
-                                    return VxToast.show(
-                                        _scaffoldKy.currentContext!,
+                                    return VxToast.show(context,
                                         msg: 'Sign up successful',
                                         bgColor: const Color.fromARGB(
                                             255, 44, 112, 48),

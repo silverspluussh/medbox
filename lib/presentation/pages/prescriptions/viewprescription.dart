@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:MedBox/constants/colors.dart';
 import 'package:MedBox/data/repos/Dbhelpers/prescriptiondb.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +22,12 @@ class _PrescriptionState extends State<Prescription> {
     return Scaffold(
       backgroundColor: AppColors.scaffoldColor,
       appBar: AppBar(
-        title: const Text('Prescription Panel'),
+        toolbarHeight: 40,
+        title: const Text(
+          'Prescription Panel',
+          style: TextStyle(fontSize: 13, fontFamily: 'Popb'),
+        ),
+        centerTitle: true,
       ),
       body: FutureBuilder(
           future: PrescriptionDB.getprescribe(),

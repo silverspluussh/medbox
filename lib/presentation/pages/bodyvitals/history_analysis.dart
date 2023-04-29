@@ -99,6 +99,7 @@ class _VitalshistoryState extends State<Vitalshistory> {
     return DefaultTabController(
         length: 5,
         child: Scaffold(
+          backgroundColor: AppColors.scaffoldColor,
           appBar: AppBar(
             actions: [
               IconButton(
@@ -132,350 +133,360 @@ class _VitalshistoryState extends State<Vitalshistory> {
             ),
           ),
           body: FutureBuilder(
-              future: VitalsDB().weeklyreadings(day: 'Friday'),
+              future: VitalsDB().avgquery(),
               builder: (context, snapshot) {
-                return TabBarView(key: const ObjectKey('tabview'), children: [
-                  CustomScrollView(
-                    key: const ValueKey(0),
-                    slivers: [
-                      circularcardsliver(size,
-                          value:
-                              '${getvitals.isEmpty ? 0.0 : getvitals.last.temperature}',
-                          unit: 'deg.celsius'),
-                      minavgmax(
-                        size,
-                        color2: Colors.black,
-                        color: AppColors.primaryColor,
-                        avgtitle: 'AVG',
-                        avgvalue:
-                            "${avgQuery[0]['temperature'].toStringAsFixed(2)}",
-                        maxtitle: 'MAX',
-                        maxvalue: "${maxQuery[0]['temperature']}",
-                        mintitle: 'MIN',
-                        minvalue: "${minQuery[0]['temperature']}",
-                      ),
-                      SliverToBoxAdapter(
-                        child: Linechart(flspots: [
-                          const FlSpot(0, 0),
-                          FlSpot(
-                              1,
-                              weeklyQuery1.isEmpty
-                                  ? 0
-                                  : double.parse(
-                                      '${weeklyQuery1[0]['temperature']}')),
-                          FlSpot(
-                              2,
-                              weeklyQuery2.isEmpty
-                                  ? 0
-                                  : double.parse(
-                                      '${weeklyQuery2.last['temperature']}')),
-                          FlSpot(
-                              3,
-                              weeklyQuery3.isEmpty
-                                  ? 0
-                                  : double.parse(
-                                      '${weeklyQuery3[0]['temperature']}')),
-                          FlSpot(
-                              4,
-                              weeklyQuery4.isEmpty
-                                  ? 0
-                                  : double.parse(
-                                      '${weeklyQuery4[0]['temperature']}')),
-                          FlSpot(
-                              5,
-                              weeklyQuery5.isEmpty
-                                  ? 0
-                                  : double.parse(
-                                      '${weeklyQuery5[0]['temperature']}')),
-                          FlSpot(
-                              6,
-                              weeklyQuery6.isEmpty
-                                  ? 0
-                                  : double.parse(
-                                      '${weeklyQuery6[0]['temperature']}')),
-                          FlSpot(
-                              7,
-                              weeklyQuery7.isEmpty
-                                  ? 0
-                                  : double.parse(
-                                      '${weeklyQuery7[0]['temperature']}')),
-                        ]),
-                      )
-                    ],
-                  ),
-                  CustomScrollView(
-                    key: const ValueKey(1),
-                    slivers: [
-                      circularcardsliver(size,
-                          value:
-                              '${getvitals.isEmpty ? 0.0 : getvitals.last.bloodpressure}',
-                          unit: 'mmHg'),
-                      minavgmax(
-                        size,
-                        color2: Colors.black,
-                        color: AppColors.primaryColor,
-                        avgtitle: 'AVG',
-                        avgvalue:
-                            "${avgQuery[0]['bloodpressure'].toStringAsFixed(2)}",
-                        maxtitle: 'MAX',
-                        maxvalue: "${maxQuery[0]['bloodpressure']}",
-                        mintitle: 'MIN',
-                        minvalue: "${minQuery[0]['bloodpressure']}",
-                      ),
-                      SliverToBoxAdapter(
-                        child: Linechart(flspots: [
-                          const FlSpot(0, 0),
-                          FlSpot(
-                              1,
-                              weeklyQuery1.isEmpty
-                                  ? 0
-                                  : double.parse(
-                                      '${weeklyQuery1[0]['bloodpressure']}')),
-                          FlSpot(
-                              2,
-                              weeklyQuery2.isEmpty
-                                  ? 0
-                                  : double.parse(
-                                      '${weeklyQuery2.last['bloodpressure']}')),
-                          FlSpot(
-                              3,
-                              weeklyQuery3.isEmpty
-                                  ? 0
-                                  : double.parse(
-                                      '${weeklyQuery3[0]['bloodpressure']}')),
-                          FlSpot(
-                              4,
-                              weeklyQuery4.isEmpty
-                                  ? 0
-                                  : double.parse(
-                                      '${weeklyQuery4[0]['bloodpressure']}')),
-                          FlSpot(
-                              5,
-                              weeklyQuery5.isEmpty
-                                  ? 0
-                                  : double.parse(
-                                      '${weeklyQuery5[0]['bloodpressure']}')),
-                          FlSpot(
-                              6,
-                              weeklyQuery6.isEmpty
-                                  ? 0
-                                  : double.parse(
-                                      '${weeklyQuery6[0]['bloodpressure']}')),
-                          FlSpot(
-                              7,
-                              weeklyQuery7.isEmpty
-                                  ? 0
-                                  : double.parse(
-                                      '${weeklyQuery7[0]['bloodpressure']}')),
-                        ]),
-                      )
-                    ],
-                  ),
-                  CustomScrollView(
-                    key: const ValueKey(2),
-                    slivers: [
-                      circularcardsliver(size,
-                          value:
-                              '${getvitals.isEmpty ? 0.0 : getvitals.last.heartrate}',
-                          unit: 'bpm'),
-                      minavgmax(
-                        size,
-                        color2: Colors.black,
-                        color: AppColors.primaryColor,
-                        avgtitle: 'AVG',
-                        avgvalue:
-                            "${avgQuery[0]['heartrate'].toStringAsFixed(2)}",
-                        maxtitle: 'MAX',
-                        maxvalue: "${maxQuery[0]['heartrate']}",
-                        mintitle: 'MIN',
-                        minvalue: "${minQuery[0]['heartrate']}",
-                      ),
-                      SliverToBoxAdapter(
-                        child: Linechart(flspots: [
-                          const FlSpot(0, 0),
-                          FlSpot(
-                              1,
-                              weeklyQuery1.isEmpty
-                                  ? 0
-                                  : double.parse(
-                                      '${weeklyQuery1[0]['heartrate']}')),
-                          FlSpot(
-                              2,
-                              weeklyQuery2.isEmpty
-                                  ? 0
-                                  : double.parse(
-                                      '${weeklyQuery2.last['heartrate']}')),
-                          FlSpot(
-                              3,
-                              weeklyQuery3.isEmpty
-                                  ? 0
-                                  : double.parse(
-                                      '${weeklyQuery3[0]['heartrate']}')),
-                          FlSpot(
-                              4,
-                              weeklyQuery4.isEmpty
-                                  ? 0
-                                  : double.parse(
-                                      '${weeklyQuery4[0]['heartrate']}')),
-                          FlSpot(
-                              5,
-                              weeklyQuery5.isEmpty
-                                  ? 0
-                                  : double.parse(
-                                      '${weeklyQuery5[0]['heartrate']}')),
-                          FlSpot(
-                              6,
-                              weeklyQuery6.isEmpty
-                                  ? 0
-                                  : double.parse(
-                                      '${weeklyQuery6[0]['heartrate']}')),
-                          FlSpot(
-                              7,
-                              weeklyQuery7.isEmpty
-                                  ? 0
-                                  : double.parse(
-                                      '${weeklyQuery7[0]['heartrate']}')),
-                        ]),
-                      )
-                    ],
-                  ),
-                  CustomScrollView(
-                    key: const ValueKey(3),
-                    slivers: [
-                      circularcardsliver(size,
-                          value:
-                              '${getvitals.isEmpty ? 0.0 : getvitals.last.oxygenlevel}',
-                          unit: '%'),
-                      minavgmax(
-                        size,
-                        color2: Colors.black,
-                        color: AppColors.primaryColor,
-                        avgtitle: 'AVG',
-                        avgvalue:
-                            "${avgQuery[0]['oxygenlevel'].toStringAsFixed(2)}",
-                        maxtitle: 'MAX',
-                        maxvalue: "${maxQuery[0]['oxygenlevel']}",
-                        mintitle: 'MIN',
-                        minvalue: "${minQuery[0]['oxygenlevel']}",
-                      ),
-                      SliverToBoxAdapter(
-                        child: Linechart(flspots: [
-                          const FlSpot(0, 0),
-                          FlSpot(
-                              1,
-                              weeklyQuery1.isEmpty
-                                  ? 0
-                                  : double.parse(
-                                      '${weeklyQuery1[0]['oxygenlevel']}')),
-                          FlSpot(
-                              2,
-                              weeklyQuery2.isEmpty
-                                  ? 0
-                                  : double.parse(
-                                      '${weeklyQuery2.last['oxygenlevel']}')),
-                          FlSpot(
-                              3,
-                              weeklyQuery3.isEmpty
-                                  ? 0
-                                  : double.parse(
-                                      '${weeklyQuery3[0]['oxygenlevel']}')),
-                          FlSpot(
-                              4,
-                              weeklyQuery4.isEmpty
-                                  ? 0
-                                  : double.parse(
-                                      '${weeklyQuery4[0]['oxygenlevel']}')),
-                          FlSpot(
-                              5,
-                              weeklyQuery5.isEmpty
-                                  ? 0
-                                  : double.parse(
-                                      '${weeklyQuery5[0]['oxygenlevel']}')),
-                          FlSpot(
-                              6,
-                              weeklyQuery6.isEmpty
-                                  ? 0
-                                  : double.parse(
-                                      '${weeklyQuery6[0]['oxygenlevel']}')),
-                          FlSpot(
-                              7,
-                              weeklyQuery7.isEmpty
-                                  ? 0
-                                  : double.parse(
-                                      '${weeklyQuery7[0]['oxygenlevel']}')),
-                        ]),
-                      )
-                    ],
-                  ),
-                  CustomScrollView(
-                    key: const ValueKey(4),
-                    slivers: [
-                      circularcardsliver(size,
-                          value:
-                              '${getvitals.isEmpty ? 0.0 : getvitals.last.respiration}',
-                          unit: 'bpm'),
-                      minavgmax(
-                        size,
-                        color2: Colors.black,
-                        color: AppColors.primaryColor,
-                        avgtitle: 'AVG',
-                        avgvalue:
-                            "${avgQuery[0]['respiration'].toStringAsFixed(2)}",
-                        maxtitle: 'MAX',
-                        maxvalue: "${maxQuery[0]['respiration']}",
-                        mintitle: 'MIN',
-                        minvalue: "${minQuery[0]['respiration']}",
-                      ),
-                      SliverToBoxAdapter(
-                        child: Linechart(flspots: [
-                          const FlSpot(0, 0),
-                          FlSpot(
-                              1,
-                              weeklyQuery1.isEmpty
-                                  ? 0
-                                  : double.parse(
-                                      '${weeklyQuery1[0]['respiration']}')),
-                          FlSpot(
-                              2,
-                              weeklyQuery2.isEmpty
-                                  ? 0
-                                  : double.parse(
-                                      '${weeklyQuery2.last['respiration']}')),
-                          FlSpot(
-                              3,
-                              weeklyQuery3.isEmpty
-                                  ? 0
-                                  : double.parse(
-                                      '${weeklyQuery3[0]['respiration']}')),
-                          FlSpot(
-                              4,
-                              weeklyQuery4.isEmpty
-                                  ? 0
-                                  : double.parse(
-                                      '${weeklyQuery4[0]['respiration']}')),
-                          FlSpot(
-                              5,
-                              weeklyQuery5.isEmpty
-                                  ? 0
-                                  : double.parse(
-                                      '${weeklyQuery5[0]['respiration']}')),
-                          FlSpot(
-                              6,
-                              weeklyQuery6.isEmpty
-                                  ? 0
-                                  : double.parse(
-                                      '${weeklyQuery6[0]['respiration']}')),
-                          FlSpot(
-                              7,
-                              weeklyQuery7.isEmpty
-                                  ? 0
-                                  : double.parse(
-                                      '${weeklyQuery7[0]['respiration']}')),
-                        ]),
-                      )
-                    ],
-                  ),
-                ]);
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(
+                        color: AppColors.primaryColor, strokeWidth: 5),
+                  );
+                }
+                return snapshot.data!.isNotEmpty
+                    ? TabBarView(key: const ObjectKey('tabview'), children: [
+                        CustomScrollView(
+                          key: const ValueKey(0),
+                          slivers: [
+                            circularcardsliver(size,
+                                value:
+                                    '${getvitals.isEmpty ? 0.0 : getvitals.last.temperature}',
+                                unit: 'deg.celsius'),
+                            minavgmax(
+                              size,
+                              color2: Colors.black,
+                              color: AppColors.primaryColor,
+                              avgtitle: 'AVG',
+                              avgvalue:
+                                  "${avgQuery[0]['temperature'].toStringAsFixed(1)}",
+                              maxtitle: 'MAX',
+                              maxvalue: "${maxQuery[0]['temperature']}",
+                              mintitle: 'MIN',
+                              minvalue: "${minQuery[0]['temperature']}",
+                            ),
+                            SliverToBoxAdapter(
+                              child: Linechart(flspots: [
+                                const FlSpot(0, 0),
+                                FlSpot(
+                                    1,
+                                    weeklyQuery1.isEmpty
+                                        ? 0
+                                        : double.parse(
+                                            '${weeklyQuery1[0]['temperature']}')),
+                                FlSpot(
+                                    2,
+                                    weeklyQuery2.isEmpty
+                                        ? 0
+                                        : double.parse(
+                                            '${weeklyQuery2.last['temperature']}')),
+                                FlSpot(
+                                    3,
+                                    weeklyQuery3.isEmpty
+                                        ? 0
+                                        : double.parse(
+                                            '${weeklyQuery3[0]['temperature']}')),
+                                FlSpot(
+                                    4,
+                                    weeklyQuery4.isEmpty
+                                        ? 0
+                                        : double.parse(
+                                            '${weeklyQuery4[0]['temperature']}')),
+                                FlSpot(
+                                    5,
+                                    weeklyQuery5.isEmpty
+                                        ? 0
+                                        : double.parse(
+                                            '${weeklyQuery5[0]['temperature']}')),
+                                FlSpot(
+                                    6,
+                                    weeklyQuery6.isEmpty
+                                        ? 0
+                                        : double.parse(
+                                            '${weeklyQuery6[0]['temperature']}')),
+                                FlSpot(
+                                    7,
+                                    weeklyQuery7.isEmpty
+                                        ? 0
+                                        : double.parse(
+                                            '${weeklyQuery7[0]['temperature']}')),
+                              ]),
+                            )
+                          ],
+                        ),
+                        CustomScrollView(
+                          key: const ValueKey(1),
+                          slivers: [
+                            circularcardsliver(size,
+                                value:
+                                    '${getvitals.isEmpty ? 0.0 : getvitals.last.bloodpressure}',
+                                unit: 'mmHg'),
+                            minavgmax(
+                              size,
+                              color2: Colors.black,
+                              color: AppColors.primaryColor,
+                              avgtitle: 'AVG',
+                              avgvalue:
+                                  "${avgQuery[0]['bloodpressure'].toStringAsFixed(2)}",
+                              maxtitle: 'MAX',
+                              maxvalue: "${maxQuery[0]['bloodpressure']}",
+                              mintitle: 'MIN',
+                              minvalue: "${minQuery[0]['bloodpressure']}",
+                            ),
+                            SliverToBoxAdapter(
+                              child: Linechart(flspots: [
+                                const FlSpot(0, 0),
+                                FlSpot(
+                                    1,
+                                    weeklyQuery1.isEmpty
+                                        ? 0
+                                        : double.parse(
+                                            '${weeklyQuery1[0]['bloodpressure']}')),
+                                FlSpot(
+                                    2,
+                                    weeklyQuery2.isEmpty
+                                        ? 0
+                                        : double.parse(
+                                            '${weeklyQuery2.last['bloodpressure']}')),
+                                FlSpot(
+                                    3,
+                                    weeklyQuery3.isEmpty
+                                        ? 0
+                                        : double.parse(
+                                            '${weeklyQuery3[0]['bloodpressure']}')),
+                                FlSpot(
+                                    4,
+                                    weeklyQuery4.isEmpty
+                                        ? 0
+                                        : double.parse(
+                                            '${weeklyQuery4[0]['bloodpressure']}')),
+                                FlSpot(
+                                    5,
+                                    weeklyQuery5.isEmpty
+                                        ? 0
+                                        : double.parse(
+                                            '${weeklyQuery5[0]['bloodpressure']}')),
+                                FlSpot(
+                                    6,
+                                    weeklyQuery6.isEmpty
+                                        ? 0
+                                        : double.parse(
+                                            '${weeklyQuery6[0]['bloodpressure']}')),
+                                FlSpot(
+                                    7,
+                                    weeklyQuery7.isEmpty
+                                        ? 0
+                                        : double.parse(
+                                            '${weeklyQuery7[0]['bloodpressure']}')),
+                              ]),
+                            )
+                          ],
+                        ),
+                        CustomScrollView(
+                          key: const ValueKey(2),
+                          slivers: [
+                            circularcardsliver(size,
+                                value:
+                                    '${getvitals.isEmpty ? 0.0 : getvitals.last.heartrate}',
+                                unit: 'bpm'),
+                            minavgmax(
+                              size,
+                              color2: Colors.black,
+                              color: AppColors.primaryColor,
+                              avgtitle: 'AVG',
+                              avgvalue:
+                                  "${avgQuery[0]['heartrate'].toStringAsFixed(2)}",
+                              maxtitle: 'MAX',
+                              maxvalue: "${maxQuery[0]['heartrate']}",
+                              mintitle: 'MIN',
+                              minvalue: "${minQuery[0]['heartrate']}",
+                            ),
+                            SliverToBoxAdapter(
+                              child: Linechart(flspots: [
+                                const FlSpot(0, 0),
+                                FlSpot(
+                                    1,
+                                    weeklyQuery1.isEmpty
+                                        ? 0
+                                        : double.parse(
+                                            '${weeklyQuery1[0]['heartrate']}')),
+                                FlSpot(
+                                    2,
+                                    weeklyQuery2.isEmpty
+                                        ? 0
+                                        : double.parse(
+                                            '${weeklyQuery2.last['heartrate']}')),
+                                FlSpot(
+                                    3,
+                                    weeklyQuery3.isEmpty
+                                        ? 0
+                                        : double.parse(
+                                            '${weeklyQuery3[0]['heartrate']}')),
+                                FlSpot(
+                                    4,
+                                    weeklyQuery4.isEmpty
+                                        ? 0
+                                        : double.parse(
+                                            '${weeklyQuery4[0]['heartrate']}')),
+                                FlSpot(
+                                    5,
+                                    weeklyQuery5.isEmpty
+                                        ? 0
+                                        : double.parse(
+                                            '${weeklyQuery5[0]['heartrate']}')),
+                                FlSpot(
+                                    6,
+                                    weeklyQuery6.isEmpty
+                                        ? 0
+                                        : double.parse(
+                                            '${weeklyQuery6[0]['heartrate']}')),
+                                FlSpot(
+                                    7,
+                                    weeklyQuery7.isEmpty
+                                        ? 0
+                                        : double.parse(
+                                            '${weeklyQuery7[0]['heartrate']}')),
+                              ]),
+                            )
+                          ],
+                        ),
+                        CustomScrollView(
+                          key: const ValueKey(3),
+                          slivers: [
+                            circularcardsliver(size,
+                                value:
+                                    '${getvitals.isEmpty ? 0.0 : getvitals.last.oxygenlevel}',
+                                unit: '%'),
+                            minavgmax(
+                              size,
+                              color2: Colors.black,
+                              color: AppColors.primaryColor,
+                              avgtitle: 'AVG',
+                              avgvalue:
+                                  "${avgQuery[0]['oxygenlevel'].toStringAsFixed(2)}",
+                              maxtitle: 'MAX',
+                              maxvalue: "${maxQuery[0]['oxygenlevel']}",
+                              mintitle: 'MIN',
+                              minvalue: "${minQuery[0]['oxygenlevel']}",
+                            ),
+                            SliverToBoxAdapter(
+                              child: Linechart(flspots: [
+                                const FlSpot(0, 0),
+                                FlSpot(
+                                    1,
+                                    weeklyQuery1.isEmpty
+                                        ? 0
+                                        : double.parse(
+                                            '${weeklyQuery1[0]['oxygenlevel']}')),
+                                FlSpot(
+                                    2,
+                                    weeklyQuery2.isEmpty
+                                        ? 0
+                                        : double.parse(
+                                            '${weeklyQuery2.last['oxygenlevel']}')),
+                                FlSpot(
+                                    3,
+                                    weeklyQuery3.isEmpty
+                                        ? 0
+                                        : double.parse(
+                                            '${weeklyQuery3[0]['oxygenlevel']}')),
+                                FlSpot(
+                                    4,
+                                    weeklyQuery4.isEmpty
+                                        ? 0
+                                        : double.parse(
+                                            '${weeklyQuery4[0]['oxygenlevel']}')),
+                                FlSpot(
+                                    5,
+                                    weeklyQuery5.isEmpty
+                                        ? 0
+                                        : double.parse(
+                                            '${weeklyQuery5[0]['oxygenlevel']}')),
+                                FlSpot(
+                                    6,
+                                    weeklyQuery6.isEmpty
+                                        ? 0
+                                        : double.parse(
+                                            '${weeklyQuery6[0]['oxygenlevel']}')),
+                                FlSpot(
+                                    7,
+                                    weeklyQuery7.isEmpty
+                                        ? 0
+                                        : double.parse(
+                                            '${weeklyQuery7[0]['oxygenlevel']}')),
+                              ]),
+                            )
+                          ],
+                        ),
+                        CustomScrollView(
+                          key: const ValueKey(4),
+                          slivers: [
+                            circularcardsliver(size,
+                                value:
+                                    '${getvitals.isEmpty ? 0.0 : getvitals.last.respiration}',
+                                unit: 'bpm'),
+                            minavgmax(
+                              size,
+                              color2: Colors.black,
+                              color: AppColors.primaryColor,
+                              avgtitle: 'AVG',
+                              avgvalue:
+                                  "${avgQuery[0]['respiration'].toStringAsFixed(2)}",
+                              maxtitle: 'MAX',
+                              maxvalue: "${maxQuery[0]['respiration']}",
+                              mintitle: 'MIN',
+                              minvalue: "${minQuery[0]['respiration']}",
+                            ),
+                            SliverToBoxAdapter(
+                              child: Linechart(flspots: [
+                                const FlSpot(0, 0),
+                                FlSpot(
+                                    1,
+                                    weeklyQuery1.isEmpty
+                                        ? 0
+                                        : double.parse(
+                                            '${weeklyQuery1[0]['respiration']}')),
+                                FlSpot(
+                                    2,
+                                    weeklyQuery2.isEmpty
+                                        ? 0
+                                        : double.parse(
+                                            '${weeklyQuery2.last['respiration']}')),
+                                FlSpot(
+                                    3,
+                                    weeklyQuery3.isEmpty
+                                        ? 0
+                                        : double.parse(
+                                            '${weeklyQuery3[0]['respiration']}')),
+                                FlSpot(
+                                    4,
+                                    weeklyQuery4.isEmpty
+                                        ? 0
+                                        : double.parse(
+                                            '${weeklyQuery4[0]['respiration']}')),
+                                FlSpot(
+                                    5,
+                                    weeklyQuery5.isEmpty
+                                        ? 0
+                                        : double.parse(
+                                            '${weeklyQuery5[0]['respiration']}')),
+                                FlSpot(
+                                    6,
+                                    weeklyQuery6.isEmpty
+                                        ? 0
+                                        : double.parse(
+                                            '${weeklyQuery6[0]['respiration']}')),
+                                FlSpot(
+                                    7,
+                                    weeklyQuery7.isEmpty
+                                        ? 0
+                                        : double.parse(
+                                            '${weeklyQuery7[0]['respiration']}')),
+                              ]),
+                            )
+                          ],
+                        ),
+                      ])
+                    : const Center(
+                        child: Text('No data at the moment'),
+                      );
               }),
         ));
   }
@@ -491,9 +502,9 @@ class _VitalshistoryState extends State<Vitalshistory> {
       required maxvalue}) {
     return SliverToBoxAdapter(
       child: Container(
-          width: size.width - 20,
+          width: size.width,
           height: size.height * 0.2,
-          margin: const EdgeInsets.only(top: 20, right: 20, left: 20),
+          margin: const EdgeInsets.only(top: 20, right: 5, left: 5),
           padding: const EdgeInsets.all(0),
           decoration: BoxDecoration(
             color: AppColors.primaryColor.withOpacity(0.4),
@@ -501,11 +512,11 @@ class _VitalshistoryState extends State<Vitalshistory> {
           ),
           child: VxGlassmorphic(
             blur: 0,
-            circularRadius: 5,
+            circularRadius: 30,
             shadowStrength: 0,
             opacity: 0.5,
             height: size.height * 0.2,
-            width: size.width - 20,
+            width: size.width,
             child: HStack(
               [
                 minmaxavgelement(
@@ -529,8 +540,8 @@ class _VitalshistoryState extends State<Vitalshistory> {
                   value: maxvalue,
                 ),
               ],
-              alignment: MainAxisAlignment.spaceBetween,
-            ).px12().py12(),
+              alignment: MainAxisAlignment.spaceEvenly,
+            ).px4().py12(),
           )),
     );
   }
@@ -559,7 +570,7 @@ class _VitalshistoryState extends State<Vitalshistory> {
                 fontFamily: 'Pop')),
         const SizedBox(height: 20),
         Divider(color: AppColors.primaryColor.withOpacity(0.6), thickness: 1),
-      ]).px20().py8(),
+      ]).px12().py4(),
     );
   }
 

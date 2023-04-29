@@ -1,22 +1,49 @@
 import 'package:MedBox/constants/colors.dart';
+import 'package:MedBox/main.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:velocity_x/velocity_x.dart';
-
 import '../../../domain/models/rapidtestmodel.dart';
 import '../rapidtests/scheduletest.dart';
 
-class RapidTests extends StatelessWidget {
+class RapidTests extends StatefulWidget {
   const RapidTests({
     super.key,
   });
 
   @override
+  State<RapidTests> createState() => _RapidTestsState();
+}
+
+class _RapidTestsState extends State<RapidTests> {
+  String userID = prefs.getString('googlename') ??
+      prefs.getString('username') ??
+      'Anonymous';
+
+  Stream? rapidtests;
+
+  @override
+  void initState() {
+    rapidtests = FirebaseFirestore.instance
+        .collection('rapidtests')
+        .doc(userID)
+        .snapshots();
+
+    print('rapidtests!.length');
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    return CustomScrollView(
-      slivers: [_titlebox(size, context), _testlists()],
-    );
+    return StreamBuilder(
+        stream: rapidtests,
+        builder: ((context, snapshot) => CustomScrollView(
+              slivers: [
+                _titlebox(size, context),
+              ],
+            )));
   }
 
   SliverList _testlists() {
@@ -71,7 +98,7 @@ class RapidTests extends StatelessWidget {
                       color: Colors.white,
                       fontWeight: FontWeight.w500,
                       fontFamily: 'Pop'),
-                ).centered().px16(),
+                ).centered().px12(),
               ),
             ),
           ),

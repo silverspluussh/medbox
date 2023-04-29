@@ -17,8 +17,10 @@ class MyVitals extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+    return Container(
+      width: size.width,
+      height: size.height,
+      padding: const EdgeInsets.all(10),
       child: FutureBuilder(
           future: VitalsDB().getvitals(),
           builder: (context, snapshot) {
