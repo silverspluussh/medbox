@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-
 import 'package:syncfusion_flutter_charts/charts.dart';
-import 'package:velocity_x/velocity_x.dart';
-
 import '../../domain/models/vitalsmodel.dart';
 
 class RadialBarAngle extends StatefulWidget {
@@ -26,16 +23,11 @@ class _RadialBarAngleState extends State<RadialBarAngle> {
   @override
   Widget build(BuildContext context) {
     return SfCircularChart(
+      legend: Legend(height: '0', isVisible: false),
       title: ChartTitle(
           text: 'Overview Chart'.toUpperCase(),
           textStyle:
               const TextStyle(fontFamily: 'Pop', fontWeight: FontWeight.w500)),
-      legend: Legend(
-          height: '200',
-          isVisible: true,
-          iconHeight: 30,
-          iconWidth: 30,
-          overflowMode: LegendItemOverflowMode.wrap),
       tooltipBehavior: _tooltipBehavior,
       series: _getRadialBarSeries(
         t: double.parse('${widget.model[0].temperature}'),
@@ -47,7 +39,7 @@ class _RadialBarAngleState extends State<RadialBarAngle> {
         rr: double.parse('${widget.model[0].respiration}'),
         w: double.parse('${widget.model[0].weight}'),
       ),
-    ).py32();
+    );
   }
 
   List<RadialBarSeries<ChartSampleData, String>> _getRadialBarSeries(

@@ -35,4 +35,9 @@ class SharedCli {
 
   String? getemoji() => prefs.getString('emotion');
   Future<bool> setemo({required value}) => prefs.setString('emotion', value);
+
+  //
+
+  Future<bool> setuserID({required value}) => prefs.setString('userID', value);
+  String? getuserID() => prefs.getString('userID');
 }

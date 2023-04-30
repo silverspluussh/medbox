@@ -3,8 +3,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:velocity_x/velocity_x.dart';
 import '../../../constants/colors.dart';
-import '../../../data/datasource/fbasehelper.dart';
-import '../../../domain/sharedpreferences/profileshared.dart';
+import '../../../domain/sharedpreferences/sharedprefs.dart';
 import '../../../utils/extensions/photos_extension.dart';
 
 class PersonalProfile extends StatefulWidget {
@@ -37,7 +36,6 @@ class _PersonalProfileState extends State<PersonalProfile> {
 
   void referesh() async {
     pfp = SharedCli().getpfp();
-    google = SharedCli().getgmailstatus() ?? false;
     usernames = SharedCli().getusername();
     setState(() {});
   }
@@ -128,30 +126,22 @@ class _PersonalProfileState extends State<PersonalProfile> {
                       : 'first name',
                   width: size.width),
               inputformfield(
+                  controller: lname,
                   widget: const Icon(Icons.details_sharp,
                       color: AppColors.primaryColor),
                   title: 'Last name',
-                  hinttext: SharedCli().getemail() != null
-                      ? SharedCli().getemail()!
+                  hinttext: SharedCli().getlname() != null
+                      ? SharedCli().getlname()!
                       : 'last name',
                   width: size.width),
               inputformfield(
-                  controller: email,
-                  widget: const Icon(Icons.email_outlined,
-                      color: AppColors.primaryColor),
+                  controller: phonenumber,
+                  widget:
+                      const Icon(Icons.phone, color: AppColors.primaryColor),
                   title: 'Phone number',
                   hinttext: SharedCli().getcontact() != null
                       ? SharedCli().getcontact()!
                       : 'contact',
-                  width: size.width),
-              inputformfield(
-                  controller: email,
-                  widget: const Icon(Icons.email_outlined,
-                      color: AppColors.primaryColor),
-                  title: 'Email address',
-                  hinttext: SharedCli().getemail() != null
-                      ? SharedCli().getemail()!
-                      : 'email',
                   width: size.width),
               google == false
                   ? inputformfield(
@@ -161,7 +151,7 @@ class _PersonalProfileState extends State<PersonalProfile> {
                       title: 'Date of Birth',
                       hinttext: SharedCli().getdob() != null
                           ? SharedCli().getdob()!
-                          : 'date of birth',
+                          : 'format: d/mm/yyyy',
                       width: size.width)
                   : const SizedBox(),
               Visibility(
@@ -248,16 +238,12 @@ class _PersonalProfileState extends State<PersonalProfile> {
     if (dob.text.isNotEmpty) {
       SharedCli().dob(value: dob.text);
     }
-    if (email.text.isNotEmpty) {
-      await FireBaseCLi().updateEmail(email.text);
-      SharedCli().email(value: dob.text);
-    }
 
     if (lname.text.isNotEmpty) {
       SharedCli().lastname(value: lname.text);
     }
     if (username.text.isNotEmpty) {
-      SharedCli().lastname(value: username.text);
+      SharedCli().username(value: username.text);
     }
 
     if (phonenumber.text.isNotEmpty) {

@@ -1,9 +1,10 @@
 import 'package:MedBox/main.dart';
 import 'package:flutter/material.dart';
-import 'package:MedBox/presentation/pages/intro_page.dart';
 import 'package:MedBox/data/datasource/fbasehelper.dart';
 import 'package:flutter/services.dart';
 import 'package:velocity_x/velocity_x.dart';
+
+import 'onboarding.dart';
 
 class Settings extends StatefulWidget {
   const Settings({super.key});
@@ -53,8 +54,8 @@ class _SettingsState extends State<Settings> {
                 callback: () => SystemNavigator.pop()),
             const SizedBox(height: 30),
             Image.asset(
-              'assets/images/ic_launcher_adaptive_fore.png',
-              width: size.width * 0.45,
+              'assets/images/medboxicon.png',
+              width: size.width * 0.4,
               height: size.height * 0.2,
             ).centered(),
             const SizedBox(height: 20),
@@ -99,8 +100,6 @@ class _SettingsState extends State<Settings> {
                   TextButton(
                     onPressed: () async {
                       FireBaseCLi().signOut().then((value) async {
-                        prefs.remove('googleloggedin');
-                        prefs.remove('gpfp');
                         Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(

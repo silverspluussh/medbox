@@ -1,108 +1,67 @@
 import 'dart:developer';
 import 'package:MedBox/domain/models/medication_model.dart';
+import 'package:MedBox/main.dart';
 import 'package:sqflite/sqflite.dart';
-
-import '../../../domain/sharedpreferences/profileshared.dart';
+import '../../../domain/sharedpreferences/sharedprefs.dart';
 
 class MedicationsDB {
   static Database? _database;
   static const int _version = 3;
   static const String _colname = 'medications';
 
-  static const String _googlecolname = 'gmedications';
-
-  static Future<void> initDatabase() async {
-    if (_database != null) {
+  Future<void> initDatabase() async {
+    if (_database != null &&
+        prefs.getString('uid') == SharedCli().getuserID()) {
       return;
     }
     try {
-      bool google = SharedCli().getgmailstatus() ?? false;
+      String path = '${await getDatabasesPath()}medications.db';
+      _database = await openDatabase(
+        path,
+        version: _version,
+        onCreate: (db, version) {
+          log('creating medications db');
 
-      if (google == false) {
-        String path = '${await getDatabasesPath()}medications.db';
-        _database = await openDatabase(
-          path,
-          version: _version,
-          onCreate: (db, version) {
-            log('creating medications db');
-
-            return db.execute('''
+          return db.execute('''
               CREATE TABLE $_colname (
               id INTEGER PRIMARY KEY AUTOINCREMENT,
               medicinename TEXT, dose TEXT, medicinetype TEXT,
                image TEXT
               )''');
-          },
-        );
-      } else if (google == true) {
-        String path = '${await getDatabasesPath()}gmedications.db';
-        _database = await openDatabase(
-          path,
-          version: _version,
-          onCreate: (db, version) {
-            log('creating googlemedications db');
-
-            return db.execute('''
-              CREATE TABLE $_googlecolname (
-              id INTEGER PRIMARY KEY AUTOINCREMENT,
-              medicinename TEXT, dose TEXT, medicinetype TEXT,
-               image TEXT
-              )''');
-          },
-        );
-      }
+        },
+      );
     } catch (e) {
       log(e.toString());
     }
   }
 
-  static Future<int> insertmedication(MModel? mmodel) async {
-    await initDatabase();
-    bool google = SharedCli().getgmailstatus() ?? false;
-
-    return await _database?.insert(
-            google == false ? _colname : _googlecolname, mmodel!.toJson()) ??
-        1;
+  Future<int> insertmedication(MModel? mmodel) async {
+    return await _database?.insert(_colname, mmodel!.toJson()) ?? 1;
   }
 
   Future<int> updatemedicine(MModel mmodel) async {
-    await initDatabase();
-    bool google = SharedCli().getgmailstatus() ?? false;
-
-    return await _database!.update(
-        google == false ? _colname : _googlecolname, mmodel.toJson(),
+    return await _database!.update(_colname, mmodel.toJson(),
         where: 'id =?', whereArgs: [mmodel.id]);
   }
 
   Future<int> deletemedication(int id) async {
-    await initDatabase();
-    bool google = SharedCli().getgmailstatus() ?? false;
-
-    return await _database!.delete(google == false ? _colname : _googlecolname,
-        where: 'id =?', whereArgs: [id]);
+    return await _database!.delete(_colname, where: 'id =?', whereArgs: [id]);
   }
 
-  static Future<List<Map<String, dynamic>>> querymedication() async {
-    await initDatabase();
-    bool google = SharedCli().getgmailstatus() ?? false;
-
+  Future<List<Map<String, dynamic>>> querymedication() async {
     log('retrieving medicine');
-    return await _database!.query(google == false ? _colname : _googlecolname);
+    return await _database!.query(_colname);
   }
 
   Future<List<MModel>> getmeds() async {
     await initDatabase();
-    bool google = SharedCli().getgmailstatus() ?? false;
-
-    var result =
-        await _database!.query(google == false ? _colname : _googlecolname);
+    var result = await _database!.query(_colname);
     return List.generate(result.length, (i) {
       return MModel.fromJson(result[i]);
     });
   }
 
   Future<int> addmedController({MModel? mModel}) async {
-    await initDatabase();
-    return await MedicationsDB.insertmedication(mModel);
+    return await MedicationsDB().insertmedication(mModel);
   }
 }

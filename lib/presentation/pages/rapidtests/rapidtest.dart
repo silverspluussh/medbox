@@ -1,4 +1,6 @@
 import 'package:MedBox/constants/colors.dart';
+import 'package:MedBox/data/datasource/fbasehelper.dart';
+import 'package:MedBox/domain/sharedpreferences/sharedprefs.dart';
 import 'package:MedBox/main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -16,20 +18,6 @@ class RapidTests extends StatefulWidget {
 }
 
 class _RapidTestsState extends State<RapidTests> {
-  String userID = prefs.getString('googlename') ??
-      prefs.getString('username') ??
-      'Anonymous';
-
-  final Stream<QuerySnapshot> tests = FirebaseFirestore.instance
-      .collection('rapidtests')
-      .where('patientcontact', isEqualTo: '0557466718')
-      .snapshots();
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -37,12 +25,15 @@ class _RapidTestsState extends State<RapidTests> {
     return StreamBuilder(
         stream: FirebaseFirestore.instance
             .collection('rapidtests')
-            .doc('joojo')
+            .where('patientcontact', isEqualTo: SharedCli().getemail())
             .snapshots(),
-        builder: ((context, snapshot) => CustomScrollView(
+        builder: ((context, tests) {
+          if (tests.hasData) {
+            print(SharedCli().getemail());
+            return CustomScrollView(
               slivers: [
                 _titlebox(size, context),
-                snapshot.hasData
+                tests.data!.docs.isNotEmpty
                     ? SliverList(
                         delegate: SliverChildBuilderDelegate((context, index) {
                         return ListTile(
@@ -61,38 +52,23 @@ class _RapidTestsState extends State<RapidTests> {
                           title: Card(
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(1)),
-                            color: snapshot.data!.data()!['testresults']
-                                        [index] ==
-                                    true
-                                ? Colors.red
-                                : Colors.green,
-                            child: Text(snapshot.data!
-                                    .data()!['results'][index]
-                                    .toString()
-                                    .trim())
-                                .centered()
-                                .py8(),
+                            color:
+                                tests.data!.docs.first['testresults']![index] ==
+                                        true
+                                    ? Colors.red
+                                    : Colors.green,
+                            child: Text(
+                              tests.data!.docs[0]['results']![index],
+                            ).centered().py8(),
                           ),
                           subtitle: Text(
-                            snapshot.data!
-                                .data()!['testname'][index]
-                                .toString()
-                                .trim(),
+                            tests.data!.docs[0]['testname']![index],
                             style: const TextStyle(
                                 fontFamily: 'Pop',
                                 fontWeight: FontWeight.w400,
                                 color: Colors.black),
                           ),
-                          trailing: Text(
-                            snapshot.data!
-                                .data()!['testdate'][index]
-                                .toString()
-                                .trim(),
-                            style: const TextStyle(
-                                fontFamily: 'Pop',
-                                fontWeight: FontWeight.w400,
-                                color: AppColors.primaryColor),
-                          ),
+                          trailing: const SizedBox(width: 70),
                         ).p8();
                       }, childCount: 2))
                     : const SliverToBoxAdapter(
@@ -101,7 +77,12 @@ class _RapidTestsState extends State<RapidTests> {
                         ),
                       )
               ],
-            )));
+            );
+          }
+          return const Center(
+            child: Text('No rapid test available.'),
+          );
+        }));
   }
 
   SliverToBoxAdapter _titlebox(Size size, BuildContext context) {

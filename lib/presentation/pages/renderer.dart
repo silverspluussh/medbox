@@ -1,6 +1,7 @@
-import 'package:MedBox/domain/sharedpreferences/profileshared.dart';
+import 'package:MedBox/domain/sharedpreferences/sharedprefs.dart';
 import 'package:MedBox/presentation/pages/myprofile/myprofile.dart';
-import 'package:MedBox/presentation/pages/reminders/reminders_main.dart';
+import 'package:MedBox/presentation/pages/reminders/reminders.dart';
+
 import 'package:flutter/material.dart';
 import 'package:MedBox/presentation/providers/navigation.dart';
 import 'package:MedBox/presentation/pages/medication/medication_main.dart';
@@ -25,16 +26,6 @@ class _RenderState extends State<Render> with SingleTickerProviderStateMixin {
   late String? username;
   var pfp;
 
-  bool alarmactive = false;
-
-  void referesh() async {
-    final datum = await NotifConsole().getreminders();
-
-    setState(() {
-      datum.isNotEmpty ? alarmactive = true : alarmactive = false;
-    });
-  }
-
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -44,14 +35,14 @@ class _RenderState extends State<Render> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    referesh();
     setState(() {
       pfp = SharedCli().getpfp();
       username = SharedCli().getusername();
     });
     super.initState();
+
     animationController = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 300));
+        vsync: this, duration: const Duration(milliseconds: 200));
     _pages = [
       const DashboardOverview(),
       const Medications(),
@@ -71,7 +62,7 @@ class _RenderState extends State<Render> with SingleTickerProviderStateMixin {
     return WillPopScope(
       onWillPop: () async {
         VxToast.show(context,
-            msg: 'Slide to Exit Med Box',
+            msg: 'exit denied',
             pdVertical: 20,
             pdHorizontal: 20,
             bgColor: Colors.red,
@@ -84,11 +75,7 @@ class _RenderState extends State<Render> with SingleTickerProviderStateMixin {
           backgroundColor: AppColors.scaffoldColor,
           appBar: AppBar(
             automaticallyImplyLeading: false,
-            centerTitle: _selectedIndex == 0
-                ? false
-                : _selectedIndex == 1
-                    ? false
-                    : true,
+            centerTitle: _selectedIndex == 0 ? false : true,
             title: _selectedIndex == 0
                 ? _dashboardtitle()
                 : _selectedIndex == 1
@@ -118,9 +105,9 @@ class _RenderState extends State<Render> with SingleTickerProviderStateMixin {
                                 color: Colors.black),
                           ),
             actions: _selectedIndex == 0
-                ? _dashboardactions(pfp)
+                ? _dashboardactions(context, pfp)
                 : _selectedIndex == 1
-                    ? _medicationactions(context, alarmactive: alarmactive)
+                    ? []
                     : _selectedIndex == 2
                         ? []
                         : [],
@@ -193,24 +180,7 @@ class _RenderState extends State<Render> with SingleTickerProviderStateMixin {
   }
 }
 
-List<Widget> _medicationactions(BuildContext context, {required alarmactive}) {
-  return [
-    Badge(
-      smallSize: 10,
-      backgroundColor: alarmactive == true ? Colors.green : Colors.red,
-      alignment: AlignmentDirectional.topStart,
-      child: IconButton(
-          onPressed: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => const DrugAlarms()));
-          },
-          icon: const ImageIcon(
-              size: 25, AssetImage('assets/icons/reminder.png'))),
-    )
-  ];
-}
-
-List<Widget> _dashboardactions(pfp) {
+List<Widget> _dashboardactions(BuildContext context, pfp) {
   return [
     Container(
       height: 25,
@@ -227,14 +197,32 @@ List<Widget> _dashboardactions(pfp) {
                       : const AssetImage('assets/icons/profile-35-64.png')
                           as ImageProvider)),
     ),
-    DropdownButton(
-      items: [],
-      onChanged: (e) {},
-      icon: const Icon(
-        Icons.notifications_none_outlined,
-        size: 25,
-        color: AppColors.primaryColor,
-      ),
-    )
+    const SizedBox(width: 10),
+    FutureBuilder(
+        future: NotifConsole().pendingreminders(),
+        builder: (c, x) {
+          if (x.hasData) {
+            return VxBadge(
+                color: x.data!.isNotEmpty ? Colors.green : Colors.red,
+                size: 10,
+                type: VxBadgeType.round,
+                position: VxBadgePosition.rightTop,
+                child: Semantics(
+                  tooltip: 'Medication reminders',
+                  button: true,
+                  child: IconButton(
+                    onPressed: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: ((context) => const MedReminders()))),
+                    icon: const Icon(Icons.notifications_active_outlined,
+                        size: 30),
+                    color: AppColors.primaryColor.withOpacity(0.6),
+                  ),
+                ));
+          }
+          return const SizedBox();
+        }),
+    const SizedBox(width: 10)
   ];
 }

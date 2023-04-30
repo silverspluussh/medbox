@@ -1,4 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
+import 'package:MedBox/data/repos/Dbhelpers/medicationdb.dart';
+import 'package:MedBox/data/repos/Dbhelpers/prescriptiondb.dart';
+import 'package:MedBox/data/repos/Dbhelpers/remindDb.dart';
 import 'package:MedBox/presentation/pages/prescriptions/addprescription.dart';
 import 'package:MedBox/presentation/pages/prescriptions/viewprescription.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +12,7 @@ import 'package:provider/provider.dart';
 import 'package:velocity_x/velocity_x.dart';
 import '../../data/repos/Dbhelpers/vitalsdb.dart';
 import '../../domain/models/emotions.dart';
-import '../../domain/sharedpreferences/profileshared.dart';
+import '../../domain/sharedpreferences/sharedprefs.dart';
 
 class DashboardOverview extends StatefulWidget {
   const DashboardOverview({super.key});
@@ -26,7 +29,12 @@ class _DashboardOverviewState extends State<DashboardOverview> {
 
   bool loading = true;
   void referesh() async {
-    final data1 = await VitalsDB.queryvital();
+    await VitalsDB().initDatabase();
+    await ReminderDB().initDatabase();
+    await PrescriptionDB().initDatabase();
+    await MedicationsDB().initDatabase();
+
+    final data1 = await VitalsDB().queryvital();
     setState(() {
       vitals = data1;
       loading = false;
@@ -35,8 +43,6 @@ class _DashboardOverviewState extends State<DashboardOverview> {
 
   setfield() async {
     setState(() {
-      isgoogle = SharedCli().getgmailstatus() ?? false;
-
       emoaddress = SharedCli().getemoji() ?? 'assets/images/exciting.png';
     });
   }

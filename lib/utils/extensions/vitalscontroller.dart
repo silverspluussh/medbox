@@ -3,6 +3,6 @@ import '../../domain/models/vitalsmodel.dart';
 
 class VController {
   Future<int> addvital({VModel? vModel}) async {
-    return await VitalsDB.insertvitals(vModel);
+    return await VitalsDB().insertvitals(vModel);
   }
 }

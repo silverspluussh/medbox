@@ -1,0 +1,29 @@
+flutter_native_splash:
+  color: "#ffffff"
+  image: assets/images/medboxicon.png
+
+  
+  #branding: assets/dart.png
+
+  #branding_mode: bottom
+
+  android_12:
+   
+    image: assets/images/medboxicon.png
+
+    # Splash screen background color.
+    color: "#ffffff"
+
+
+  android: true
+  ios: true
+  web: false
+
+
+
+  fullscreen: true
+
+  # do not remove any spaces:
+  #info_plist_files:
+  #  - 'ios/Runner/Info-Debug.plist'
+  #  - 'ios/Runner/Info-Release.plist'

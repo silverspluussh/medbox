@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:MedBox/utils/extensions/notification.dart';
 import 'package:flutter/material.dart';
 import 'package:MedBox/constants/colors.dart';
 import 'package:MedBox/presentation/pages/renderer.dart';
@@ -32,7 +33,7 @@ class _AddVitalsState extends State<AddVitals> {
   late List<Map<String, dynamic>> vitals = [];
 
   void referesh() async {
-    final data1 = await VitalsDB.queryvital();
+    final data1 = await VitalsDB().queryvital();
     setState(() {
       vitals = data1;
     });
@@ -69,13 +70,31 @@ class _AddVitalsState extends State<AddVitals> {
                 children: [
                   const SizedBox(height: 10),
                   inputformfield(
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'Field cannot be empty';
+                        }
+                        if (int.parse(value) > 200) {
+                          return 'Field cannot exceed 200';
+                        }
+                        return null;
+                      },
                       controller: temp,
                       title: 'Temperature',
-                      hinttext: 'Temperature',
+                      hinttext: 'eg. 25 degree celsius',
                       width: size.width - 20,
                       height: 50),
                   const SizedBox(height: 15),
                   inputformfield(
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'Field cannot be empty';
+                        }
+                        if (int.parse(value) > 200) {
+                          return 'Field cannot exceed 200';
+                        }
+                        return null;
+                      },
                       controller: pressure,
                       title: 'Blood pressure',
                       hinttext: 'Blood pressure',
@@ -83,6 +102,15 @@ class _AddVitalsState extends State<AddVitals> {
                       height: 50),
                   const SizedBox(height: 15),
                   inputformfield(
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'Field cannot be empty';
+                        }
+                        if (int.parse(value) > 200) {
+                          return 'Field cannot exceed 200';
+                        }
+                        return null;
+                      },
                       controller: heartrate,
                       title: 'Heart rate',
                       hinttext: 'Heart rate',
@@ -90,6 +118,15 @@ class _AddVitalsState extends State<AddVitals> {
                       height: 50),
                   const SizedBox(height: 15),
                   inputformfield(
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'Field cannot be empty';
+                        }
+                        if (int.parse(value) > 200) {
+                          return 'Field cannot exceed 200';
+                        }
+                        return null;
+                      },
                       controller: oxygen,
                       title: 'Oxygen level',
                       hinttext: 'level of oxygen',
@@ -97,6 +134,15 @@ class _AddVitalsState extends State<AddVitals> {
                       height: 50),
                   const SizedBox(height: 15),
                   inputformfield(
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'Field cannot be empty';
+                        }
+                        if (int.parse(value) > 200) {
+                          return 'Field cannot exceed 200';
+                        }
+                        return null;
+                      },
                       controller: respiration,
                       title: 'Respiratory rate',
                       hinttext: 'Rate of respiration',
@@ -106,16 +152,34 @@ class _AddVitalsState extends State<AddVitals> {
                   Row(
                     children: [
                       inputformfield(
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'Field cannot be empty';
+                            }
+                            if (int.parse(value) > 500) {
+                              return 'Field cannot exceed 200';
+                            }
+                            return null;
+                          },
                           controller: weight,
                           title: 'Weight',
-                          hinttext: 'weight',
+                          hinttext: 'input weight in kilograms(kg)',
                           width: size.width * 0.36,
                           height: 50),
                       const Spacer(),
                       inputformfield(
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'Field cannot be empty';
+                            }
+                            if (int.parse(value) > 250) {
+                              return 'Field cannot exceed 250cm';
+                            }
+                            return null;
+                          },
                           controller: height,
                           title: 'Height',
-                          hinttext: 'Height',
+                          hinttext: 'input height in centimeters(cm)',
                           width: size.width * 0.36,
                           height: 50),
                     ],
@@ -152,6 +216,8 @@ class _AddVitalsState extends State<AddVitals> {
                         } catch (e) {
                           rethrow;
                         } finally {
+                          await bpp(double.parse(pressure.text.trim()));
+
                           bmi.clear();
                           respiration.clear();
                           height.clear();
@@ -160,7 +226,6 @@ class _AddVitalsState extends State<AddVitals> {
                           heartrate.clear();
                           oxygen.clear();
                           weight.clear();
-
                           Future.delayed(const Duration(milliseconds: 700), () {
                             Navigator.pushReplacement(
                                 context,
@@ -195,28 +260,49 @@ class _AddVitalsState extends State<AddVitals> {
     );
   }
 
+  Future bpp(var bp) async {
+    if (bp == 120) {
+      NotifConsole().instantnotif(
+          title: 'Blood Pressure', body: 'Your blood pressure is okay.');
+    } else if (bp > 120 && bp <= 129) {
+      NotifConsole().instantnotif(
+          title: 'Blood Pressure',
+          body: 'Take a moment to relax, your bp seem a bit abnormal');
+    } else if (bp > 129 && bp <= 139) {
+      NotifConsole().instantnotif(
+          title: 'Blood Pressure',
+          body: 'Take a short break and take deep breathes');
+    } else if (bp > 139) {
+      NotifConsole().instantnotif(
+          title: 'Blood Pressure',
+          body: 'Please contact your doctor on your blood pressure levels');
+    }
+  }
+
   Future bmical() async {
     if (weight.text.isNotEmpty && height.text.isNotEmpty) {
-      var result = (double.parse(weight.text) /
-          (double.parse(height.text) * double.parse(height.text)));
+      var result = (double.parse(weight.text.trim()) /
+          (double.parse(height.text.trim()).meterxs *
+              double.parse(height.text.trim()).meterxs));
 
       setState(() {
-        bmi.text = result.toStringAsFixed(2);
+        bmi.text = result.toStringAsFixed(1);
       });
     } else {
       setState(() {
-        bmi.text = '0.00';
+        bmi.text = '0.0';
       });
     }
   }
 
-  inputformfield(
-      {required String title,
-      TextEditingController? controller,
-      required String hinttext,
-      double? width,
-      double? height,
-      Widget? widget}) {
+  inputformfield({
+    required String title,
+    TextEditingController? controller,
+    required String hinttext,
+    FormFieldValidator? validator,
+    double? width,
+    double? height,
+  }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -241,32 +327,22 @@ class _AddVitalsState extends State<AddVitals> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SizedBox(
-                  width: width! - 67,
+                  width: width! - 30,
                   height: height,
                   child: TextFormField(
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'Field cannot be empty';
-                      }
-                      return null;
-                    },
+                    validator: validator,
                     autofocus: false,
                     style: const TextStyle(
                         fontWeight: FontWeight.w400, fontSize: 12),
                     keyboardType: TextInputType.number,
                     controller: controller,
-                    readOnly: widget == null ? false : true,
                     decoration: InputDecoration(
                       hintText: hinttext,
                       border: InputBorder.none,
                       contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 15, vertical: 0),
+                          horizontal: 10, vertical: 0),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: widget ?? const SizedBox(),
                 ),
               ],
             ),
@@ -276,4 +352,8 @@ class _AddVitalsState extends State<AddVitals> {
       ],
     );
   }
+}
+
+extension on num {
+  num get meterxs => this * 0.1;
 }

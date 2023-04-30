@@ -33,7 +33,6 @@ class _VitalshistoryState extends State<Vitalshistory> {
   @override
   void initState() {
     overallQuery();
-    setState(() {});
     super.initState();
   }
 
@@ -88,6 +87,8 @@ class _VitalshistoryState extends State<Vitalshistory> {
       await VitalsDB().weeklyreadings(day: 'Sunday').then((value) {
         weeklyQuery7 = value;
       });
+
+      setState(() {});
     } catch (e) {
       log(e.toString());
     }
@@ -124,7 +125,6 @@ class _VitalshistoryState extends State<Vitalshistory> {
                   color: Colors.black,
                 )),
             bottom: TabBar(
-              key: const ObjectKey('tabbar'),
               tabs: [
                 ...icons.map((e) => Tab(
                       icon: ImageIcon(AssetImage(e)),
@@ -144,7 +144,6 @@ class _VitalshistoryState extends State<Vitalshistory> {
                 return snapshot.data!.isNotEmpty
                     ? TabBarView(key: const ObjectKey('tabview'), children: [
                         CustomScrollView(
-                          key: const ValueKey(0),
                           slivers: [
                             circularcardsliver(size,
                                 value:
@@ -212,7 +211,6 @@ class _VitalshistoryState extends State<Vitalshistory> {
                           ],
                         ),
                         CustomScrollView(
-                          key: const ValueKey(1),
                           slivers: [
                             circularcardsliver(size,
                                 value:
@@ -280,7 +278,6 @@ class _VitalshistoryState extends State<Vitalshistory> {
                           ],
                         ),
                         CustomScrollView(
-                          key: const ValueKey(2),
                           slivers: [
                             circularcardsliver(size,
                                 value:
@@ -348,7 +345,6 @@ class _VitalshistoryState extends State<Vitalshistory> {
                           ],
                         ),
                         CustomScrollView(
-                          key: const ValueKey(3),
                           slivers: [
                             circularcardsliver(size,
                                 value:
@@ -416,7 +412,6 @@ class _VitalshistoryState extends State<Vitalshistory> {
                           ],
                         ),
                         CustomScrollView(
-                          key: const ValueKey(4),
                           slivers: [
                             circularcardsliver(size,
                                 value:

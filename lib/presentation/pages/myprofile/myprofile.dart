@@ -1,5 +1,5 @@
 import 'package:MedBox/constants/colors.dart';
-import 'package:MedBox/presentation/pages/myprofile/rapidtest.dart';
+import 'package:MedBox/presentation/pages/rapidtests/rapidtest.dart';
 import 'package:flutter/material.dart';
 import 'package:velocity_x/velocity_x.dart';
 import 'myvitals.dart';

@@ -46,7 +46,7 @@ class _AddPrescriptionState extends State<AddPrescription> {
 
   @override
   void initState() {
-    PrescriptionDB.initDatabase();
+    PrescriptionDB().initDatabase();
     loadCamera();
     super.initState();
   }

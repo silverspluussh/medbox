@@ -56,7 +56,7 @@ class MyVitals extends StatelessWidget {
                         SliverToBoxAdapter(
                           child: SizedBox(
                               width: size.width,
-                              height: size.height * 0.87,
+                              height: size.height * 0.5,
                               child: RadialBarAngle(
                                 model: model,
                               )),

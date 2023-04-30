@@ -2,6 +2,7 @@ import 'package:MedBox/constants/colors.dart';
 import 'package:MedBox/data/repos/Dbhelpers/prescriptiondb.dart';
 import 'package:flutter/material.dart';
 import 'package:velocity_x/velocity_x.dart';
+import 'addprescription.dart';
 
 class Prescription extends StatefulWidget {
   const Prescription({super.key});
@@ -11,11 +12,6 @@ class Prescription extends StatefulWidget {
 }
 
 class _PrescriptionState extends State<Prescription> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -30,7 +26,7 @@ class _PrescriptionState extends State<Prescription> {
         centerTitle: true,
       ),
       body: FutureBuilder(
-          future: PrescriptionDB.getprescribe(),
+          future: PrescriptionDB().getprescribe(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(
@@ -53,15 +49,44 @@ class _PrescriptionState extends State<Prescription> {
 
             return snapshot.data!.isEmpty
                 ? Center(
-                    child: Text(snapshot.data![0]['datetime']),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text(
+                          'No Prescriptions added.',
+                          style:
+                              TextStyle(fontFamily: 'Pop', color: Colors.black),
+                        ),
+                        const SizedBox(height: 50),
+                        Semantics(
+                          button: true,
+                          child: InkWell(
+                            onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: ((context) =>
+                                        const AddPrescription()))),
+                            child: Card(
+                              color: AppColors.primaryColor,
+                              child: const Text(
+                                'Add a Prescription',
+                                style: TextStyle(
+                                    fontFamily: 'Pop', color: Colors.white),
+                              ).px8().py8().centered(),
+                            ),
+                          ),
+                        )
+                      ],
+                    ).px64(),
                   )
                 : ListView.builder(
                     itemCount: snapshot.data!.length,
                     itemBuilder: (context, index) {
                       return Container(
-                          height: 60,
+                          height: 80,
                           width: size.width,
                           padding: const EdgeInsets.all(5),
+                          margin: const EdgeInsets.all(10),
                           decoration: BoxDecoration(
                               color: Colors.white,
                               border:
