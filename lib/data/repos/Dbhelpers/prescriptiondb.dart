@@ -5,7 +5,7 @@ import '../../../domain/sharedpreferences/sharedprefs.dart';
 import '../../../main.dart';
 
 class PrescriptionDB {
-  static Database? _database;
+  static Database _database;
   static const int _version = 6;
   static const String _colname = 'prescriptions';
 
@@ -39,21 +39,21 @@ class PrescriptionDB {
     return await _database?.insert(_colname, ppmodel.toJSON()) ?? 1;
   }
 
-  Future<int> addpres({required PrescModel ppModel}) async {
+  Future<int> addpres({PrescModel ppModel}) async {
     return await PrescriptionDB().addprescription(ppModel);
   }
 
   Future<int> removePrescription(int id) async {
-    return await _database!.delete(_colname, where: 'id =?', whereArgs: [id]);
+    return await _database.delete(_colname, where: 'id =?', whereArgs: [id]);
   }
 
   Future<List<Map<String, dynamic>>> getprescribe() async {
     log('retrieving prescriptions');
-    return await _database!.query(_colname);
+    return await _database.query(_colname);
   }
 
   Future<List<PrescModel>> getprescription() async {
-    var result = await _database!.query(_colname);
+    var result = await _database.query(_colname);
     return List.generate(result.length, (i) {
       return PrescModel.fromJson(result[i]);
     });

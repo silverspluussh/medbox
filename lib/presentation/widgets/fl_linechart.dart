@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import '../../constants/colors.dart';
 
 class Linechart extends StatefulWidget {
-  const Linechart({super.key, required this.flspots});
+  const Linechart({Key key, this.flspots}) : super(key: key);
 
   final List<FlSpot> flspots;
 
@@ -78,7 +78,7 @@ class _LineChartState extends State<Linechart> {
     );
   }
 
-  LineChartData mainData({required List<FlSpot> flspots}) {
+  LineChartData mainData({List<FlSpot> flspots}) {
     return LineChartData(
       gridData: FlGridData(
         show: true,

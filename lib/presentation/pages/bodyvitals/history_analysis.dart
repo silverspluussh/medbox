@@ -1,7 +1,7 @@
 import 'dart:developer';
 import 'package:MedBox/constants/colors.dart';
+import 'package:MedBox/constants/fonts.dart';
 import 'package:MedBox/data/repos/Dbhelpers/vitalsdb.dart';
-import 'package:MedBox/presentation/pages/bodyvitals/vitalstable.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
@@ -10,7 +10,7 @@ import '../../../domain/models/vitalsmodel.dart';
 import '../../widgets/fl_linechart.dart';
 
 class Vitalshistory extends StatefulWidget {
-  const Vitalshistory({super.key});
+  const Vitalshistory({Key key}) : super(key: key);
 
   @override
   State<Vitalshistory> createState() => _VitalshistoryState();
@@ -102,28 +102,8 @@ class _VitalshistoryState extends State<Vitalshistory> {
         child: Scaffold(
           backgroundColor: AppColors.scaffoldColor,
           appBar: AppBar(
-            actions: [
-              IconButton(
-                tooltip: 'View table chart for all health vitals',
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const VitalsTable()));
-                },
-                icon: const Icon(Icons.grid_on_sharp),
-                iconSize: 25,
-                color: AppColors.primaryColor,
-              )
-            ],
             centerTitle: true,
-            title: const Text('Health Overview',
-                style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 13,
-                  fontFamily: 'Popb',
-                  color: Colors.black,
-                )),
+            title: const Text('Health Overview', style: popheaderB),
             bottom: TabBar(
               tabs: [
                 ...icons.map((e) => Tab(
@@ -141,7 +121,7 @@ class _VitalshistoryState extends State<Vitalshistory> {
                         color: AppColors.primaryColor, strokeWidth: 5),
                   );
                 }
-                return snapshot.data!.isNotEmpty
+                return snapshot.data.isNotEmpty
                     ? TabBarView(key: const ObjectKey('tabview'), children: [
                         CustomScrollView(
                           slivers: [
@@ -487,14 +467,14 @@ class _VitalshistoryState extends State<Vitalshistory> {
   }
 
   SliverToBoxAdapter minavgmax(Size size,
-      {required Color color,
-      required color2,
-      required mintitle,
-      required minvalue,
-      required avgtitle,
-      required avgvalue,
-      required maxtitle,
-      required maxvalue}) {
+      {Color color,
+      color2,
+      mintitle,
+      minvalue,
+      avgtitle,
+      avgvalue,
+      maxtitle,
+      maxvalue}) {
     return SliverToBoxAdapter(
       child: Container(
           width: size.width,
@@ -541,18 +521,14 @@ class _VitalshistoryState extends State<Vitalshistory> {
     );
   }
 
-  minmaxavgelement(
-      {required Color tcolor,
-      required Color vcolor,
-      required title,
-      required value}) {
+  minmaxavgelement({Color tcolor, Color vcolor, title, value}) {
     return Card(
       elevation: 10,
       child: VStack([
         Text(title,
             style: TextStyle(
               fontWeight: FontWeight.w600,
-              fontSize: 16,
+              fontSize: 14,
               fontFamily: 'Popb',
               color: tcolor,
             )),
@@ -560,7 +536,7 @@ class _VitalshistoryState extends State<Vitalshistory> {
         Text(value,
             style: TextStyle(
                 fontWeight: FontWeight.w500,
-                fontSize: 16,
+                fontSize: 14,
                 color: vcolor,
                 fontFamily: 'Pop')),
         const SizedBox(height: 20),
@@ -569,8 +545,7 @@ class _VitalshistoryState extends State<Vitalshistory> {
     );
   }
 
-  SliverToBoxAdapter circularcardsliver(Size size,
-      {required value, required unit}) {
+  SliverToBoxAdapter circularcardsliver(Size size, {value, unit}) {
     return SliverToBoxAdapter(
       child: Container(
         width: size.width * 0.5,
@@ -597,7 +572,7 @@ class _VitalshistoryState extends State<Vitalshistory> {
                   Text(value,
                       style: const TextStyle(
                         fontWeight: FontWeight.w600,
-                        fontSize: 16,
+                        fontSize: 14,
                         fontFamily: 'Popb',
                         color: Colors.white,
                       )),

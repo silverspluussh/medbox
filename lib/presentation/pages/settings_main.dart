@@ -1,13 +1,14 @@
-import 'package:MedBox/main.dart';
+import 'package:MedBox/constants/fonts.dart';
+import 'package:MedBox/presentation/pages/onboarding.dart';
 import 'package:flutter/material.dart';
 import 'package:MedBox/data/datasource/fbasehelper.dart';
 import 'package:flutter/services.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:velocity_x/velocity_x.dart';
 
-import 'onboarding.dart';
-
 class Settings extends StatefulWidget {
-  const Settings({super.key});
+  const Settings({Key key}) : super(key: key);
 
   @override
   State<Settings> createState() => _SettingsState();
@@ -24,21 +25,35 @@ class _SettingsState extends State<Settings> {
               delegate: SliverChildListDelegate([
             _tileelement(
               size,
-              title: 'Support',
-              lead: 'assets/icons/set-up-950-512.png',
-              callback: () {},
+              title: 'Help and Support',
+              lead: 'assets/icons/help-85-512.png',
+              callback: () =>
+                  launchUrl(Uri.parse('https://www.datasustl.com/#contact')),
             ),
             _tileelement(
               size,
               title: 'Share with a friend',
               lead: 'assets/icons/sharing-wireless-bluetooth-sharing-4-512.png',
-              callback: () {},
+              callback: () async {
+                await Share.share('text',
+                    subject:
+                        'https://play.google.com/store/apps/details?id=com.datasus.medbox Hi there, kindly download Medbox for easy health management.');
+              },
             ),
             _tileelement(size,
                 title: 'Connect to Medbox device',
                 lead:
                     'assets/icons/sharing-wireless-bluetooth-sharing-9-512.png',
-                callback: () {}),
+                callback: () {
+              VxToast.show(context,
+                  pdHorizontal: 20,
+                  pdVertical: 20,
+                  bgColor: Colors.red[400],
+                  textColor: Colors.white,
+                  position: VxToastPosition.top,
+                  msg:
+                      'Feature is not enabled at the moment.Check out the lastest update.');
+            }),
             _tileelement(size,
                 title: 'Log out',
                 lead: 'assets/icons/sign-out-243-512.png', callback: () {
@@ -80,16 +95,11 @@ class _SettingsState extends State<Settings> {
           children: [
             const Text(
               'Sign out confirmation',
-              style: TextStyle(
-                  color: Colors.black, fontSize: 12, fontFamily: 'Popb'),
+              style: popheaderB,
             ),
             const SizedBox(height: 15),
-            const Text(
-              'Are you sure you want to log out?',
-              textAlign: TextAlign.justify,
-              style: TextStyle(
-                  color: Colors.black, fontSize: 12, fontFamily: 'Pop'),
-            ),
+            const Text('Are you sure you want to log out?',
+                textAlign: TextAlign.justify, style: popblack),
             const SizedBox(height: 15),
             SizedBox(
               height: 30,
@@ -103,14 +113,14 @@ class _SettingsState extends State<Settings> {
                         Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const Introduction()),
+                                builder: (context) => const GoogleOnbarding()),
                             (route) => false);
                       });
                     },
                     child: const Text(
                       'Yes',
                       style: TextStyle(
-                          color: Colors.red, fontSize: 13, fontFamily: 'Popb'),
+                          color: Colors.red, fontSize: 11, fontFamily: 'Popb'),
                     ),
                   ),
                   const Spacer(),
@@ -122,7 +132,7 @@ class _SettingsState extends State<Settings> {
                       'No',
                       style: TextStyle(
                           color: Colors.black,
-                          fontSize: 13,
+                          fontSize: 11,
                           fontFamily: 'Popb'),
                     ),
                   ),
@@ -135,8 +145,7 @@ class _SettingsState extends State<Settings> {
     );
   }
 
-  _tileelement(Size size,
-      {required title, required lead, required VoidCallback callback}) {
+  _tileelement(Size size, {title, lead, VoidCallback callback}) {
     return Container(
       width: size.width,
       height: 60,
@@ -152,11 +161,7 @@ class _SettingsState extends State<Settings> {
           width: 25,
           height: 25,
         ),
-        title: Text(
-          title,
-          style: const TextStyle(
-              fontFamily: 'Pop', fontSize: 12, color: Colors.black),
-        ),
+        title: Text(title, style: popblack),
         trailing: const Icon(
           Icons.arrow_forward_ios_outlined,
           size: 15,

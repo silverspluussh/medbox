@@ -1,11 +1,13 @@
+import 'package:MedBox/constants/fonts.dart';
 import 'package:MedBox/utils/extensions/notification.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:velocity_x/velocity_x.dart';
 import '../../../constants/colors.dart';
+import '../../widgets/formfieldwidget.dart';
 
 class SetAlarm extends StatefulWidget {
-  const SetAlarm({super.key, required this.medicinename, required this.dose});
+  const SetAlarm({Key key, this.medicinename, this.dose}) : super(key: key);
   final String medicinename;
   final String dose;
   @override
@@ -13,8 +15,10 @@ class SetAlarm extends StatefulWidget {
 }
 
 class _SetAlarmState extends State<SetAlarm> {
-  TimeOfDay? initime = TimeOfDay.now();
+  TimeOfDay initime = TimeOfDay.now();
   TimeOfDay time = TimeOfDay.now();
+
+  TextEditingController timec = TextEditingController();
 // @huawei2023Jnr
 //idaas_557466718
   @override
@@ -24,47 +28,32 @@ class _SetAlarmState extends State<SetAlarm> {
         appBar: AppBar(
           backgroundColor: Colors.white,
           toolbarHeight: 50,
-          title: Text(
-            'Set reminder for ${widget.medicinename}'.toUpperCase(),
-            style: const TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.w600,
-                fontSize: 13,
-                fontFamily: 'Pop'),
-          ),
+          title: Text('Set reminder for ${widget.medicinename}'.toUpperCase(),
+              style: popblack),
           centerTitle: true,
         ),
         body: Column(
           children: [
+            const SizedBox(height: 60),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Container(
-                  width: 200,
-                  height: 50,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                      border:
-                          Border.all(width: 1, color: AppColors.primaryColor)),
-                  child: Center(
-                    child: Text(
-                      time.format(context).toString(),
-                      style: const TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.normal,
-                          fontSize: 12,
-                          fontFamily: 'Pop'),
-                    ),
-                  ),
-                ),
+                FormfieldX(
+                    label: 'Time',
+                    controller: timec,
+                    readonly: true,
+                    hinttext: time.format(context).toString(),
+                    validator: (e) {
+                      return null;
+                    }),
                 const SizedBox(width: 40),
                 IconButton(
                     onPressed: () async {
                       await showTimePicker(
-                              context: context, initialTime: initime!)
+                              context: context, initialTime: initime)
                           .then((value) {
                         setState(() {
-                          time = value!;
+                          timec.text = value.format(context).toString();
                         });
                       });
                     },
@@ -104,14 +93,7 @@ class _SetAlarmState extends State<SetAlarm> {
                     borderRadius: BorderRadius.circular(15),
                     color: AppColors.primaryColor),
                 child: const Center(
-                  child: Text(
-                    'Set reminder',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 12,
-                        fontFamily: 'Pop'),
-                  ),
+                  child: Text('Set reminder', style: popblack),
                 ),
               ),
             ),

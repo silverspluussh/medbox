@@ -1,9 +1,9 @@
 class RModel {
-  int? id;
-  String? medicinename;
-  String? timeformat;
-  String? setdate;
-  bool? status;
+  int id;
+  String medicinename;
+  String timeformat;
+  String setdate;
+  bool status;
 
   RModel({
     this.id,
@@ -14,10 +14,10 @@ class RModel {
   });
 
   RModel.fromJson(Map<String, dynamic> json) {
-    id = json['id'] ?? 'none';
-    medicinename = json['medicinename'] ?? 'none';
-    setdate = json['setdate'] ?? 'none';
-    timeformat = json['timeformat'] ?? 'none';
+    id = json['id'];
+    medicinename = json['medicinename'];
+    setdate = json['setdate'];
+    timeformat = json['timeformat'];
     status = json['status'] ?? true;
   }
 

@@ -1,4 +1,5 @@
 import 'package:MedBox/constants/colors.dart';
+import 'package:MedBox/constants/fonts.dart';
 import 'package:MedBox/utils/extensions/notification.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -7,7 +8,7 @@ import 'package:lottie/lottie.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class MedReminders extends StatefulWidget {
-  const MedReminders({super.key});
+  const MedReminders({Key key}) : super(key: key);
 
   @override
   State<MedReminders> createState() => _MedRemindersState();
@@ -26,11 +27,7 @@ class _MedRemindersState extends State<MedReminders> {
           toolbarHeight: 50,
           title: const Text(
             'Medication Reminders',
-            style: TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.w500,
-                fontSize: 12,
-                fontFamily: 'Pop'),
+            style: popblack,
           ),
           centerTitle: true,
           bottom: const PreferredSize(
@@ -38,11 +35,11 @@ class _MedRemindersState extends State<MedReminders> {
               child: TabBar(tabs: [
                 Text(
                   'Active Reminders',
-                  style: TextStyle(fontSize: 12, fontFamily: 'Popb'),
+                  style: popheaderB,
                 ),
                 Text(
                   'Pending Reminders',
-                  style: TextStyle(fontSize: 12, fontFamily: 'Popb'),
+                  style: popheaderB,
                 )
               ])),
         ),
@@ -51,7 +48,7 @@ class _MedRemindersState extends State<MedReminders> {
               future: NotifConsole().activereminders(),
               builder: (context, active) {
                 if (active.hasData) {
-                  List<ActiveNotification>? activ = active.data;
+                  List<ActiveNotification> activ = active.data;
                   return _listbuilder(activ, size);
                 }
                 return nodata(size, context);
@@ -60,7 +57,7 @@ class _MedRemindersState extends State<MedReminders> {
               future: NotifConsole().pendingreminders(),
               builder: (context, pending) {
                 if (pending.hasData) {
-                  List<PendingNotificationRequest>? pend = pending.data;
+                  List<PendingNotificationRequest> pend = pending.data;
 
                   return _listbuilder(pend, size);
                 }
@@ -84,65 +81,62 @@ class _MedRemindersState extends State<MedReminders> {
           const Text(
             "No pending reminders",
             textAlign: TextAlign.center,
-            style: TextStyle(
-                color: Colors.black,
-                fontFamily: 'Pop',
-                fontSize: 12,
-                fontWeight: FontWeight.w600),
+            style: popblack,
           ),
         ],
       ),
     );
   }
 
-  ListView _listbuilder(List<dynamic>? list, Size size) {
+  ListView _listbuilder(List<dynamic> list, Size size) {
     return ListView.builder(
         padding: const EdgeInsets.symmetric(horizontal: 30),
-        itemCount: list!.length,
+        itemCount: list.length,
         physics: const NeverScrollableScrollPhysics(),
         itemBuilder: (context, index) {
           return SizedBox(
-            child: VStack([
-              Row(
-                children: [
-                  Card(
-                    elevation: 5,
-                    color: Colors.white,
-                    margin: const EdgeInsets.all(1),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 2),
-                      child: Text(
-                        list[index].title!,
-                        style: const TextStyle(
-                            fontSize: 12,
-                            fontFamily: 'Pop',
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500),
+            width: size.width - 40,
+            child: Card(
+              elevation: 4,
+              child: VStack([
+                Row(
+                  children: [
+                    Card(
+                      elevation: 5,
+                      color: Colors.white,
+                      margin: const EdgeInsets.all(1),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 2),
+                        child: Text(list[index].title, style: popblack),
                       ),
                     ),
-                  ),
-                  const Spacer(),
-                  IconButton(
-                      onPressed: () {
-                        dialogg(context, size, list, index);
-                      },
-                      icon: const ImageIcon(
+                    const Spacer(),
+                    IconButton(
+                        onPressed: () {
+                          dialogg(context, size, list, index);
+                        },
+                        icon: const ImageIcon(
+                          AssetImage('assets/icons/eliminate-50-512.png'),
                           color: Colors.red,
                           size: 25,
-                          AssetImage('assets/icons/eliminate-50-512.png')))
-                ],
-              ),
-              const SizedBox(height: 10),
-              Text(
-                list[index].body!,
-                style: const TextStyle(
-                    fontSize: 12,
-                    fontFamily: 'Pop',
-                    color: Colors.black,
-                    fontWeight: FontWeight.w500),
-              ).centered(),
-            ]).p20(),
+                        ))
+                  ],
+                ),
+                Text(list[index].body, style: popblack).centered(),
+                const SizedBox(height: 10),
+                Card(
+                  elevation: 5,
+                  color: Colors.green,
+                  margin: const EdgeInsets.all(1),
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 20, vertical: 2),
+                    child: Text(list[index].payload, style: popwhite),
+                  ),
+                ),
+              ]).p20(),
+            ),
           );
         });
   }
@@ -166,15 +160,13 @@ class _MedRemindersState extends State<MedReminders> {
                 children: [
                   const Text(
                     'Remove reminder',
-                    style: TextStyle(
-                        color: Colors.black, fontSize: 12, fontFamily: 'Popb'),
+                    style: popheaderB,
                   ),
                   const SizedBox(height: 10),
                   const Text(
                     'Are you sure you want to delete reminder?',
                     textAlign: TextAlign.left,
-                    style: TextStyle(
-                        color: Colors.black, fontSize: 12, fontFamily: 'Pop'),
+                    style: popblack,
                   ),
                   const SizedBox(height: 10),
                   SizedBox(
@@ -196,7 +188,7 @@ class _MedRemindersState extends State<MedReminders> {
                             'Yes',
                             style: TextStyle(
                                 color: Colors.red,
-                                fontSize: 13,
+                                fontSize: 11,
                                 fontFamily: 'Popb'),
                           ),
                         ),
@@ -209,7 +201,7 @@ class _MedRemindersState extends State<MedReminders> {
                             'No',
                             style: TextStyle(
                                 color: Colors.black,
-                                fontSize: 13,
+                                fontSize: 11,
                                 fontFamily: 'Popb'),
                           ),
                         ),

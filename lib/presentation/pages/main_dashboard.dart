@@ -1,9 +1,11 @@
 // ignore_for_file: use_build_context_synchronously
+import 'package:MedBox/constants/fonts.dart';
 import 'package:MedBox/data/repos/Dbhelpers/medicationdb.dart';
 import 'package:MedBox/data/repos/Dbhelpers/prescriptiondb.dart';
 import 'package:MedBox/data/repos/Dbhelpers/remindDb.dart';
 import 'package:MedBox/presentation/pages/prescriptions/addprescription.dart';
 import 'package:MedBox/presentation/pages/prescriptions/viewprescription.dart';
+import 'package:MedBox/presentation/widgets/emojiman.dart';
 import 'package:flutter/material.dart';
 import 'package:MedBox/constants/colors.dart';
 import 'package:MedBox/presentation/providers/vitalsprovider.dart';
@@ -11,11 +13,10 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:provider/provider.dart';
 import 'package:velocity_x/velocity_x.dart';
 import '../../data/repos/Dbhelpers/vitalsdb.dart';
-import '../../domain/models/emotions.dart';
 import '../../domain/sharedpreferences/sharedprefs.dart';
 
 class DashboardOverview extends StatefulWidget {
-  const DashboardOverview({super.key});
+  const DashboardOverview({Key key}) : super(key: key);
 
   @override
   State<DashboardOverview> createState() => _DashboardOverviewState();
@@ -25,7 +26,7 @@ class _DashboardOverviewState extends State<DashboardOverview> {
   String emoaddress = 'assets/images/exciting.png';
   bool isgoogle = false;
 
-  late List<Map<String, dynamic>> vitals = [];
+  List<Map<String, dynamic>> vitals = [];
 
   bool loading = true;
   void referesh() async {
@@ -186,7 +187,7 @@ class _DashboardOverviewState extends State<DashboardOverview> {
                             reading: vitals.isNotEmpty
                                 ? vitals[0]['temperature']
                                 : '0',
-                            units: 'deg-celsius',
+                            units: 'degree-celsius',
                             callback: () {
                               if (val.vv.index == 2) {
                                 val.changevitals(
@@ -211,12 +212,7 @@ class _DashboardOverviewState extends State<DashboardOverview> {
     );
   }
 
-  Column _vitalscol(
-      {required VoidCallback callback,
-      required image,
-      required label,
-      required reading,
-      required units}) {
+  Column _vitalscol({VoidCallback callback, image, label, reading, units}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -259,24 +255,20 @@ class _DashboardOverviewState extends State<DashboardOverview> {
     );
   }
 
-  Text _labeltext({required String label, required color}) {
+  Text _labeltext({String label, color}) {
     return Text(
       label,
-      style: TextStyle(
-          fontFamily: 'Popb',
-          fontSize: 13,
-          fontWeight: FontWeight.w500,
-          color: color),
+      style: popheaderB,
     );
   }
 
-  Text _valuetext({required String label}) {
+  Text _valuetext({String label}) {
     return Text(
       label,
       style: const TextStyle(
           fontFamily: 'Popb',
-          fontSize: 17,
-          fontWeight: FontWeight.w800,
+          fontSize: 13,
+          fontWeight: FontWeight.w500,
           color: Colors.white),
     );
   }
@@ -294,96 +286,23 @@ class _DashboardOverviewState extends State<DashboardOverview> {
                 children: [
                   const Text(
                     'How are you feeling today? ',
-                    style: TextStyle(
-                        fontFamily: 'Popb',
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black),
+                    style: popblack,
                   ),
                   const Spacer(),
                   InkWell(
                     onTap: () =>
-                        Future.delayed(const Duration(milliseconds: 200), () {
-                      showGeneralDialog(
-                          context: context,
-                          barrierDismissible: true,
-                          barrierLabel: 'Mood',
-                          pageBuilder: (context, _, __) {
-                            return Center(
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(35)),
-                                width: size.width - 80,
-                                height: size.height * 0.5,
-                                child: Scaffold(
-                                    body: GridView.count(
-                                  childAspectRatio: 1.3,
-                                  crossAxisCount: 2,
-                                  children: [
-                                    ...emoticons.map((e) => Column(
-                                          children: [
-                                            GestureDetector(
-                                              onTap: () async {
-                                                setState(() {
-                                                  emoaddress = e.image;
-                                                });
-                                                await SharedCli()
-                                                    .setemo(value: emoaddress)
-                                                    .then((value) =>
-                                                        Future.delayed(
-                                                            const Duration(
-                                                                milliseconds:
-                                                                    100), () {
-                                                          Navigator.pop(
-                                                              context);
-                                                        }));
-                                              },
-                                              onLongPress: () {},
-                                              child: Container(
-                                                width: size.width * 0.3,
-                                                height: 100,
-                                                decoration: BoxDecoration(
-                                                    color: Colors.white,
-                                                    boxShadow: const [
-                                                      BoxShadow(
-                                                          blurRadius: 5,
-                                                          color: Colors.black12)
-                                                    ],
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            15)),
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    Image.asset(e.image),
-                                                    Text(
-                                                      e.emojiname,
-                                                      style: const TextStyle(
-                                                          fontSize: 12,
-                                                          fontFamily: 'Popb',
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                          color: Colors.black),
-                                                    )
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ))
-                                  ],
-                                )),
-                              ),
-                            );
-                          });
+                        Future.delayed(const Duration(milliseconds: 50), () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const EmojiChanger()));
                     }),
                     child: const Text(
-                      'set mood',
+                      'Set mood',
                       style: TextStyle(
-                          fontFamily: 'Popb',
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
+                          fontFamily: 'Pop',
+                          fontSize: 13,
+                          fontWeight: FontWeight.w400,
                           color: Colors.blue),
                     ),
                   ),
@@ -404,11 +323,8 @@ class _DashboardOverviewState extends State<DashboardOverview> {
 }
 
 class BoxContainer extends StatelessWidget {
-  const BoxContainer(
-      {super.key,
-      required this.height,
-      required this.width,
-      required this.widget});
+  const BoxContainer({Key key, this.height, this.width, this.widget})
+      : super(key: key);
   final double height;
   final double width;
   final Widget widget;

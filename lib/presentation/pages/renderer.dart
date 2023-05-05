@@ -1,3 +1,4 @@
+import 'package:MedBox/constants/fonts.dart';
 import 'package:MedBox/domain/sharedpreferences/sharedprefs.dart';
 import 'package:MedBox/presentation/pages/myprofile/myprofile.dart';
 import 'package:MedBox/presentation/pages/reminders/reminders.dart';
@@ -8,12 +9,11 @@ import 'package:MedBox/presentation/pages/medication/medication_main.dart';
 import 'package:velocity_x/velocity_x.dart';
 import '../../constants/colors.dart';
 import '../../utils/extensions/notification.dart';
-import '../../utils/extensions/photos_extension.dart';
 import 'main_dashboard.dart';
 import 'settings_main.dart';
 
 class Render extends StatefulWidget {
-  const Render({super.key});
+  const Render({Key key}) : super(key: key);
 
   @override
   State<Render> createState() => _RenderState();
@@ -21,10 +21,9 @@ class Render extends StatefulWidget {
 
 class _RenderState extends State<Render> with SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
-  late AnimationController animationController;
-  late List<Widget> _pages;
-  late String? username;
-  var pfp;
+  AnimationController animationController;
+  List<Widget> _pages;
+  String username;
 
   void _onItemTapped(int index) {
     setState(() {
@@ -36,7 +35,6 @@ class _RenderState extends State<Render> with SingleTickerProviderStateMixin {
   void initState() {
     super.initState();
     setState(() {
-      pfp = SharedCli().getpfp();
       username = SharedCli().getusername();
     });
     super.initState();
@@ -46,7 +44,7 @@ class _RenderState extends State<Render> with SingleTickerProviderStateMixin {
     _pages = [
       const DashboardOverview(),
       const Medications(),
-      MyProfile(),
+      const MyProfile(),
       const Settings()
     ];
   }
@@ -61,14 +59,6 @@ class _RenderState extends State<Render> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        VxToast.show(context,
-            msg: 'exit denied',
-            pdVertical: 20,
-            pdHorizontal: 20,
-            bgColor: Colors.red,
-            textColor: Colors.white,
-            position: VxToastPosition.bottom);
-
         return false;
       },
       child: Scaffold(
@@ -81,33 +71,21 @@ class _RenderState extends State<Render> with SingleTickerProviderStateMixin {
                 : _selectedIndex == 1
                     ? const Text(
                         ' Medications schedules',
-                        style: TextStyle(
-                            fontFamily: 'Popb',
-                            fontSize: 13,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black),
+                        style: popheaderB,
                       )
                     : _selectedIndex == 2
                         ? const Text(
                             'My Profile',
-                            style: TextStyle(
-                                fontFamily: 'Popb',
-                                fontSize: 13,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.black),
+                            style: popheaderB,
                           )
                         : const Text(
                             'Settings',
-                            style: TextStyle(
-                                fontFamily: 'Popb',
-                                fontSize: 13,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.black),
+                            style: popheaderB,
                           ),
             actions: _selectedIndex == 0
-                ? _dashboardactions(context, pfp)
+                ? _dashboardactions(context)
                 : _selectedIndex == 1
-                    ? []
+                    ? _dashboardactions(context)
                     : _selectedIndex == 2
                         ? []
                         : [],
@@ -116,8 +94,7 @@ class _RenderState extends State<Render> with SingleTickerProviderStateMixin {
             index: _selectedIndex,
             children: _pages,
           ),
-          extendBody: true,
-          resizeToAvoidBottomInset: true,
+          extendBody: false,
           bottomNavigationBar: BottomNavigationBar(
             currentIndex: _selectedIndex,
             onTap: _onItemTapped,
@@ -146,41 +123,25 @@ class _RenderState extends State<Render> with SingleTickerProviderStateMixin {
           'Good day, ',
           style: TextStyle(
               fontFamily: 'Popb',
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
+              fontSize: 13,
+              fontWeight: FontWeight.w500,
               color: Colors.black26),
         ),
         const SizedBox(height: 5),
-        username != null
-            ? Text(
-                username!,
-                style: const TextStyle(
-                    fontFamily: 'Popb',
-                    fontSize: 15,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.black),
-              )
-            : InkWell(
-                onTap: () {
-                  setState(() {
-                    _selectedIndex == 2;
-                  });
-                },
-                child: const Text(
-                  'set username',
-                  style: TextStyle(
-                      fontFamily: 'Popb',
-                      fontSize: 13,
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.primaryColor),
-                ),
-              ),
+        Text(
+          username ?? 'none',
+          style: const TextStyle(
+              fontFamily: 'Popb',
+              fontSize: 10,
+              fontWeight: FontWeight.w300,
+              color: Colors.black),
+        )
       ],
     );
   }
 }
 
-List<Widget> _dashboardactions(BuildContext context, pfp) {
+List<Widget> _dashboardactions(BuildContext context) {
   return [
     Container(
       height: 25,
@@ -189,13 +150,7 @@ List<Widget> _dashboardactions(BuildContext context, pfp) {
       decoration: BoxDecoration(
           shape: BoxShape.circle,
           image: DecorationImage(
-              fit: BoxFit.fill,
-              image: SharedCli().getgmailstatus() == true
-                  ? NetworkImage(SharedCli().getgpfp()!)
-                  : pfp != null
-                      ? MemoryImage(Utility().dataFromBase64String(pfp))
-                      : const AssetImage('assets/icons/profile-35-64.png')
-                          as ImageProvider)),
+              fit: BoxFit.fill, image: NetworkImage(SharedCli().getgpfp()))),
     ),
     const SizedBox(width: 10),
     FutureBuilder(
@@ -203,7 +158,7 @@ List<Widget> _dashboardactions(BuildContext context, pfp) {
         builder: (c, x) {
           if (x.hasData) {
             return VxBadge(
-                color: x.data!.isNotEmpty ? Colors.green : Colors.red,
+                color: x.data.isNotEmpty ? Colors.green : Colors.red,
                 size: 10,
                 type: VxBadgeType.round,
                 position: VxBadgePosition.rightTop,

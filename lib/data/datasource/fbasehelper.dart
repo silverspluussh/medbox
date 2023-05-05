@@ -20,8 +20,8 @@ class FireBaseCLi {
     await FirebaseAuth.instance.signOut();
   }
 
-  Future<String?> getCurrentEmail() async {
-    return FirebaseAuth.instance.currentUser?.email!;
+  Future<String> getCurrentEmail() async {
+    return FirebaseAuth.instance.currentUser?.email;
   }
 
   Future resetpassword(String email) async {

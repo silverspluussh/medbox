@@ -1,2 +1,2 @@
-const des =
-    'Introducing Medbox, the ultimate health management app designed to help you take control of your health. With Medbox, you can easily keep track of your medication schedule, set reminders to take your pills, and even share your health information with your healthcare provider. Whether you need to monitor your vital signs, check your health status, or get a complete overview of your health, Medbox has got you covered. Say goodbye to the hassle of managing your health and hello to a healthier, more organized life with Medbox.';
+const medboxdesc =
+    'Welcome to MedBox! Your all-in-one healthcare solution. Keep track of pills, take rapid tests, and upload prescriptions with ease.';

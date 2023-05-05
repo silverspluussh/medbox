@@ -1,10 +1,10 @@
 class PharmacyModel {
-  String? pharmacyname;
-  String? whatsappid;
-  String? smsid;
-  String? pharmacyid;
-  String? location;
-  String? phonenumber;
+  String pharmacyname;
+  String whatsappid;
+  String smsid;
+  String pharmacyid;
+  String location;
+  String phonenumber;
 
   PharmacyModel(
       {this.pharmacyname,
@@ -15,11 +15,11 @@ class PharmacyModel {
       this.phonenumber});
 
   PharmacyModel.fromJson(Map<String, dynamic> json) {
-    pharmacyname = json['fname'];
-    pharmacyid = json['lname'];
-    smsid = json['dob'];
-    location = json['email'];
-    whatsappid = json['email'];
-    phonenumber = json['email'];
+    pharmacyname = json['pharmacyname'];
+    pharmacyid = json['pharmacyid'];
+    smsid = json['smsid'];
+    location = json['location'];
+    whatsappid = json['whatsappid'];
+    phonenumber = json['phonenumber'];
   }
 }

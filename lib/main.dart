@@ -6,13 +6,13 @@ import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:MedBox/presentation/providers/vitalsprovider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'constants/colors.dart';
 import 'presentation/providers/localization_state.dart';
 import 'presentation/pages/renderer.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
@@ -20,27 +20,20 @@ import 'package:timezone/timezone.dart' as tz;
 import 'package:flutter_gen/gen_l10n/app_localization.dart';
 import 'translation/l10n/l10n.dart';
 
-late SharedPreferences prefs;
+SharedPreferences prefs;
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
-
 Future<void> main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
-
   await Firebase.initializeApp();
   await NotifConsole().initnotifs();
-
   prefs = await SharedPreferences.getInstance();
   await _configureLocalTimeZone();
-
   await FirebaseAppCheck.instance.activate(
     androidProvider: AndroidProvider.playIntegrity,
   );
-
   runApp(const MedBox());
-
-  Future.delayed(200.milliseconds, () => FlutterNativeSplash.remove());
 }
 
 Future<void> _configureLocalTimeZone() async {
@@ -50,27 +43,27 @@ Future<void> _configureLocalTimeZone() async {
 }
 
 class MedBox extends StatefulWidget {
-  const MedBox({super.key});
+  const MedBox({Key key}) : super(key: key);
 
   @override
   State<MedBox> createState() => _MedBoxState();
 }
 
 class _MedBoxState extends State<MedBox> {
-  User? user;
+  User user;
   bool notificationEnabled = false;
-  late BuildContext ctx;
+  BuildContext ctx;
   @override
   void initState() {
+    FlutterNativeSplash.remove();
+
     super.initState();
     isAndroidPermissionGranted();
     requestPermissions();
     FirebaseAuth.instance.authStateChanges().listen((event) async {
       updateUserStatus(event);
-      await prefs.setString('uid', event!.uid);
+      await prefs.setString('uid', event.uid);
     });
-
-    NotifConsole().scheduleDailyTenAMNotification();
   }
 
   updateUserStatus(event) {
@@ -94,11 +87,11 @@ class _MedBoxState extends State<MedBox> {
   }
 
   Future<void> requestPermissions() async {
-    final AndroidFlutterLocalNotificationsPlugin? androidImplementation =
+    final AndroidFlutterLocalNotificationsPlugin androidImplementation =
         flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
             AndroidFlutterLocalNotificationsPlugin>();
 
-    final bool? granted = await androidImplementation?.requestPermission();
+    final bool granted = await androidImplementation?.requestPermission();
     setState(() {
       notificationEnabled = granted ?? false;
     });
@@ -111,7 +104,7 @@ class _MedBoxState extends State<MedBox> {
           ChangeNotifierProvider(create: (context) => LanguageProvider()),
           ChangeNotifierProvider(
               create: (context) => VitalsProvider(Vv.pressure)),
-          StreamProvider<User?>.value(
+          StreamProvider<User>.value(
             value: FirebaseAuth.instance.authStateChanges(),
             initialData: FirebaseAuth.instance.currentUser,
           ),
@@ -132,10 +125,10 @@ class _MedBoxState extends State<MedBox> {
             ],
             theme: ThemeData(
               useMaterial3: true,
-              primaryColor: const Color.fromRGBO(61, 30, 236, 1),
+              primaryColor: AppColors.primaryColor,
               brightness: Brightness.light,
             ),
-            home: user == null ? const Introduction() : const Render(),
+            home: user == null ? const GoogleOnbarding() : const Render(),
           );
         });
   }

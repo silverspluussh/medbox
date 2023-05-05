@@ -3,7 +3,7 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 import '../../domain/models/vitalsmodel.dart';
 
 class RadialBarAngle extends StatefulWidget {
-  const RadialBarAngle({super.key, required this.model});
+  const RadialBarAngle({Key key, this.model}) : super(key: key);
   final List<VModel> model;
 
   @override
@@ -12,7 +12,7 @@ class RadialBarAngle extends StatefulWidget {
 
 class _RadialBarAngleState extends State<RadialBarAngle> {
   _RadialBarAngleState();
-  TooltipBehavior? _tooltipBehavior;
+  TooltipBehavior _tooltipBehavior;
 
   @override
   void initState() {
@@ -30,20 +30,17 @@ class _RadialBarAngleState extends State<RadialBarAngle> {
               const TextStyle(fontFamily: 'Pop', fontWeight: FontWeight.w500)),
       tooltipBehavior: _tooltipBehavior,
       series: _getRadialBarSeries(
-        t: double.parse('${widget.model[0].temperature}'),
-        bmi: double.parse('${widget.model[0].bmi}'),
-        bp: double.parse('${widget.model[0].bloodpressure}'),
-        h: double.parse('${widget.model[0].height}'),
-        hr: double.parse('${widget.model[0].heartrate}'),
-        ox: double.parse('${widget.model[0].oxygenlevel}'),
-        rr: double.parse('${widget.model[0].respiration}'),
-        w: double.parse('${widget.model[0].weight}'),
+        t: double.parse(widget.model[0].temperature),
+        bp: double.parse(widget.model[0].bloodpressure),
+        hr: double.parse(widget.model[0].heartrate),
+        ox: double.parse(widget.model[0].oxygenlevel),
+        rr: double.parse(widget.model[0].respiration),
       ),
     );
   }
 
   List<RadialBarSeries<ChartSampleData, String>> _getRadialBarSeries(
-      {required t, ox, hr, bp, rr, bmi, h, w}) {
+      {t, ox, hr, bp, rr, bmi}) {
     final List<RadialBarSeries<ChartSampleData, String>> list =
         <RadialBarSeries<ChartSampleData, String>>[
       RadialBarSeries<ChartSampleData, String>(
@@ -84,16 +81,6 @@ class _RadialBarAngleState extends State<RadialBarAngle> {
                 y: bmi,
                 text: 'BMI',
                 pointColor: const Color.fromRGBO(0, 201, 230, 1.0)),
-            ChartSampleData(
-                x: 'Height\n$h m',
-                y: h,
-                text: 'Height',
-                pointColor: const Color.fromRGBO(63, 224, 0, 1.0)),
-            ChartSampleData(
-                x: 'Weight\n$w kg',
-                y: w,
-                text: 'Weight  ',
-                pointColor: const Color.fromRGBO(226, 1, 26, 1.0)),
           ],
           cornerStyle: CornerStyle.bothCurve,
           xValueMapper: (ChartSampleData data, _) => data.x as String,
@@ -125,29 +112,29 @@ class ChartSampleData {
 
   final dynamic x;
 
-  final num? y;
+  final num y;
 
   final dynamic xValue;
 
-  final num? yValue;
+  final num yValue;
 
-  final num? secondSeriesYValue;
+  final num secondSeriesYValue;
 
-  final num? thirdSeriesYValue;
+  final num thirdSeriesYValue;
 
-  final Color? pointColor;
+  final Color pointColor;
 
-  final num? size;
+  final num size;
 
-  final String? text;
+  final String text;
 
-  final num? open;
+  final num open;
 
-  final num? close;
+  final num close;
 
-  final num? low;
+  final num low;
 
-  final num? high;
+  final num high;
 
-  final num? volume;
+  final num volume;
 }

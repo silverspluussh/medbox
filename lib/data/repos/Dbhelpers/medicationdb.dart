@@ -5,7 +5,7 @@ import 'package:sqflite/sqflite.dart';
 import '../../../domain/sharedpreferences/sharedprefs.dart';
 
 class MedicationsDB {
-  static Database? _database;
+  static Database _database;
   static const int _version = 3;
   static const String _colname = 'medications';
 
@@ -35,33 +35,33 @@ class MedicationsDB {
     }
   }
 
-  Future<int> insertmedication(MModel? mmodel) async {
-    return await _database?.insert(_colname, mmodel!.toJson()) ?? 1;
+  Future<int> insertmedication(MModel mmodel) async {
+    return await _database?.insert(_colname, mmodel.toJson()) ?? 1;
   }
 
   Future<int> updatemedicine(MModel mmodel) async {
-    return await _database!.update(_colname, mmodel.toJson(),
+    return await _database.update(_colname, mmodel.toJson(),
         where: 'id =?', whereArgs: [mmodel.id]);
   }
 
   Future<int> deletemedication(int id) async {
-    return await _database!.delete(_colname, where: 'id =?', whereArgs: [id]);
+    return await _database.delete(_colname, where: 'id =?', whereArgs: [id]);
   }
 
   Future<List<Map<String, dynamic>>> querymedication() async {
     log('retrieving medicine');
-    return await _database!.query(_colname);
+    return await _database.query(_colname);
   }
 
   Future<List<MModel>> getmeds() async {
     await initDatabase();
-    var result = await _database!.query(_colname);
+    var result = await _database.query(_colname);
     return List.generate(result.length, (i) {
       return MModel.fromJson(result[i]);
     });
   }
 
-  Future<int> addmedController({MModel? mModel}) async {
+  Future<int> addmedController({MModel mModel}) async {
     return await MedicationsDB().insertmedication(mModel);
   }
 }

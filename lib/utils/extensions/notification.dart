@@ -1,11 +1,14 @@
 // ignore_for_file: depend_on_referenced_packages
 
+import 'dart:math';
+
 import 'package:MedBox/constants/colors.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 class NotifConsole {
   int id = 0;
+  double rand = Random().nextDouble() * 234;
   FlutterLocalNotificationsPlugin notificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
@@ -20,7 +23,17 @@ class NotifConsole {
 
   notificationdetails() {
     return NotificationDetails(
-      android: AndroidNotificationDetails('medboxid', 'medbox',
+      android: AndroidNotificationDetails(rand.toString(), '$rand medbox',
+          fullScreenIntent: true,
+          color: AppColors.primaryColor.withOpacity(0.3),
+          priority: Priority.high,
+          importance: Importance.max),
+    );
+  }
+
+  tenamnotification() {
+    return NotificationDetails(
+      android: AndroidNotificationDetails('10', 'ten10am',
           fullScreenIntent: true,
           color: AppColors.primaryColor.withOpacity(0.3),
           priority: Priority.high,
@@ -45,23 +58,18 @@ class NotifConsole {
         androidAllowWhileIdle: true);
   }
 
-  Future<void> instantnotif(
-      {required String? title, required String? body, String? payload}) async {
+  Future<void> instantnotif({String title, String body, String payload}) async {
     await notificationsPlugin.show(
       id++,
       title,
       body,
-      await notificationdetails(),
+      await tenamnotification(),
       payload: payload,
     );
   }
 
   Future<void> setreminder(
-      {required String? title,
-      required String? body,
-      String? payload,
-      required int hour,
-      required int minute}) async {
+      {String title, String body, String payload, int hour, int minute}) async {
     await notificationsPlugin
         .zonedSchedule(
             id++,
@@ -74,10 +82,11 @@ class NotifConsole {
                 UILocalNotificationDateInterpretation.absoluteTime,
             payload: payload,
             matchDateTimeComponents: DateTimeComponents.time)
+        // ignore: avoid_print
         .then((value) => print('alarm is set successfully'));
   }
 
-  Future<void> cancelreminder({required id}) async {
+  Future<void> cancelreminder({id}) async {
     await notificationsPlugin.cancel(id);
   }
 
@@ -113,7 +122,7 @@ class NotifConsole {
     return scheduledDate;
   }
 
-  tz.TZDateTime instanceofsettime({required int hour, required int minute}) {
+  tz.TZDateTime instanceofsettime({int hour, int minute}) {
     final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
     tz.TZDateTime scheduledDate = tz.TZDateTime(
       tz.local,

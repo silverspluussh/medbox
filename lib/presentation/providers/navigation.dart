@@ -1,9 +1,7 @@
-import 'package:flutter/material.dart';
-
 class BottomNav {
   String icon;
   String title;
-  BottomNav({required this.icon, required this.title});
+  BottomNav({this.icon, this.title});
 }
 
 List<BottomNav> navitems = [

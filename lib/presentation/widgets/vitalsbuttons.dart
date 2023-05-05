@@ -7,9 +7,9 @@ import '../pages/bodyvitals/history_analysis.dart';
 
 class VitalsButtons extends StatelessWidget {
   const VitalsButtons({
-    super.key,
-    required this.size,
-  });
+    Key key,
+    this.size,
+  }) : super(key: key);
 
   final Size size;
 
