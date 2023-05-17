@@ -18,6 +18,7 @@ class _EmojiChangerState extends State<EmojiChanger> {
   @override
   void dispose() {
     emojicounter.dispose();
+
     super.dispose();
   }
 
@@ -29,7 +30,7 @@ class _EmojiChangerState extends State<EmojiChanger> {
           centerTitle: true,
           title: const Text(
             'Today\'s Mood',
-            style: popblack,
+            style: popheaderB,
           ),
         ),
         body: ValueListenableBuilder(
@@ -73,16 +74,27 @@ class _EmojiChangerState extends State<EmojiChanger> {
                       label: emoticons[emoji].emojiname,
                       value: double.parse(emoji.toString()),
                       onChanged: (e) {
-                        setState(() {
-                          emoji = e.floor();
-                          emojicounter.value = e.floor();
-                          SharedCli().setemo(value: emoticons[e.floor()].image);
-                        });
+                        emoji = e.floor();
+                        emojicounter.value = e.floor();
                       },
                       min: 0,
                       max: 5,
                       divisions: 5,
-                    ).centered()
+                    ).centered(),
+                    InkWell(
+                      onTap: () => SharedCli()
+                          .setemo(value: emoticons[emojicounter.value])
+                          .then((value) => context.pop()),
+                      child: Container(
+                          height: 50,
+                          width: size.width - 200,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: AppColors.primaryColor),
+                          child: const Center(
+                            child: Text('Add vitals', style: popwhite),
+                          )),
+                    )
                   ],
                 ),
               )..animate()

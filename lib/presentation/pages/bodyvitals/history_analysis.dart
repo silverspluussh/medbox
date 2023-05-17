@@ -149,7 +149,7 @@ class _VitalshistoryState extends State<Vitalshistory> {
                                     weeklyQuery1.isEmpty
                                         ? 0
                                         : double.parse(
-                                            '${weeklyQuery1[0]['temperature']}')),
+                                            '${weeklyQuery1.last['temperature']}')),
                                 FlSpot(
                                     2,
                                     weeklyQuery2.isEmpty
@@ -161,19 +161,19 @@ class _VitalshistoryState extends State<Vitalshistory> {
                                     weeklyQuery3.isEmpty
                                         ? 0
                                         : double.parse(
-                                            '${weeklyQuery3[0]['temperature']}')),
+                                            '${weeklyQuery3.last['temperature']}')),
                                 FlSpot(
                                     4,
                                     weeklyQuery4.isEmpty
                                         ? 0
                                         : double.parse(
-                                            '${weeklyQuery4[0]['temperature']}')),
+                                            '${weeklyQuery4.last['temperature']}')),
                                 FlSpot(
                                     5,
                                     weeklyQuery5.isEmpty
                                         ? 0
                                         : double.parse(
-                                            '${weeklyQuery5[0]['temperature']}')),
+                                            '${weeklyQuery5.last['temperature']}')),
                                 FlSpot(
                                     6,
                                     weeklyQuery6.isEmpty
@@ -216,7 +216,7 @@ class _VitalshistoryState extends State<Vitalshistory> {
                                     weeklyQuery1.isEmpty
                                         ? 0
                                         : double.parse(
-                                            '${weeklyQuery1[0]['bloodpressure']}')),
+                                            '${weeklyQuery1.last['bloodpressure']}')),
                                 FlSpot(
                                     2,
                                     weeklyQuery2.isEmpty
@@ -228,31 +228,31 @@ class _VitalshistoryState extends State<Vitalshistory> {
                                     weeklyQuery3.isEmpty
                                         ? 0
                                         : double.parse(
-                                            '${weeklyQuery3[0]['bloodpressure']}')),
+                                            '${weeklyQuery3.last['bloodpressure']}')),
                                 FlSpot(
                                     4,
                                     weeklyQuery4.isEmpty
                                         ? 0
                                         : double.parse(
-                                            '${weeklyQuery4[0]['bloodpressure']}')),
+                                            '${weeklyQuery4.last['bloodpressure']}')),
                                 FlSpot(
                                     5,
                                     weeklyQuery5.isEmpty
                                         ? 0
                                         : double.parse(
-                                            '${weeklyQuery5[0]['bloodpressure']}')),
+                                            '${weeklyQuery5.last['bloodpressure']}')),
                                 FlSpot(
                                     6,
                                     weeklyQuery6.isEmpty
                                         ? 0
                                         : double.parse(
-                                            '${weeklyQuery6[0]['bloodpressure']}')),
+                                            '${weeklyQuery6.last['bloodpressure']}')),
                                 FlSpot(
                                     7,
                                     weeklyQuery7.isEmpty
                                         ? 0
                                         : double.parse(
-                                            '${weeklyQuery7[0]['bloodpressure']}')),
+                                            '${weeklyQuery7.last['bloodpressure']}')),
                               ]),
                             )
                           ],
@@ -283,7 +283,7 @@ class _VitalshistoryState extends State<Vitalshistory> {
                                     weeklyQuery1.isEmpty
                                         ? 0
                                         : double.parse(
-                                            '${weeklyQuery1[0]['heartrate']}')),
+                                            '${weeklyQuery1.last['heartrate']}')),
                                 FlSpot(
                                     2,
                                     weeklyQuery2.isEmpty
@@ -295,31 +295,31 @@ class _VitalshistoryState extends State<Vitalshistory> {
                                     weeklyQuery3.isEmpty
                                         ? 0
                                         : double.parse(
-                                            '${weeklyQuery3[0]['heartrate']}')),
+                                            '${weeklyQuery3.last['heartrate']}')),
                                 FlSpot(
                                     4,
                                     weeklyQuery4.isEmpty
                                         ? 0
                                         : double.parse(
-                                            '${weeklyQuery4[0]['heartrate']}')),
+                                            '${weeklyQuery4.last['heartrate']}')),
                                 FlSpot(
                                     5,
                                     weeklyQuery5.isEmpty
                                         ? 0
                                         : double.parse(
-                                            '${weeklyQuery5[0]['heartrate']}')),
+                                            '${weeklyQuery5.last['heartrate']}')),
                                 FlSpot(
                                     6,
                                     weeklyQuery6.isEmpty
                                         ? 0
                                         : double.parse(
-                                            '${weeklyQuery6[0]['heartrate']}')),
+                                            '${weeklyQuery6.last['heartrate']}')),
                                 FlSpot(
                                     7,
                                     weeklyQuery7.isEmpty
                                         ? 0
                                         : double.parse(
-                                            '${weeklyQuery7[0]['heartrate']}')),
+                                            '${weeklyQuery7.last['heartrate']}')),
                               ]),
                             )
                           ],
@@ -350,7 +350,7 @@ class _VitalshistoryState extends State<Vitalshistory> {
                                     weeklyQuery1.isEmpty
                                         ? 0
                                         : double.parse(
-                                            '${weeklyQuery1[0]['oxygenlevel']}')),
+                                            '${weeklyQuery1.last['oxygenlevel']}')),
                                 FlSpot(
                                     2,
                                     weeklyQuery2.isEmpty
@@ -362,31 +362,31 @@ class _VitalshistoryState extends State<Vitalshistory> {
                                     weeklyQuery3.isEmpty
                                         ? 0
                                         : double.parse(
-                                            '${weeklyQuery3[0]['oxygenlevel']}')),
+                                            '${weeklyQuery3.last['oxygenlevel']}')),
                                 FlSpot(
                                     4,
                                     weeklyQuery4.isEmpty
                                         ? 0
                                         : double.parse(
-                                            '${weeklyQuery4[0]['oxygenlevel']}')),
+                                            '${weeklyQuery4.last['oxygenlevel']}')),
                                 FlSpot(
                                     5,
                                     weeklyQuery5.isEmpty
                                         ? 0
                                         : double.parse(
-                                            '${weeklyQuery5[0]['oxygenlevel']}')),
+                                            '${weeklyQuery5.last['oxygenlevel']}')),
                                 FlSpot(
                                     6,
                                     weeklyQuery6.isEmpty
                                         ? 0
                                         : double.parse(
-                                            '${weeklyQuery6[0]['oxygenlevel']}')),
+                                            '${weeklyQuery6.last['oxygenlevel']}')),
                                 FlSpot(
                                     7,
                                     weeklyQuery7.isEmpty
                                         ? 0
                                         : double.parse(
-                                            '${weeklyQuery7[0]['oxygenlevel']}')),
+                                            '${weeklyQuery7.last['oxygenlevel']}')),
                               ]),
                             )
                           ],
@@ -417,7 +417,7 @@ class _VitalshistoryState extends State<Vitalshistory> {
                                     weeklyQuery1.isEmpty
                                         ? 0
                                         : double.parse(
-                                            '${weeklyQuery1[0]['respiration']}')),
+                                            '${weeklyQuery1.last['respiration']}')),
                                 FlSpot(
                                     2,
                                     weeklyQuery2.isEmpty
@@ -429,31 +429,31 @@ class _VitalshistoryState extends State<Vitalshistory> {
                                     weeklyQuery3.isEmpty
                                         ? 0
                                         : double.parse(
-                                            '${weeklyQuery3[0]['respiration']}')),
+                                            '${weeklyQuery3.last['respiration']}')),
                                 FlSpot(
                                     4,
                                     weeklyQuery4.isEmpty
                                         ? 0
                                         : double.parse(
-                                            '${weeklyQuery4[0]['respiration']}')),
+                                            '${weeklyQuery4.last['respiration']}')),
                                 FlSpot(
                                     5,
                                     weeklyQuery5.isEmpty
                                         ? 0
                                         : double.parse(
-                                            '${weeklyQuery5[0]['respiration']}')),
+                                            '${weeklyQuery5.last['respiration']}')),
                                 FlSpot(
                                     6,
                                     weeklyQuery6.isEmpty
                                         ? 0
                                         : double.parse(
-                                            '${weeklyQuery6[0]['respiration']}')),
+                                            '${weeklyQuery6.last['respiration']}')),
                                 FlSpot(
                                     7,
                                     weeklyQuery7.isEmpty
                                         ? 0
                                         : double.parse(
-                                            '${weeklyQuery7[0]['respiration']}')),
+                                            '${weeklyQuery7.last['respiration']}')),
                               ]),
                             )
                           ],

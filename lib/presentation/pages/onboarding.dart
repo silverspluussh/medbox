@@ -64,7 +64,7 @@ class _GoogleOnbardingState extends State<GoogleOnbarding> {
                             textColor: Colors.white,
                             pdHorizontal: 30,
                             pdVertical: 20);
-                        Navigator.pushReplacement(
+                        return Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
                                 builder: (context) => const Render()));
@@ -80,7 +80,8 @@ class _GoogleOnbardingState extends State<GoogleOnbarding> {
                   }).catchError((e) {});
                 } catch (e) {
                   return VxToast.show(context,
-                      msg: 'Sorry an error occurred with your sign in request',
+                      msg:
+                          'Sorry an error occurred with your sign in request $e',
                       bgColor: const Color.fromARGB(255, 245, 36, 29),
                       textColor: Colors.white,
                       pdHorizontal: 30,

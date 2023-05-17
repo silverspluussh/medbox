@@ -8,7 +8,9 @@ import 'package:timezone/timezone.dart' as tz;
 
 class NotifConsole {
   int id = 0;
-  double rand = Random().nextDouble() * 234;
+  int rand = Random().nextInt(10039) * 234;
+  int hash = Random().nextInt(10039) * 2;
+
   FlutterLocalNotificationsPlugin notificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
@@ -52,19 +54,20 @@ class NotifConsole {
               'daily notification channel name',
               channelDescription: 'daily notification description'),
         ),
+        payload: hash.toString(),
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.absoluteTime,
         matchDateTimeComponents: DateTimeComponents.time,
         androidAllowWhileIdle: true);
   }
 
-  Future<void> instantnotif({String title, String body, String payload}) async {
+  Future<void> instantnotif({String title, String body}) async {
     await notificationsPlugin.show(
       id++,
       title,
       body,
       await tenamnotification(),
-      payload: payload,
+      payload: hash.toString(),
     );
   }
 

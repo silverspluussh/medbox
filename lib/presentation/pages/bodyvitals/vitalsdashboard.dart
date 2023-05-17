@@ -1,4 +1,5 @@
 import 'package:MedBox/domain/sharedpreferences/sharedprefs.dart';
+import 'package:MedBox/presentation/pages/bodyvitals/history_analysis.dart';
 import 'package:MedBox/presentation/pages/bodyvitals/vscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
@@ -27,8 +28,6 @@ class _VitalsDashboardState extends State<VitalsDashboard> {
   String weight;
   String bmi;
   String age;
-  double bpstatus = 0.0;
-  String status = 'diastolic';
   Color bpcolor = Colors.green;
 
   TextEditingController weightt = TextEditingController();
@@ -42,15 +41,14 @@ class _VitalsDashboardState extends State<VitalsDashboard> {
 
   @override
   void initState() {
-    setState(() {
-      age = SharedCli().getage();
-      bmi = SharedCli().getbmi();
-      weight = SharedCli().getweight();
-      height = SharedCli().getheight();
-      heightt.text = SharedCli().getheight();
+    age = SharedCli().getage() ?? '_';
+    bmi = SharedCli().getbmi();
+    weight = SharedCli().getweight();
+    height = SharedCli().getheight();
+    heightt.text = SharedCli().getheight();
 
-      weightt.text = SharedCli().getweight();
-    });
+    weightt.text = SharedCli().getweight();
+
     super.initState();
   }
 
@@ -66,15 +64,7 @@ class _VitalsDashboardState extends State<VitalsDashboard> {
           builder: (context, snap) {
             if (snap.hasData) {
               List<VModel> vitals = snap.data;
-              bpstatus = double.parse(vitals[0].bloodpressure ?? '0.0');
 
-              if (bpstatus < 130) {
-                bpcolor = Colors.red;
-                status = 'diastolic';
-              } else {
-                status = 'systolic';
-                bpcolor = Colors.green;
-              }
               return vitals.isNotEmpty
                   ? CustomScrollView(
                       slivers: [
@@ -83,21 +73,40 @@ class _VitalsDashboardState extends State<VitalsDashboard> {
                             alignment: Alignment.topRight,
                             child: SizedBox(
                               height: 50,
-                              child: Card(
-                                  color: Colors.green,
-                                  child: Semantics(
-                                    button: true,
-                                    child: InkWell(
-                                      onTap: () => Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const AddVitals())),
-                                      child: const Text('Add new entry',
-                                              style: popwhite)
-                                          .p12(),
-                                    ),
-                                  )),
+                              child: Row(
+                                children: [
+                                  Card(
+                                      color: Colors.green,
+                                      child: Semantics(
+                                        button: true,
+                                        child: InkWell(
+                                          onTap: () => Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      const Vitalshistory())),
+                                          child: const Text('View stats',
+                                                  style: popwhite)
+                                              .p12(),
+                                        ),
+                                      )),
+                                  Card(
+                                      color: Colors.green,
+                                      child: Semantics(
+                                        button: true,
+                                        child: InkWell(
+                                          onTap: () => Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      const AddVitals())),
+                                          child: const Text('Add new entry',
+                                                  style: popwhite)
+                                              .p12(),
+                                        ),
+                                      )),
+                                ],
+                              ),
                             ),
                           ),
                         ),
@@ -176,29 +185,28 @@ class _VitalsDashboardState extends State<VitalsDashboard> {
                           delegate: SliverChildListDelegate(
                             [
                               VitalBox(
+                                suffix: const Text('Systolic',
+                                        style: TextStyle(
+                                            color: Colors.amber,
+                                            fontSize: 13,
+                                            fontFamily: 'Pop'))
+                                    .px8(),
                                 action: () => editdialog(context, size,
                                     controller: bp,
                                     label: 'Blood Pressure',
-                                    action: () => VitalsDB()
+                                    action: () async => await VitalsDB()
                                         .updatepressure(bloodpressure: bp.text)
                                         .then((value) => context.pop())),
-                                suffix: Text(
-                                  status,
-                                  style: TextStyle(
-                                      color: bpcolor,
-                                      fontFamily: 'Pop',
-                                      fontSize: 11),
-                                ),
                                 unit: 'mmHg',
                                 title: 'Blood Pressure',
                                 subtitle: vitals.isNotEmpty
-                                    ? vitals[0].bloodpressure
+                                    ? vitals.first.bloodpressure
                                     : '0.0',
                                 leading: 'assets/icons/blood-pressure.png',
                               ),
                               VitalBox(
                                 action: () => editdialog(context, size,
-                                    controller: temp.text,
+                                    controller: temp,
                                     label: 'Temperature',
                                     action: () => VitalsDB()
                                         .updatetemperature(temp: temp.text)
@@ -206,7 +214,7 @@ class _VitalsDashboardState extends State<VitalsDashboard> {
                                 title: 'Temperature',
                                 unit: 'degree celsius',
                                 subtitle: vitals.isNotEmpty
-                                    ? vitals[0].temperature
+                                    ? vitals.first.temperature
                                     : '25',
                                 leading: 'assets/icons/temperature.png',
                               ),
@@ -221,7 +229,7 @@ class _VitalsDashboardState extends State<VitalsDashboard> {
                                 leading: 'assets/icons/heartbeat.png',
                                 unit: 'Bpm',
                                 subtitle: vitals.isNotEmpty
-                                    ? vitals[0].heartrate
+                                    ? vitals.first.heartrate
                                     : '0.0',
                               ),
                               VitalBox(
@@ -233,7 +241,7 @@ class _VitalsDashboardState extends State<VitalsDashboard> {
                                         .then((value) => context.pop())),
                                 unit: '%',
                                 subtitle: vitals.isNotEmpty
-                                    ? vitals[0].oxygenlevel
+                                    ? vitals.first.oxygenlevel
                                     : '0.0',
                                 leading:
                                     'assets/icons/6-medical-blood-oxygen.png',
@@ -251,7 +259,7 @@ class _VitalsDashboardState extends State<VitalsDashboard> {
                                 title: 'Respiration rate',
                                 leading: 'assets/icons/health-12-512.png',
                                 subtitle: vitals.isNotEmpty
-                                    ? vitals[0].respiration
+                                    ? vitals.first.respiration
                                     : '0.0',
                               ),
                               VitalBox(
@@ -375,7 +383,7 @@ class _VitalsDashboardState extends State<VitalsDashboard> {
           padding: const EdgeInsets.all(10.0),
           child: SizedBox(
             width: size.width * 0.7,
-            height: size.height * 0.35,
+            height: size.height * 0.2,
             child: Flex(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               direction: Axis.vertical,

@@ -43,7 +43,7 @@ class VitalBox extends StatelessWidget {
         ),
       ),
       subtitle: Text(
-        subtitle + unit,
+        '$subtitle $unit',
         style: TextStyle(
           fontFamily: 'Pop',
           color: AppColors.primaryColor.withOpacity(0.7),

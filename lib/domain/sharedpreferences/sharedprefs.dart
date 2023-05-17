@@ -38,7 +38,7 @@ class SharedCli {
   Future<bool> setweight({value}) => prefs.setString('weight', value);
   Future<bool> setbmi({value}) => prefs.setString('bmi', value);
 
-  String getheight() => prefs.getString('height');
-  String getweight() => prefs.getString('weight');
-  String getbmi() => prefs.getString('bmi');
+  String getheight() => prefs.getString('height') ?? 0.0;
+  String getweight() => prefs.getString('weight') ?? 0.0;
+  String getbmi() => prefs.getString('bmi') ?? 0.0;
 }

@@ -29,12 +29,10 @@ class _PersonalProfileState extends State<PersonalProfile> {
   String usernames;
 
   referesh() async {
-    setState(() {
-      usernames = SharedCli().getusername();
-      name.text = SharedCli().getusername() ?? 'username';
-      email.text = SharedCli().getemail() ?? 'email';
-      age.text = SharedCli().getage() ?? 'age';
-    });
+    usernames = SharedCli().getusername();
+    name.text = SharedCli().getusername() ?? 'username';
+    email.text = SharedCli().getemail() ?? 'email';
+    age.text = SharedCli().getage();
   }
 
   @override

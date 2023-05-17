@@ -27,7 +27,7 @@ class _MedRemindersState extends State<MedReminders> {
           toolbarHeight: 50,
           title: const Text(
             'Medication Reminders',
-            style: popblack,
+            style: popheaderB,
           ),
           centerTitle: true,
           bottom: const PreferredSize(

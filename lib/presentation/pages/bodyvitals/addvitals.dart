@@ -21,7 +21,6 @@ class AddVitals extends StatefulWidget {
 }
 
 class _AddVitalsState extends State<AddVitals> {
-  final formkey = GlobalKey<FormState>();
   var date = DateTime.now();
   TextEditingController temp = TextEditingController();
   TextEditingController pressure = TextEditingController();
@@ -55,7 +54,7 @@ class _AddVitalsState extends State<AddVitals> {
         toolbarHeight: 40,
         centerTitle: true,
         backgroundColor: Colors.white,
-        title: const Text('Add vitals', style: popblack),
+        title: const Text('Add vitals', style: popheaderB),
       ),
       body: SizedBox(
         width: size.width,
@@ -64,7 +63,6 @@ class _AddVitalsState extends State<AddVitals> {
           slivers: [
             SliverToBoxAdapter(
               child: Form(
-                key: formkey,
                 child: SizedBox(
                   width: size.width,
                   height: size.height * 0.7,

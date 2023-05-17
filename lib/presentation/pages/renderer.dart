@@ -21,7 +21,6 @@ class Render extends StatefulWidget {
 
 class _RenderState extends State<Render> with SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
-  AnimationController animationController;
   List<Widget> _pages;
   String username;
 
@@ -34,25 +33,12 @@ class _RenderState extends State<Render> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    setState(() {
-      username = SharedCli().getusername();
-    });
-    super.initState();
-
-    animationController = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 200));
     _pages = [
       const DashboardOverview(),
       const Medications(),
       const MyProfile(),
       const Settings()
     ];
-  }
-
-  @override
-  void dispose() {
-    animationController.dispose();
-    super.dispose();
   }
 
   @override
@@ -129,7 +115,7 @@ class _RenderState extends State<Render> with SingleTickerProviderStateMixin {
         ),
         const SizedBox(height: 5),
         Text(
-          username ?? 'none',
+          SharedCli().getusername() ?? 'none',
           style: const TextStyle(
               fontFamily: 'Popb',
               fontSize: 10,

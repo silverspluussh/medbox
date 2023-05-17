@@ -22,6 +22,14 @@
           }
         },
         {
+          "client_id": "23934801372-o4rbhiv563kfcgfdpbpu7vb4vkcil8md.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.datasus.medbox",
+            "certificate_hash": "32d880caea47432c18c98e7cc1f9d33999277474"
+          }
+        },
+        {
           "client_id": "23934801372-66qdub0losf8ihqa4ho0hom2m06e8inp.apps.googleusercontent.com",
           "client_type": 3
         }
