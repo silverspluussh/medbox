@@ -1,31 +1,30 @@
 name: MedBox
-description: A new Flutter project.
+description: A product by saint spluussh.
 publish_to: 'none'
 
 version: 1.0.0+1
 
 environment:
-  sdk: '>=2.6.0 <3.0.0'
-
+  sdk: '>=3.0.0 <4.0.0'
 dependencies:
   camera: ^0.10.4
   cloud_firestore: ^4.3.1
   cupertino_icons: ^1.0.2
-  date_picker_timeline: null
+  date_picker_timeline: 
   file_picker: ^5.2.5
   firebase_app_check: ^0.1.1+12
   firebase_auth: null
   firebase_core: ^2.4.1
+  firebase_messaging: ^14.6.1
   fl_chart: ^0.55.2
   flutter:
     sdk: flutter
   flutter_animate: ^3.1.0
-  flutter_datetime_picker: ^1.5.1
+  flutter_datetime_picker: 
   flutter_local_notifications: ^13.0.0
-  flutter_localizations:
-    sdk: flutter
-  flutter_native_splash: ^2.2.19
+
   flutter_slidable: ^2.0.0
+  flutter_timezone: ^1.0.6
   gallery_saver: null
   google_sign_in: ^5.4.4
   http: ^0.13.5
@@ -37,13 +36,13 @@ dependencies:
   provider: ^6.0.5
   share_plus: any
   shared_preferences: ^2.0.17
-  showcaseview: ^2.0.2
   sqflite: ^2.2.4+1
   syncfusion_flutter_charts: ^21.1.41
   url_launcher: ^6.1.10
-  velocity_x: ^3.6.0
+  velocity_x:
 
 dev_dependencies:
+  flutter_native_splash: ^2.2.19
   flutter_lints: ^2.0.0
   flutter_test:
     sdk: flutter
@@ -64,6 +63,3 @@ flutter:
       fonts:
         - asset: assets/fonts/Poppins-Regular.ttf
 
-    - family: Popb
-      fonts:
-        - asset: assets/fonts/Poppins-SemiBold.ttf

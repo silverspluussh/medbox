@@ -1,9 +1,9 @@
 class RapidtestModel {
-  List<bool> testresults;
-  List<String> results;
-  List<String> testname;
-  List<String> testdate;
-  List<String> patientcontact;
+  List<bool>? testresults;
+  List<String>? results;
+  List<String>? testname;
+  List<String>? testdate;
+  List<String>? patientcontact;
 
   RapidtestModel(
       {this.testresults,

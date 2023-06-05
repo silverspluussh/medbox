@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import '../../constants/colors.dart';
 
 class Linechart extends StatefulWidget {
-  const Linechart({Key key, this.flspots}) : super(key: key);
+  final List<FlSpot>? flspots;
 
-  final List<FlSpot> flspots;
+  const Linechart({super.key, this.flspots});
 
   @override
   State<Linechart> createState() => _LineChartState();
@@ -15,7 +15,7 @@ class Linechart extends StatefulWidget {
 class _LineChartState extends State<Linechart> {
   List<Color> gradientColors = [
     const Color.fromARGB(255, 124, 102, 247).withOpacity(0.8),
-    AppColors.primaryColor.withOpacity(0.5),
+    kprimary.withOpacity(0.5),
   ];
 
   @override
@@ -23,7 +23,7 @@ class _LineChartState extends State<Linechart> {
     return Stack(
       children: <Widget>[
         AspectRatio(
-          aspectRatio: 1.20,
+          aspectRatio: 1.05,
           child: Padding(
             padding: const EdgeInsets.only(
               top: 10,
@@ -31,7 +31,7 @@ class _LineChartState extends State<Linechart> {
               right: 2,
             ),
             child: LineChart(
-              mainData(flspots: widget.flspots),
+              mainData(flspots: widget.flspots!),
             ),
           ),
         ),
@@ -78,7 +78,7 @@ class _LineChartState extends State<Linechart> {
     );
   }
 
-  LineChartData mainData({List<FlSpot> flspots}) {
+  LineChartData mainData({List<FlSpot>? flspots}) {
     return LineChartData(
       gridData: FlGridData(
         show: true,
@@ -109,7 +109,7 @@ class _LineChartState extends State<Linechart> {
         bottomTitles: AxisTitles(
           sideTitles: SideTitles(
             showTitles: true,
-            reservedSize: 20,
+            reservedSize: 25,
             interval: 1,
             getTitlesWidget: bottomTitleWidgets,
           ),

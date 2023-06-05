@@ -1,9 +1,9 @@
 class RModel {
-  int id;
-  String medicinename;
-  String timeformat;
-  String setdate;
-  bool status;
+  int? id;
+  String? medicinename;
+  String? timeformat;
+  String? setdate;
+  bool? status;
 
   RModel({
     this.id,

@@ -21,7 +21,6 @@ flutter_native_splash:
 
 
 
-  fullscreen: true
 
   # do not remove any spaces:
   #info_plist_files:

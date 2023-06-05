@@ -1,10 +1,8 @@
 import 'package:MedBox/presentation/pages/reminders/setalarm.dart';
-import 'package:date_picker_timeline/date_picker_timeline.dart';
 import 'package:flutter/material.dart';
 import 'package:MedBox/data/repos/Dbhelpers/medicationdb.dart';
 import 'package:MedBox/constants/colors.dart';
 import 'package:MedBox/presentation/pages/medication/add_medication_page.dart';
-import 'package:MedBox/constants/fonts.dart';
 import 'package:MedBox/utils/extensions/photos_extension.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -14,7 +12,7 @@ import '../../../domain/models/medication_model.dart';
 import '../../widgets/formfieldwidget.dart';
 
 class Medications extends StatefulWidget {
-  const Medications({Key key}) : super(key: key);
+  const Medications({super.key});
 
   @override
   State<Medications> createState() => _MedicationsState();
@@ -38,26 +36,22 @@ class _MedicationsState extends State<Medications> {
         future: MedicationsDB().getmeds(),
         builder: (context, medic) {
           if (medic.hasData) {
-            List<MModel> medication = medic.data;
+            List<MModel> medication = medic.data!;
 
             return Stack(
               children: [
                 CustomScrollView(slivers: [
-                  SliverToBoxAdapter(
-                    child: SizedBox(
-                      height: 85,
-                      width: size.width,
-                      child: DatePicker(
-                        DateTime(2023, 5, 1),
-                        height: 85,
-                        width: 50,
-                        initialSelectedDate: DateTime.now(),
-                        selectionColor: AppColors.primaryColor,
-                        dateTextStyle: popblack,
-                        onDateChange: (e) {},
-                      ),
-                    ),
-                  ),
+                  // SliverToBoxAdapter(
+                  //   child: DatePicker(
+                  //     DateTime.now(),
+                  //     height: size.height * 0.18,
+                  //     width: 50,
+                  //     initialSelectedDate: DateTime.now(),
+                  //     selectionColor: kprimary,
+                  //     dateTextStyle: Theme.of(context).textTheme.bodySmall!,
+                  //     onDateChange: (e) {},
+                  //   ),
+                  // ),
                   medication.isNotEmpty
                       ? SliverList(
                           delegate: SliverChildBuilderDelegate(
@@ -70,9 +64,7 @@ class _MedicationsState extends State<Medications> {
                                         flex: 2,
                                         borderRadius: BorderRadius.circular(15),
                                         icon: Icons.delete_outline_rounded,
-                                        backgroundColor:
-                                            AppColors.redColor.withOpacity(0.7),
-                                        label: 'Delete',
+                                        backgroundColor: kred.withOpacity(0.7),
                                         onPressed: (context) async {
                                           showDialog(
                                               context: context,
@@ -80,7 +72,7 @@ class _MedicationsState extends State<Medications> {
                                                 return Dialog(
                                                   backgroundColor: Colors.green,
                                                   child: Container(
-                                                    height: 150,
+                                                    height: size.height * 0.3,
                                                     width: size.width * 0.7,
                                                     padding:
                                                         const EdgeInsets.all(
@@ -98,20 +90,25 @@ class _MedicationsState extends State<Medications> {
                                                           CrossAxisAlignment
                                                               .start,
                                                       children: [
-                                                        const Text(
-                                                            'Remove medicine',
-                                                            style: popblack),
+                                                        Text('Remove medicine',
+                                                            style: Theme.of(
+                                                                    context)
+                                                                .textTheme
+                                                                .titleSmall),
                                                         const SizedBox(
                                                             height: 10),
-                                                        const Text(
+                                                        Text(
                                                             'Are you sure you want to delete medication?',
                                                             textAlign:
                                                                 TextAlign.left,
-                                                            style: popblack),
+                                                            style: Theme.of(
+                                                                    context)
+                                                                .textTheme
+                                                                .bodySmall),
                                                         const SizedBox(
                                                             height: 10),
                                                         SizedBox(
-                                                          height: 30,
+                                                          height: 40,
                                                           width:
                                                               size.width * 0.7,
                                                           child: Row(
@@ -120,36 +117,39 @@ class _MedicationsState extends State<Medications> {
                                                                     .center,
                                                             children: [
                                                               TextButton(
-                                                                onPressed: () {
-                                                                  MedicationsDB()
-                                                                      .deletemedication(
-                                                                          medication[index]
-                                                                              .id)
-                                                                      .then(
-                                                                          (value) {
-                                                                    setState(
-                                                                        () {
-                                                                      Navigator.pop(
-                                                                          context);
+                                                                  onPressed:
+                                                                      () {
+                                                                    MedicationsDB()
+                                                                        .deletemedication(medication[index]
+                                                                            .id!)
+                                                                        .then(
+                                                                            (value) {
+                                                                      setState(
+                                                                          () {
+                                                                        Navigator.pop(
+                                                                            context);
+                                                                      });
                                                                     });
-                                                                  });
-                                                                },
-                                                                child: const Text(
-                                                                    'Yes',
-                                                                    style:
-                                                                        popheaderB),
-                                                              ),
+                                                                  },
+                                                                  child: Text(
+                                                                      'Yes',
+                                                                      style: Theme.of(
+                                                                              context)
+                                                                          .textTheme
+                                                                          .titleSmall)),
                                                               const Spacer(),
                                                               TextButton(
-                                                                onPressed: () {
-                                                                  Navigator.pop(
-                                                                      context);
-                                                                },
-                                                                child: const Text(
-                                                                    'No',
-                                                                    style:
-                                                                        popheaderB),
-                                                              ),
+                                                                  onPressed:
+                                                                      () {
+                                                                    Navigator.pop(
+                                                                        context);
+                                                                  },
+                                                                  child: Text(
+                                                                      'No',
+                                                                      style: Theme.of(
+                                                                              context)
+                                                                          .textTheme
+                                                                          .titleSmall)),
                                                             ],
                                                           ),
                                                         )
@@ -164,9 +164,8 @@ class _MedicationsState extends State<Medications> {
                                         flex: 2,
                                         borderRadius: BorderRadius.circular(15),
                                         icon: Icons.edit_outlined,
-                                        backgroundColor: AppColors.primaryColor
-                                            .withOpacity(0.5),
-                                        label: 'Update',
+                                        backgroundColor:
+                                            kprimary.withOpacity(0.5),
                                         onPressed: (context) {
                                           showDialog(
                                               context: context,
@@ -178,8 +177,8 @@ class _MedicationsState extends State<Medications> {
                                                           const EdgeInsets.all(
                                                               10),
                                                       decoration: BoxDecoration(
-                                                          color: AppColors
-                                                              .scaffoldColor,
+                                                          color:
+                                                              kBackgroundColor,
                                                           borderRadius:
                                                               BorderRadius
                                                                   .circular(
@@ -195,7 +194,7 @@ class _MedicationsState extends State<Medications> {
                                                               readonly: false,
                                                               hinttext: medication[
                                                                       index]
-                                                                  .medicinename,
+                                                                  .medicinename!,
                                                               label:
                                                                   'Medicine name',
                                                               controller:
@@ -206,7 +205,7 @@ class _MedicationsState extends State<Medications> {
                                                               hinttext:
                                                                   medication[
                                                                           index]
-                                                                      .dose,
+                                                                      .dose!,
                                                               controller: dose),
                                                           FormfieldX(
                                                             readonly: true,
@@ -245,82 +244,75 @@ class _MedicationsState extends State<Medications> {
                                                                       setState(
                                                                           () {
                                                                         medicinetype.text =
-                                                                            val;
+                                                                            val!;
                                                                       });
                                                                     }),
                                                             controller:
                                                                 medicinetype,
                                                             hinttext: medication[
                                                                     index]
-                                                                .medicinetype,
+                                                                .medicinetype!,
                                                             label:
                                                                 'Medication type',
                                                           ),
                                                           const SizedBox(
                                                               height: 30),
-                                                          InkWell(
-                                                            onTap: () {
-                                                              MModel mModel =
-                                                                  MModel(
-                                                                dose: dose.text
-                                                                        .isNotBlank
-                                                                    ? dose.text
-                                                                    : medication[
-                                                                            index]
-                                                                        .dose,
-                                                                image: medication[
-                                                                        index]
-                                                                    .image,
-                                                                id: medication[
-                                                                        index]
-                                                                    .id,
-                                                                medicinename: medname
-                                                                        .text
-                                                                        .isNotBlank
-                                                                    ? medname
-                                                                        .text
-                                                                    : medication[
-                                                                            index]
-                                                                        .medicinename,
-                                                                medicinetype: medicinetype
-                                                                        .text
-                                                                        .isNotBlank
-                                                                    ? medicinetype
-                                                                        .text
-                                                                    : medication[
-                                                                            index]
-                                                                        .medicinetype,
-                                                              );
-                                                              MedicationsDB()
-                                                                  .updatemedicine(
-                                                                      mModel)
-                                                                  .then(
-                                                                      (value) {
-                                                                setState(() {});
-                                                                Navigator.pop(
-                                                                    context);
-                                                              });
-                                                            },
-                                                            child: const Chip(
-                                                                backgroundColor:
-                                                                    AppColors
-                                                                        .primaryColor,
-                                                                elevation: 5,
-                                                                labelPadding: EdgeInsets
-                                                                    .symmetric(
-                                                                        horizontal:
-                                                                            20,
-                                                                        vertical:
-                                                                            5),
-                                                                label: Text(
-                                                                  'Save',
-                                                                  style:
-                                                                      popwhite,
-                                                                  textAlign:
-                                                                      TextAlign
-                                                                          .center,
-                                                                )),
-                                                          )
+                                                          ElevatedButton(
+                                                              onPressed: () {
+                                                                MModel mModel =
+                                                                    MModel(
+                                                                  dose: dose
+                                                                          .text
+                                                                          .isNotBlank
+                                                                      ? dose
+                                                                          .text
+                                                                      : medication[
+                                                                              index]
+                                                                          .dose,
+                                                                  image: medication[
+                                                                          index]
+                                                                      .image,
+                                                                  id: medication[
+                                                                          index]
+                                                                      .id,
+                                                                  medicinename: medname
+                                                                          .text
+                                                                          .isNotBlank
+                                                                      ? medname
+                                                                          .text
+                                                                      : medication[
+                                                                              index]
+                                                                          .medicinename,
+                                                                  medicinetype: medicinetype
+                                                                          .text
+                                                                          .isNotBlank
+                                                                      ? medicinetype
+                                                                          .text
+                                                                      : medication[
+                                                                              index]
+                                                                          .medicinetype,
+                                                                );
+                                                                MedicationsDB()
+                                                                    .updatemedicine(
+                                                                        mModel)
+                                                                    .then(
+                                                                        (value) {
+                                                                  setState(
+                                                                      () {});
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                });
+                                                              },
+                                                              child: Text(
+                                                                'Save',
+                                                                style: Theme.of(
+                                                                        context)
+                                                                    .textTheme
+                                                                    .titleSmall,
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .center,
+                                                              ))
                                                         ],
                                                       )),
                                                 );
@@ -335,85 +327,56 @@ class _MedicationsState extends State<Medications> {
                                       flex: 1,
                                       borderRadius: BorderRadius.circular(15),
                                       icon: Icons.add_alarm_rounded,
-                                      backgroundColor: AppColors.primaryColor
-                                          .withOpacity(0.5),
-                                      label: 'Set Reminder',
+                                      backgroundColor:
+                                          kprimary.withOpacity(0.5),
                                       onPressed: (context) async {
                                         Navigator.push(
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) => SetAlarm(
                                                     dose:
-                                                        medication[index].dose,
+                                                        medication[index].dose!,
                                                     medicinename:
                                                         medication[index]
-                                                            .medicinename)));
+                                                            .medicinename!)));
                                       }),
                                 ],
                               ),
-                              child: Container(
-                                  width: size.width - 20,
-                                  height: 120,
-                                  margin: const EdgeInsets.only(
-                                      bottom: 20, right: 10, left: 10),
+                              child: ListTile(
+                                leading: Container(
+                                  margin: const EdgeInsets.only(left: 5),
+                                  height: 40,
+                                  width: (size.width - 90) * 0.4,
                                   decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(15)),
-                                  child: Row(
-                                    children: [
-                                      Container(
-                                        margin: const EdgeInsets.only(left: 5),
-                                        height: 100,
-                                        width: (size.width - 90) * 0.4,
-                                        decoration: BoxDecoration(
-                                            image: DecorationImage(
-                                              fit: BoxFit.fill,
-                                              image: MemoryImage(Utility()
-                                                  .dataFromBase64String(
-                                                      medication[index].image)),
-                                            ),
-                                            border: Border.all(
-                                                width: 1,
-                                                color: AppColors.primaryColor
-                                                    .withOpacity(0.3)),
-                                            borderRadius:
-                                                BorderRadius.circular(15)),
-                                      ),
-                                      const SizedBox(width: 20),
-                                      SizedBox(
-                                        height: 110,
-                                        width: (size.width - 90) * 0.5,
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceEvenly,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                                medication[index]
-                                                    .medicinename
-                                                    .toUpperCase(),
-                                                style: popblack),
-                                            Text(
-                                              'Dosage: ${medication[index].dose}'
-                                                  .toUpperCase(),
-                                              style: popblack,
-                                            ),
-                                            Text(
-                                              'Type: ${medication[index].medicinetype}'
-                                                  .toUpperCase(),
-                                              style: const TextStyle(
-                                                  fontSize: 12,
-                                                  fontFamily: 'Pop',
-                                                  color: AppColors.redColor,
-                                                  fontWeight: FontWeight.w300),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  )),
-                            ).pSymmetric(v: 10),
+                                    shape: BoxShape.circle,
+                                    image: DecorationImage(
+                                      fit: BoxFit.fill,
+                                      image: MemoryImage(Utility()
+                                          .dataFromBase64String(
+                                              medication[index].image!)),
+                                    ),
+                                    border: Border.all(
+                                        width: 1,
+                                        color: kprimary.withOpacity(0.3)),
+                                  ),
+                                ),
+                                title: Text(
+                                    medication[index]
+                                        .medicinename!
+                                        .toUpperCase(),
+                                    style:
+                                        Theme.of(context).textTheme.bodySmall),
+                                subtitle: Text(
+                                  '${medication[index].medicinetype}'
+                                      .toUpperCase(),
+                                  style: const TextStyle(
+                                      fontSize: 11,
+                                      fontFamily: 'Pop',
+                                      color: kred,
+                                      fontWeight: FontWeight.w300),
+                                ),
+                              ).p8(),
+                            ),
                             childCount: medication.length,
                           ),
                         )
@@ -430,10 +393,11 @@ class _MedicationsState extends State<Medications> {
                                         animate: true,
                                         reverse: true),
                                     const SizedBox(height: 20),
-                                    const Text(
-                                      "Medication data not set yet.",
-                                      style: popblack,
-                                    ),
+                                    Text("Medication data not set yet.",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodySmall)
+                                        .centered(),
                                   ],
                                 ),
                               )),
@@ -455,7 +419,7 @@ class _MedicationsState extends State<Medications> {
                         width: 50,
                         decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: AppColors.primaryColor.withOpacity(0.6)),
+                            color: kprimary.withOpacity(0.6)),
                         child: const Icon(
                           Icons.edit,
                           color: Colors.white,
@@ -469,21 +433,24 @@ class _MedicationsState extends State<Medications> {
                 .fadeIn(duration: 100.milliseconds, delay: 50.milliseconds);
           }
           return SizedBox(
-              width: size.width - 90,
-              height: size.height * 0.5,
-              child: Center(
-                child: Column(
-                  children: [
-                    Lottie.asset('assets/lottie/not-found.json',
-                        height: size.height * 0.35,
-                        width: size.width * 0.3,
-                        animate: true,
-                        reverse: true),
-                    const SizedBox(height: 20),
-                    const Text("Medication data not set yet.", style: popblack),
-                  ],
-                ),
-              ));
+                  width: size.width - 90,
+                  height: size.height * 0.5,
+                  child: Center(
+                    child: Column(
+                      children: [
+                        Lottie.asset('assets/lottie/not-found.json',
+                            height: size.height * 0.35,
+                            width: size.width * 0.3,
+                            animate: true,
+                            reverse: true),
+                        const SizedBox(height: 20),
+                        Text("Medication data not set yet.",
+                            style: Theme.of(context).textTheme.bodySmall),
+                      ],
+                    ).centered(),
+                  ))
+              .animate()
+              .slideX(duration: 300.milliseconds, delay: 100.milliseconds);
         });
   }
 }

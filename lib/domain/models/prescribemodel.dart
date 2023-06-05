@@ -1,8 +1,8 @@
 class PrescModel {
-  int id;
-  String title;
-  String fileimagepath;
-  String datetime;
+  int? id;
+  String? title;
+  String? fileimagepath;
+  String? datetime;
 
   PrescModel({this.title, this.fileimagepath, this.datetime, this.id});
 

@@ -1,5 +1,3 @@
-import 'package:MedBox/constants/colors.dart';
-import 'package:MedBox/constants/fonts.dart';
 import 'package:MedBox/utils/extensions/notification.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -8,7 +6,7 @@ import 'package:lottie/lottie.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class MedReminders extends StatefulWidget {
-  const MedReminders({Key key}) : super(key: key);
+  const MedReminders({super.key});
 
   @override
   State<MedReminders> createState() => _MedRemindersState();
@@ -21,51 +19,45 @@ class _MedRemindersState extends State<MedReminders> {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-        backgroundColor: AppColors.scaffoldColor,
         appBar: AppBar(
           backgroundColor: Colors.white,
-          toolbarHeight: 50,
-          title: const Text(
-            'Medication Reminders',
-            style: popheaderB,
-          ),
-          centerTitle: true,
-          bottom: const PreferredSize(
-              preferredSize: Size.fromHeight(30),
+          toolbarHeight: 0,
+          bottom: PreferredSize(
+              preferredSize: const Size.fromHeight(50),
               child: TabBar(tabs: [
-                Text(
-                  'Active Reminders',
-                  style: popheaderB,
-                ),
-                Text(
-                  'Pending Reminders',
-                  style: popheaderB,
-                )
+                Text('Active Reminders',
+                    style: Theme.of(context).textTheme.bodySmall),
+                Text('Pending Reminders',
+                    style: Theme.of(context).textTheme.bodySmall)
               ])),
         ),
-        body: TabBarView(children: [
-          FutureBuilder(
-              future: NotifConsole().activereminders(),
-              builder: (context, active) {
-                if (active.hasData) {
-                  List<ActiveNotification> activ = active.data;
-                  return _listbuilder(activ, size);
-                }
-                return nodata(size, context);
-              }),
-          FutureBuilder(
-              future: NotifConsole().pendingreminders(),
-              builder: (context, pending) {
-                if (pending.hasData) {
-                  List<PendingNotificationRequest> pend = pending.data;
+        body: SafeArea(
+          child: TabBarView(children: [
+            FutureBuilder(
+                future: NotifConsole().activereminders(),
+                builder: (context, active) {
+                  if (active.hasData) {
+                    List<ActiveNotification> activ = active.data!;
+                    return _listbuilder(activ, size);
+                  }
+                  return nodata(size, context);
+                }),
+            FutureBuilder(
+                future: NotifConsole().pendingreminders(),
+                builder: (context, pending) {
+                  if (pending.hasData) {
+                    List<PendingNotificationRequest> pend = pending.data!;
 
-                  return _listbuilder(pend, size);
-                }
+                    return _listbuilder(pend, size);
+                  }
 
-                return nodata(size, context);
-              }),
-        ]),
-      ).animate().fadeIn(duration: 100.milliseconds),
+                  return nodata(size, context);
+                }),
+          ])
+              .animate()
+              .slideX(duration: 300.milliseconds, delay: 100.milliseconds),
+        ),
+      ),
     );
   }
 
@@ -78,11 +70,9 @@ class _MedRemindersState extends State<MedReminders> {
             height: size.height * 0.35,
             width: size.width * 0.3,
           ),
-          const Text(
-            "No pending reminders",
-            textAlign: TextAlign.center,
-            style: popblack,
-          ),
+          Text("No pending reminders",
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.bodySmall),
         ],
       ),
     );
@@ -92,7 +82,6 @@ class _MedRemindersState extends State<MedReminders> {
     return ListView.builder(
         padding: const EdgeInsets.symmetric(horizontal: 30),
         itemCount: list.length,
-        physics: const NeverScrollableScrollPhysics(),
         itemBuilder: (context, index) {
           return SizedBox(
             width: size.width - 40,
@@ -108,7 +97,8 @@ class _MedRemindersState extends State<MedReminders> {
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 20, vertical: 2),
-                        child: Text(list[index].title, style: popblack),
+                        child: Text(list[index].title,
+                            style: Theme.of(context).textTheme.titleSmall),
                       ),
                     ),
                     const Spacer(),
@@ -123,7 +113,9 @@ class _MedRemindersState extends State<MedReminders> {
                         ))
                   ],
                 ),
-                Text(list[index].body, style: popblack).centered(),
+                Text(list[index].body,
+                        style: Theme.of(context).textTheme.bodySmall)
+                    .centered(),
                 const SizedBox(height: 10),
                 Card(
                   elevation: 5,
@@ -131,8 +123,9 @@ class _MedRemindersState extends State<MedReminders> {
                   margin: const EdgeInsets.all(1),
                   child: Padding(
                     padding:
-                        const EdgeInsets.symmetric(horizontal: 20, vertical: 2),
-                    child: Text(list[index].payload, style: popwhite),
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+                    child: Text(list[index].payload,
+                        style: Theme.of(context).textTheme.bodySmall),
                   ),
                 ),
               ]).p20(),
@@ -149,7 +142,7 @@ class _MedRemindersState extends State<MedReminders> {
           return Dialog(
             backgroundColor: Colors.green,
             child: Container(
-              height: 150,
+              height: size.height * 0.3,
               width: size.width * 0.7,
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
@@ -158,19 +151,15 @@ class _MedRemindersState extends State<MedReminders> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Remove reminder',
-                    style: popheaderB,
-                  ),
+                  Text('Remove reminder',
+                      style: Theme.of(context).textTheme.titleSmall),
                   const SizedBox(height: 10),
-                  const Text(
-                    'Are you sure you want to delete reminder?',
-                    textAlign: TextAlign.left,
-                    style: popblack,
-                  ),
+                  Text('Are you sure you want to delete reminder?',
+                      textAlign: TextAlign.left,
+                      style: Theme.of(context).textTheme.bodySmall),
                   const SizedBox(height: 10),
                   SizedBox(
-                    height: 30,
+                    height: 40,
                     width: size.width * 0.7,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,

@@ -1,11 +1,11 @@
 class VModel {
-  int id;
-  String bloodpressure;
-  String oxygenlevel;
-  String heartrate;
-  String temperature;
-  String respiration;
-  String datetime;
+  int? id;
+  String? bloodpressure;
+  String? oxygenlevel;
+  String? heartrate;
+  String? temperature;
+  String? respiration;
+  String? datetime;
 
   VModel({
     this.id,

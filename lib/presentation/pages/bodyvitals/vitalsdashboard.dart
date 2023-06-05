@@ -2,10 +2,10 @@ import 'package:MedBox/domain/sharedpreferences/sharedprefs.dart';
 import 'package:MedBox/presentation/pages/bodyvitals/history_analysis.dart';
 import 'package:MedBox/presentation/pages/bodyvitals/vscreen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:lottie/lottie.dart';
 import 'package:velocity_x/velocity_x.dart';
 import '../../../constants/colors.dart';
-import '../../../constants/fonts.dart';
 import '../../../data/repos/Dbhelpers/vitalsdb.dart';
 import '../../../domain/models/vitalsmodel.dart';
 import '../../widgets/formfieldwidget.dart';
@@ -13,7 +13,7 @@ import '../../widgets/radialbarchart.dart';
 import 'addvitals.dart';
 
 class VitalsDashboard extends StatefulWidget {
-  const VitalsDashboard({Key key}) : super(key: key);
+  const VitalsDashboard({super.key});
 
   @override
   State<VitalsDashboard> createState() => _VitalsDashboardState();
@@ -24,10 +24,10 @@ extension on num {
 }
 
 class _VitalsDashboardState extends State<VitalsDashboard> {
-  String height;
-  String weight;
-  String bmi;
-  String age;
+  String? height;
+  String? weight;
+  String? bmi;
+  String? age;
   Color bpcolor = Colors.green;
 
   TextEditingController weightt = TextEditingController();
@@ -41,13 +41,13 @@ class _VitalsDashboardState extends State<VitalsDashboard> {
 
   @override
   void initState() {
-    age = SharedCli().getage() ?? '_';
-    bmi = SharedCli().getbmi();
-    weight = SharedCli().getweight();
-    height = SharedCli().getheight();
-    heightt.text = SharedCli().getheight();
+    age = SharedCli().getage() ?? '0';
+    bmi = SharedCli().getbmi() ?? '0';
+    weight = SharedCli().getweight() ?? '0';
+    height = SharedCli().getheight() ?? '0';
+    heightt.text = SharedCli().getheight() ?? '0.0';
 
-    weightt.text = SharedCli().getweight();
+    weightt.text = SharedCli().getweight() ?? '0.0';
 
     super.initState();
   }
@@ -63,7 +63,7 @@ class _VitalsDashboardState extends State<VitalsDashboard> {
           future: VitalsDB().getvitals(),
           builder: (context, snap) {
             if (snap.hasData) {
-              List<VModel> vitals = snap.data;
+              List<VModel> vitals = snap.data!;
 
               return vitals.isNotEmpty
                   ? CustomScrollView(
@@ -85,8 +85,10 @@ class _VitalsDashboardState extends State<VitalsDashboard> {
                                               MaterialPageRoute(
                                                   builder: (context) =>
                                                       const Vitalshistory())),
-                                          child: const Text('View stats',
-                                                  style: popwhite)
+                                          child: Text('View stats',
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodySmall)
                                               .p12(),
                                         ),
                                       )),
@@ -100,8 +102,10 @@ class _VitalsDashboardState extends State<VitalsDashboard> {
                                               MaterialPageRoute(
                                                   builder: (context) =>
                                                       const AddVitals())),
-                                          child: const Text('Add new entry',
-                                                  style: popwhite)
+                                          child: Text('Add new entry',
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodySmall)
                                               .p12(),
                                         ),
                                       )),
@@ -111,75 +115,69 @@ class _VitalsDashboardState extends State<VitalsDashboard> {
                           ),
                         ),
                         SliverToBoxAdapter(
-                          child: SizedBox(
-                            width: size.width,
-                            height: size.height * 0.4,
-                            child: VxSwiper(
-                                autoPlay: false,
-                                enableInfiniteScroll: false,
-                                items: [
-                                  SizedBox(
-                                    width: size.width,
-                                    height: size.height * 0.4,
-                                    child: Card(
-                                        elevation: 0,
-                                        color: Colors.white,
-                                        child: RadialBarAngle(
-                                          model: vitals,
-                                        ).p16()),
-                                  ),
-                                  SizedBox(
-                                    width: size.width,
-                                    height: size.height * 0.4,
-                                    child: Card(
-                                      elevation: 0,
-                                      color: Colors.white,
-                                      child: SizedBox(
-                                        width: size.width,
-                                        height: size.height * 0.4,
-                                        child: Flex(
-                                          direction: Axis.horizontal,
-                                          children: [
-                                            Image.asset(
-                                              'assets/images/NicePng_human-figure-png_677858.png',
-                                              height: size.height * 0.35,
-                                              width: 100,
+                          child: VxSwiper(
+                              autoPlay: false,
+                              enableInfiniteScroll: false,
+                              items: [
+                                Card(
+                                    elevation: 0,
+                                    color: Colors.white,
+                                    child: RadialBarAngle(
+                                      model: vitals,
+                                    ).p16()),
+                                Card(
+                                    elevation: 0,
+                                    color: Colors.white,
+                                    child: SizedBox(
+                                      width: size.width,
+                                      height: size.height * 0.4,
+                                      child: Flex(
+                                        direction: Axis.horizontal,
+                                        children: [
+                                          Image.asset(
+                                            'assets/images/NicePng_human-figure-png_677858.png',
+                                            height: size.height * 0.35,
+                                            width: 100,
+                                          ),
+                                          SizedBox(
+                                            height: size.height * 0.3,
+                                            width: size.width * 0.4,
+                                            child: Flex(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceAround,
+                                              direction: Axis.vertical,
+                                              children: [
+                                                Text(
+                                                  'AGE: $age years',
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodySmall,
+                                                ),
+                                                Text(
+                                                  'BMI: $bmi m/kg2',
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodySmall,
+                                                ),
+                                                Text(
+                                                  'Height: $height m',
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodySmall,
+                                                ),
+                                                Text(
+                                                  'Weight: $weight kg',
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodySmall,
+                                                ),
+                                              ],
                                             ),
-                                            SizedBox(
-                                              height: size.height * 0.3,
-                                              width: size.width * 0.42,
-                                              child: Flex(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceAround,
-                                                direction: Axis.vertical,
-                                                children: [
-                                                  Text(
-                                                    'AGE: $age years',
-                                                    style: popheaderB,
-                                                  ),
-                                                  Text(
-                                                    'BMI: $bmi m/kg2',
-                                                    style: popheaderB,
-                                                  ),
-                                                  Text(
-                                                    'Height: $height m',
-                                                    style: popheaderB,
-                                                  ),
-                                                  Text(
-                                                    'Weight: $weight kg',
-                                                    style: popheaderB,
-                                                  ),
-                                                ],
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      ).p8(),
-                                    ),
-                                  )
-                                ]),
-                          ),
+                                          )
+                                        ],
+                                      ),
+                                    ))
+                              ]),
                         ),
                         SliverList(
                           delegate: SliverChildListDelegate(
@@ -200,7 +198,7 @@ class _VitalsDashboardState extends State<VitalsDashboard> {
                                 unit: 'mmHg',
                                 title: 'Blood Pressure',
                                 subtitle: vitals.isNotEmpty
-                                    ? vitals.first.bloodpressure
+                                    ? vitals.first.bloodpressure!
                                     : '0.0',
                                 leading: 'assets/icons/blood-pressure.png',
                               ),
@@ -214,7 +212,7 @@ class _VitalsDashboardState extends State<VitalsDashboard> {
                                 title: 'Temperature',
                                 unit: 'degree celsius',
                                 subtitle: vitals.isNotEmpty
-                                    ? vitals.first.temperature
+                                    ? vitals.first.temperature!
                                     : '25',
                                 leading: 'assets/icons/temperature.png',
                               ),
@@ -229,7 +227,7 @@ class _VitalsDashboardState extends State<VitalsDashboard> {
                                 leading: 'assets/icons/heartbeat.png',
                                 unit: 'Bpm',
                                 subtitle: vitals.isNotEmpty
-                                    ? vitals.first.heartrate
+                                    ? vitals.first.heartrate!
                                     : '0.0',
                               ),
                               VitalBox(
@@ -241,7 +239,7 @@ class _VitalsDashboardState extends State<VitalsDashboard> {
                                         .then((value) => context.pop())),
                                 unit: '%',
                                 subtitle: vitals.isNotEmpty
-                                    ? vitals.first.oxygenlevel
+                                    ? vitals.first.oxygenlevel!
                                     : '0.0',
                                 leading:
                                     'assets/icons/6-medical-blood-oxygen.png',
@@ -259,7 +257,7 @@ class _VitalsDashboardState extends State<VitalsDashboard> {
                                 title: 'Respiration rate',
                                 leading: 'assets/icons/health-12-512.png',
                                 subtitle: vitals.isNotEmpty
-                                    ? vitals.first.respiration
+                                    ? vitals.first.respiration!
                                     : '0.0',
                               ),
                               VitalBox(
@@ -283,16 +281,16 @@ class _VitalsDashboardState extends State<VitalsDashboard> {
                                               MainAxisAlignment.spaceAround,
                                           direction: Axis.vertical,
                                           children: [
-                                            const Text(
+                                            Text(
                                               'Add/Update Body Mass Index',
-                                              style: popheaderB,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .titleSmall,
                                             ),
                                             FormfieldX(
                                               readonly: false,
                                               controller: heightt,
-                                              hinttext:
-                                                  SharedCli().getheight() ??
-                                                      'weight in meters(m)',
+                                              hinttext: SharedCli().getheight(),
                                               inputType: TextInputType.number,
                                               label: 'Height',
                                               validator: (e) {
@@ -313,9 +311,7 @@ class _VitalsDashboardState extends State<VitalsDashboard> {
                                               },
                                               readonly: false,
                                               controller: weightt,
-                                              hinttext:
-                                                  SharedCli().getweight() ??
-                                                      '0.0',
+                                              hinttext: SharedCli().getweight(),
                                               inputType: TextInputType.number,
                                               label: 'Weight',
                                               prefixicon: const Icon(
@@ -333,10 +329,12 @@ class _VitalsDashboardState extends State<VitalsDashboard> {
                                                   });
                                                 },
                                                 child: Card(
-                                                  color: AppColors.primaryColor,
-                                                  child: const Text(
-                                                          'Update bmi',
-                                                          style: popwhite)
+                                                  color: kprimary,
+                                                  child: Text('Update bmi',
+                                                          style:
+                                                              Theme.of(context)
+                                                                  .textTheme
+                                                                  .bodySmall)
                                                       .p16(),
                                                 ),
                                               ),
@@ -348,7 +346,7 @@ class _VitalsDashboardState extends State<VitalsDashboard> {
                                   ),
                                 ),
                                 unit: 'kg/m2',
-                                subtitle: SharedCli().getbmi() ?? '0.0',
+                                subtitle: SharedCli().getbmi(),
                                 leading: 'assets/icons/health-12-512.png',
                                 title: 'Body Mass Index',
                               ),
@@ -361,7 +359,7 @@ class _VitalsDashboardState extends State<VitalsDashboard> {
             }
             return const SizedBox();
           }),
-    );
+    ).animate().slideX(duration: 300.milliseconds, delay: 100.milliseconds);
   }
 
   Future<dynamic> editdialog(
@@ -369,7 +367,7 @@ class _VitalsDashboardState extends State<VitalsDashboard> {
     Size size, {
     label,
     controller,
-    VoidCallback action,
+    VoidCallback? action,
   }) {
     return showDialog(
       context: context,
@@ -403,12 +401,11 @@ class _VitalsDashboardState extends State<VitalsDashboard> {
                   prefixicon: const Icon(Icons.monitor_weight_outlined),
                 ),
                 SizedBox(
-                  child: InkWell(
-                    onTap: action,
-                    child: Card(
-                      color: AppColors.primaryColor,
-                      child: const Text('Update', style: popwhite).p16(),
-                    ),
+                  height: 50,
+                  child: TextButton(
+                    onPressed: action,
+                    child: Text('Update',
+                        style: Theme.of(context).textTheme.titleSmall),
                   ),
                 )
               ],
@@ -448,31 +445,25 @@ nodata(Size size, BuildContext context) {
       children: [
         Lottie.asset(
           'assets/lottie/empty.json',
-          height: size.height * 0.35,
+          height: size.height * 0.32,
           width: size.width * 0.3,
         ),
         const SizedBox(height: 20),
-        const Text(
+        Text(
           "No health data added at the moment.\nYou can change that tapping on the edit button.",
           textAlign: TextAlign.center,
-          style: popblack,
+          style: Theme.of(context).textTheme.bodySmall,
         ),
-        const SizedBox(height: 50),
+        const SizedBox(height: 30),
         SizedBox(
           width: size.width * 0.6,
-          height: 50,
-          child: Semantics(
-            button: true,
-            child: InkWell(
-              onTap: () => Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const AddVitals())),
-              child: Card(
-                color: AppColors.primaryColor,
-                elevation: 5,
-                child:
-                    const Text('ADD VITALS', style: popwhite).centered().px16(),
-              ),
-            ),
+          child: ElevatedButton(
+            onPressed: () => Navigator.push(context,
+                MaterialPageRoute(builder: (context) => const AddVitals())),
+            child: Text('ADD VITALS',
+                    style: Theme.of(context).textTheme.titleSmall)
+                .centered()
+                .px16(),
           ),
         ),
       ],

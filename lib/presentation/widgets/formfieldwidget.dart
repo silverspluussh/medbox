@@ -1,12 +1,11 @@
 import 'package:MedBox/constants/colors.dart';
-import 'package:MedBox/constants/fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 // ignore: must_be_immutable
 class FormfieldX extends StatelessWidget {
   FormfieldX(
-      {Key key,
+      {super.key,
       this.suffix,
       this.prefixicon,
       this.validator,
@@ -14,17 +13,16 @@ class FormfieldX extends StatelessWidget {
       this.hinttext,
       this.label,
       this.inputType,
-      this.controller})
-      : super(key: key);
+      this.controller});
 
-  TextEditingController controller;
-  FormFieldValidator validator;
-  bool readonly;
-  Widget suffix;
-  Icon prefixicon;
-  String hinttext;
-  String label;
-  TextInputType inputType;
+  TextEditingController? controller;
+  FormFieldValidator? validator;
+  bool? readonly;
+  Widget? suffix;
+  Icon? prefixicon;
+  String? hinttext;
+  String? label;
+  TextInputType? inputType;
 
   @override
   Widget build(BuildContext context) {
@@ -32,13 +30,13 @@ class FormfieldX extends StatelessWidget {
       child: TextFormField(
         controller: controller,
         validator: validator,
-        style: popblack,
+        style: Theme.of(context).textTheme.labelSmall,
         keyboardType: inputType,
-        readOnly: readonly,
+        readOnly: readonly!,
         autovalidateMode: AutovalidateMode.onUserInteraction,
         decoration: InputDecoration(
-            label: Text(label, style: popblack),
-            labelStyle: popheaderB,
+            label: Text(label!),
+            labelStyle: Theme.of(context).textTheme.titleSmall,
             fillColor: Colors.white,
             disabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(15),
@@ -55,8 +53,7 @@ class FormfieldX extends StatelessWidget {
             contentPadding: const EdgeInsets.all(10),
             suffix: suffix,
             prefixIcon: prefixicon,
-            errorStyle: poperror,
-            prefixIconColor: AppColors.primaryColor,
+            prefixIconColor: kprimary,
             filled: true),
       ).px20().py12(),
     );

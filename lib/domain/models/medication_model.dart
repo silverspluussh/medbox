@@ -1,9 +1,9 @@
 class MModel {
-  int id;
-  String medicinename;
-  String dose;
-  String medicinetype;
-  String image;
+  int? id;
+  String? medicinename;
+  String? dose;
+  String? medicinetype;
+  String? image;
 
   MModel({
     this.id,

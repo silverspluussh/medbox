@@ -1,14 +1,13 @@
-import 'package:MedBox/constants/fonts.dart';
-import 'package:MedBox/presentation/pages/onboarding.dart';
 import 'package:flutter/material.dart';
 import 'package:MedBox/data/datasource/fbasehelper.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class Settings extends StatefulWidget {
-  const Settings({Key key}) : super(key: key);
+  const Settings({super.key});
 
   @override
   State<Settings> createState() => _SettingsState();
@@ -68,59 +67,48 @@ class _SettingsState extends State<Settings> {
                 lead: 'assets/icons/log-out-54-512.png',
                 callback: () => SystemNavigator.pop()),
             const SizedBox(height: 30),
-            Image.asset(
-              'assets/images/medboxicon.png',
-              width: size.width * 0.4,
-              height: size.height * 0.2,
-            ).centered(),
-            const SizedBox(height: 20),
           ]))
         ],
       ),
-    );
+    ).animate().slideX(duration: 300.milliseconds, delay: 100.milliseconds);
   }
 
   Dialog _dialogue(Size size, BuildContext context) {
     return Dialog(
       backgroundColor: Colors.green,
       child: Container(
-        height: 150,
+        height: size.height * 0.3,
         width: size.width * 0.7,
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(15),
         decoration: BoxDecoration(
             color: Colors.white, borderRadius: BorderRadius.circular(15)),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
+            Text(
               'Sign out confirmation',
-              style: popheaderB,
+              style: Theme.of(context).textTheme.titleSmall,
             ),
-            const SizedBox(height: 15),
-            const Text('Are you sure you want to log out?',
-                textAlign: TextAlign.justify, style: popblack),
+            const SizedBox(height: 10),
+            Text('Are you sure you want to log out?',
+                textAlign: TextAlign.justify,
+                style: Theme.of(context).textTheme.bodySmall),
             const SizedBox(height: 15),
             SizedBox(
-              height: 30,
+              height: 40,
               width: size.width * 0.7,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   TextButton(
                     onPressed: () async {
-                      FireBaseCLi().signOut().then((value) async {
-                        Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const GoogleOnbarding()),
-                            (route) => false);
-                      });
+                      FireBaseCLi().signOut().then((value) => context.pop());
                     },
                     child: const Text(
                       'Yes',
                       style: TextStyle(
-                          color: Colors.red, fontSize: 11, fontFamily: 'Popb'),
+                          color: Colors.red, fontSize: 11, fontFamily: 'Pop'),
                     ),
                   ),
                   const Spacer(),
@@ -131,9 +119,7 @@ class _SettingsState extends State<Settings> {
                     child: const Text(
                       'No',
                       style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 11,
-                          fontFamily: 'Popb'),
+                          color: Colors.black, fontSize: 11, fontFamily: 'Pop'),
                     ),
                   ),
                 ],
@@ -145,7 +131,7 @@ class _SettingsState extends State<Settings> {
     );
   }
 
-  _tileelement(Size size, {title, lead, VoidCallback callback}) {
+  _tileelement(Size size, {title, lead, VoidCallback? callback}) {
     return Container(
       width: size.width,
       height: 60,
@@ -161,7 +147,7 @@ class _SettingsState extends State<Settings> {
           width: 25,
           height: 25,
         ),
-        title: Text(title, style: popblack),
+        title: Text(title, style: Theme.of(context).textTheme.bodySmall),
         trailing: const Icon(
           Icons.arrow_forward_ios_outlined,
           size: 15,

@@ -1,10 +1,10 @@
 class PharmacyModel {
-  String pharmacyname;
-  String whatsappid;
-  String smsid;
-  String pharmacyid;
-  String location;
-  String phonenumber;
+  String? pharmacyname;
+  String? whatsappid;
+  String? smsid;
+  String? pharmacyid;
+  String? location;
+  String? phonenumber;
 
   PharmacyModel(
       {this.pharmacyname,

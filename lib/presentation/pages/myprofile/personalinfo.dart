@@ -1,4 +1,3 @@
-import 'package:MedBox/constants/fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:velocity_x/velocity_x.dart';
 import '../../../constants/colors.dart';
@@ -6,7 +5,7 @@ import '../../../domain/sharedpreferences/sharedprefs.dart';
 import '../../widgets/formfieldwidget.dart';
 
 class PersonalProfile extends StatefulWidget {
-  const PersonalProfile({Key key}) : super(key: key);
+  const PersonalProfile({super.key});
 
   @override
   State<PersonalProfile> createState() => _PersonalProfileState();
@@ -26,13 +25,13 @@ class _PersonalProfileState extends State<PersonalProfile> {
     super.initState();
   }
 
-  String usernames;
+  String? usernames;
 
   referesh() async {
     usernames = SharedCli().getusername();
-    name.text = SharedCli().getusername() ?? 'username';
-    email.text = SharedCli().getemail() ?? 'email';
-    age.text = SharedCli().getage();
+    name.text = SharedCli().getusername() ?? '';
+    email.text = SharedCli().getemail() ?? '';
+    age.text = SharedCli().getage() ?? '';
   }
 
   @override
@@ -46,21 +45,21 @@ class _PersonalProfileState extends State<PersonalProfile> {
         slivers: [
           SliverToBoxAdapter(
             child: Container(
-              height: 80,
-              width: 80,
+              height: 60,
+              width: 60,
               decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: Colors.white,
                   border: Border.all(width: 2, color: Colors.black12),
                   image: DecorationImage(
                       fit: BoxFit.fill,
-                      image: NetworkImage(SharedCli().getgpfp()))),
+                      image: NetworkImage(SharedCli().getgpfp()!))),
             ).centered(),
           ),
           SliverList(
             delegate: SliverChildListDelegate([
               SizedBox(
-                height: size.height * 0.49,
+                height: size.height * 0.6,
                 width: size.width,
                 child: Flex(
                   direction: Axis.vertical,
@@ -72,7 +71,7 @@ class _PersonalProfileState extends State<PersonalProfile> {
                         Icons.person_4_outlined,
                       ),
                       label: 'Username',
-                      hinttext: usernames ?? 'eg. Kingsford',
+                      hinttext: usernames,
                     ),
                     FormfieldX(
                       controller: email,
@@ -81,20 +80,15 @@ class _PersonalProfileState extends State<PersonalProfile> {
                         Icons.email_outlined,
                       ),
                       label: 'Email',
-                      hinttext: SharedCli().getemail() != null
-                          ? SharedCli().getemail() ?? 'eg. user@gmail.com'
-                          : 'eg. user@gmail.com',
+                      hinttext: SharedCli().getemail() ?? 'eg. user@gmail.com',
                     ),
                     FormfieldX(
                       inputType: TextInputType.phone,
                       readonly: false,
                       controller: number,
-                      prefixicon: const Icon(Icons.phone,
-                          color: AppColors.primaryColor),
+                      prefixicon: const Icon(Icons.phone, color: kprimary),
                       label: 'Phone number',
-                      hinttext: SharedCli().getcontact() != null
-                          ? SharedCli().getcontact() ?? 'eg. 0## #### ###'
-                          : 'eg. 0## #### ###',
+                      hinttext: SharedCli().getcontact() ?? 'eg. 0## #### ###',
                     ),
                     FormfieldX(
                       inputType: TextInputType.number,
@@ -104,39 +98,33 @@ class _PersonalProfileState extends State<PersonalProfile> {
                         Icons.person_4_outlined,
                       ),
                       label: 'Age',
-                      hinttext: SharedCli().getage() != null
-                          ? SharedCli().getage() ?? 'eg. 25 years old'
-                          : 'eg. 25 years old',
+                      hinttext: SharedCli().getage() ?? 'eg. 25 years old',
                     ),
                     FormfieldX(
                       inputType: TextInputType.streetAddress,
                       readonly: false,
                       controller: address,
-                      prefixicon: const Icon(Icons.home_max_outlined,
-                          color: AppColors.primaryColor),
+                      prefixicon:
+                          const Icon(Icons.home_max_outlined, color: kprimary),
                       label: 'Residential Address',
-                      hinttext: SharedCli().getaddress() != null
-                          ? SharedCli().getaddress() ?? 'Residential Address'
-                          : 'Residential Address',
+                      hinttext:
+                          SharedCli().getaddress() ?? 'Residential Address',
                     ),
-                    InkWell(
-                      onTap: () async {
-                        await updatedetails().then((value) {
-                          setState(() {});
-                        });
-                      },
-                      child: Container(
-                          height: 40,
-                          width: size.width - 200,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: AppColors.primaryColor),
-                          child: const Center(
-                            child: Text(
-                              'save changes',
-                              style: popwhite,
-                            ),
-                          )),
+                    SizedBox(
+                      width: size.width * 0.6,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          FocusScope.of(context).unfocus();
+
+                          updatedetails().then((value) {
+                            setState(() {});
+                          });
+                        },
+                        child: Center(
+                          child: Text('save changes',
+                              style: Theme.of(context).textTheme.titleSmall),
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -145,10 +133,8 @@ class _PersonalProfileState extends State<PersonalProfile> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text(
-                    'Powered by',
-                    style: popheaderB,
-                  ),
+                  Text('Powered by',
+                      style: Theme.of(context).textTheme.titleSmall),
                   const SizedBox(width: 20),
                   Image.asset('assets/icons/google-95-128.png',
                       height: 40, width: 40)

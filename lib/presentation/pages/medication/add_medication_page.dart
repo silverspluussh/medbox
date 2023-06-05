@@ -2,13 +2,13 @@
 
 import 'dart:math';
 import 'dart:typed_data';
-import 'package:MedBox/constants/fonts.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:MedBox/data/repos/Dbhelpers/medicationdb.dart';
 import 'package:MedBox/utils/extensions/notification.dart';
 import 'package:MedBox/domain/models/medication_model.dart';
 import 'package:MedBox/utils/extensions/photos_extension.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:velocity_x/velocity_x.dart';
 import '../../../constants/colors.dart';
 import 'package:timezone/timezone.dart' as tz;
@@ -16,7 +16,7 @@ import '../../widgets/formfieldwidget.dart';
 import '../renderer.dart';
 
 class AddMedications extends StatefulWidget {
-  const AddMedications({Key key}) : super(key: key);
+  const AddMedications({super.key});
 
   @override
   State<AddMedications> createState() => _AddMedicationState();
@@ -46,10 +46,10 @@ class _AddMedicationState extends State<AddMedications> {
       tz.TZDateTime.now(tz.local).add(const Duration(seconds: 6));
 
   List<String> medtype = [
-    'medications',
+    'medication',
     'prescription',
   ];
-  String vall;
+  String? vall;
 
   ///
   PageController pagecontroller = PageController();
@@ -74,14 +74,14 @@ class _AddMedicationState extends State<AddMedications> {
     });
   }
 
-  String imagepath;
-  Uint8List imagepickedd;
-  TimeOfDay initialtime = TimeOfDay.now();
-  TimeOfDay newtimeofday;
-  String meridian;
+  String? imagepath;
+  Uint8List? imagepickedd;
+  TimeOfDay? initialtime = TimeOfDay.now();
+  TimeOfDay? newtimeofday;
+  String? meridian;
 
   pickImageFromLocal() async {
-    FilePickerResult result = await FilePicker.platform.pickFiles(
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
       withData: true,
       allowCompression: true,
       type: FileType.custom,
@@ -92,7 +92,7 @@ class _AddMedicationState extends State<AddMedications> {
       setState(() {
         imagepickedd = result.files.first.bytes;
         imagepath = imagepickedd.toString();
-        image.text = Utility.base64String(imagepickedd);
+        image.text = Utility.base64String(imagepickedd!);
       });
     } else {}
   }
@@ -101,48 +101,26 @@ class _AddMedicationState extends State<AddMedications> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: AppColors.scaffoldColor,
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: const Text('Add new medication', style: popheaderB),
+        title: Text('Add new medication',
+            style: Theme.of(context).textTheme.titleSmall),
       ),
-      body: Stack(
-        children: [
-          Positioned.fill(
-            child: Form(
-              key: medformkey,
-              child: SizedBox(
-                height: size.height * 0.8,
-                width: size.width,
-                child: PageView(
-                  physics: const NeverScrollableScrollPhysics(),
-                  controller: pagecontroller,
-                  children: [firstpage(), thirdpage()],
-                ),
-              ),
-            ),
+      body: Form(
+        key: medformkey,
+        child: SizedBox(
+          height: size.height * 0.8,
+          width: size.width,
+          child: PageView(
+            physics: const NeverScrollableScrollPhysics(),
+            controller: pagecontroller,
+            children: [firstpage(), thirdpage()],
           ),
-          Positioned(
-            bottom: 30,
-            right: 0,
-            left: 0,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _progressindicator(
-                    color: currentPage == 0
-                        ? AppColors.primaryColor
-                        : const Color.fromARGB(31, 44, 44, 44)),
-                const SizedBox(width: 15),
-                _progressindicator(
-                    color: currentPage == 1
-                        ? AppColors.primaryColor
-                        : const Color.fromARGB(31, 59, 59, 59)),
-              ],
-            ),
-          ),
-        ],
-      ).p8(),
+        ),
+      )
+          .p8()
+          .animate()
+          .slideX(duration: 200.milliseconds, delay: 100.milliseconds),
     );
   }
 
@@ -154,11 +132,9 @@ class _AddMedicationState extends State<AddMedications> {
         SliverToBoxAdapter(
           child: SizedBox(
             width: size.width * 0.78,
-            child: const Text(
-              'Upload a photo of the medication or add from gallery',
-              textAlign: TextAlign.center,
-              style: popheaderB,
-            ),
+            child: Text('Upload a photo of the medication or add from gallery',
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.titleSmall),
           ).py8(),
         ),
         SliverList(
@@ -171,11 +147,11 @@ class _AddMedicationState extends State<AddMedications> {
                 image: DecorationImage(
                   fit: BoxFit.fill,
                   image: imagepath != null
-                      ? MemoryImage(imagepickedd) as ImageProvider
+                      ? MemoryImage(imagepickedd!) as ImageProvider
                       : const AssetImage('assets/images/pillbottle-min.jpg'),
                 ),
                 borderRadius: BorderRadius.circular(15),
-                color: AppColors.primaryColor.withOpacity(0.5)),
+                color: kprimary.withOpacity(0.5)),
             child: Align(
               alignment: Alignment.bottomRight,
               child: IconButton(
@@ -184,16 +160,16 @@ class _AddMedicationState extends State<AddMedications> {
                   },
                   icon: const Icon(
                     Icons.add_a_photo_outlined,
-                    size: 50,
-                    color: AppColors.primaryColor,
+                    size: 40,
+                    color: kprimary,
                   )),
             ),
           ),
           const SizedBox(height: 60),
         ])),
         SliverToBoxAdapter(
-          child: InkWell(
-            onTap: () {
+          child: ElevatedButton(
+            onPressed: () {
               String desc =
                   'Reminder to take ${dose.text} dose(s) of ${medname.text}';
 
@@ -230,23 +206,33 @@ class _AddMedicationState extends State<AddMedications> {
                             builder: (context) => const Render())));
               });
             },
-            child: Container(
-              decoration: BoxDecoration(
-                  color: AppColors.primaryColor,
-                  borderRadius: BorderRadius.circular(15)),
-              width: size.width * 0.5,
-              height: 60,
-              child: const Center(
-                child: Text(
-                  'Add Medication',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      fontFamily: 'Popb', fontSize: 12, color: Colors.white),
-                ),
+            child: const Center(
+              child: Text(
+                'Add Medication',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 12, color: Colors.white),
               ),
             ),
           ),
         ),
+        const SliverToBoxAdapter(child: SizedBox(height: 80)),
+        SliverToBoxAdapter(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _progressindicator(
+                  color: currentPage == 0
+                      ? kprimary
+                      : const Color.fromARGB(31, 44, 44, 44)),
+              const SizedBox(width: 15),
+              _progressindicator(
+                  color: currentPage == 1
+                      ? kprimary
+                      : const Color.fromARGB(31, 59, 59, 59)),
+            ],
+          ),
+        ),
+        const SliverToBoxAdapter(child: SizedBox(height: 20)),
       ],
     );
   }
@@ -256,20 +242,18 @@ class _AddMedicationState extends State<AddMedications> {
 
     return CustomScrollView(
       slivers: [
-        const SliverToBoxAdapter(
-          child: Text(
-            'Medicine Details:',
-            style: popheaderB,
-          ),
+        SliverToBoxAdapter(
+          child: Text('Medicine Details:',
+              style: Theme.of(context).textTheme.titleSmall),
         ),
         SliverToBoxAdapter(
           child: SizedBox(
-            height: size.height * 0.6,
+            height: size.height * 0.7,
             width: size.width,
             child: Flex(
               direction: Axis.vertical,
               children: [
-                const SizedBox(height: 50),
+                const SizedBox(height: 30),
                 FormfieldX(
                     readonly: false,
                     validator: (e) {
@@ -294,14 +278,12 @@ class _AddMedicationState extends State<AddMedications> {
                           medtype.map<DropdownMenuItem<String>>((String val) {
                         return DropdownMenuItem<String>(
                             value: val.toString(),
-                            child: Text(
-                              val.toString(),
-                              style: popblack,
-                            ));
+                            child: Text(val.toString(),
+                                style: Theme.of(context).textTheme.bodySmall));
                       }).toList(),
                       onChanged: (val) {
                         setState(() {
-                          medicinetype.text = val;
+                          medicinetype.text = val!;
                           vall = val;
                         });
                       }).px4(),
@@ -335,18 +317,18 @@ class _AddMedicationState extends State<AddMedications> {
                   suffix: IconButton(
                       onPressed: () async {
                         newtimeofday = await showTimePicker(
-                                context: context, initialTime: initialtime)
+                                context: context, initialTime: initialtime!)
                             .then((value) {
                           setState(() {
-                            hours.text = value.hour.toString();
+                            hours.text = value!.hour.toString();
                             minutes.text = value.minute.toString();
-                            timeset.text =
-                                '${value.hour.toString()}:${value.minute.toString()} $meridian';
                             if (value.hour <= 11) {
                               meridian = 'AM';
                             } else if (value.hour >= 12) {
                               meridian = 'PM';
                             }
+                            timeset.text =
+                                '${value.hour.toString()}:${value.minute.toString()} $meridian';
                           });
                           return null;
                         });
@@ -354,37 +336,54 @@ class _AddMedicationState extends State<AddMedications> {
                       icon: const Icon(
                         Icons.more_time_rounded,
                         size: 25,
-                        color: AppColors.primaryColor,
+                        color: kprimary,
                       )),
+                ),
+                const SizedBox(height: 50),
+                TextButton.icon(
+                  onPressed: () {
+                    final filled = medformkey.currentState!.validate();
+
+                    if (filled == true) {
+                      pagecontroller.nextPage(
+                          duration: 100.milliseconds, curve: Curves.easeIn);
+                      currentPage = 1;
+                    }
+                  },
+                  label: const Text(
+                    'Next',
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: kprimary,
+                    ),
+                  ),
+                  icon: const Icon(
+                    Icons.arrow_forward_ios_sharp,
+                    size: 25,
+                  ),
                 ),
               ],
             ),
           ),
         ),
+        const SliverToBoxAdapter(child: SizedBox(height: 80)),
         SliverToBoxAdapter(
-          child: TextButton.icon(
-            onPressed: () {
-              final filled = medformkey.currentState.validate();
-
-              if (filled == true) {
-                pagecontroller.nextPage(
-                    duration: 100.milliseconds, curve: Curves.easeIn);
-                currentPage = 1;
-              }
-            },
-            label: const Text(
-              'Next',
-              style: TextStyle(
-                fontSize: 15,
-                color: AppColors.primaryColor,
-              ),
-            ),
-            icon: const Icon(
-              Icons.arrow_forward_ios_sharp,
-              size: 25,
-            ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _progressindicator(
+                  color: currentPage == 0
+                      ? kprimary
+                      : const Color.fromARGB(31, 44, 44, 44)),
+              const SizedBox(width: 15),
+              _progressindicator(
+                  color: currentPage == 1
+                      ? kprimary
+                      : const Color.fromARGB(31, 59, 59, 59)),
+            ],
           ),
         ),
+        const SliverToBoxAdapter(child: SizedBox(height: 20)),
       ],
     );
   }

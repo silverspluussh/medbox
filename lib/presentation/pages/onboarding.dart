@@ -1,16 +1,14 @@
-import 'package:MedBox/constants/colors.dart';
 import 'package:MedBox/constants/datas.dart';
-import 'package:MedBox/constants/fonts.dart';
-import 'package:MedBox/presentation/pages/renderer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 import '../../domain/sharedpreferences/sharedprefs.dart';
 
 class GoogleOnbarding extends StatefulWidget {
-  const GoogleOnbarding({Key key}) : super(key: key);
+  const GoogleOnbarding({super.key});
 
   @override
   State<GoogleOnbarding> createState() => _GoogleOnbardingState();
@@ -20,32 +18,21 @@ class _GoogleOnbardingState extends State<GoogleOnbarding> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.scaffoldColor,
+      backgroundColor: Colors.white,
       body: SizedBox(
         child: Center(
             child: VStack(
           [
-            const Text(medboxdesc,
-                style: TextStyle(
-                    fontFamily: 'Pop',
-                    fontSize: 17,
-                    color: Colors.black,
-                    fontWeight: FontWeight.w500)),
-            const SizedBox(height: 200),
+            Text(medboxdesc, style: Theme.of(context).textTheme.titleMedium),
+            const SizedBox(height: 150),
             ListTile(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(0),
-                  side: const BorderSide(
-                      color: AppColors.primaryColor, width: 1.5)),
-              tileColor: Colors.white,
               contentPadding: const EdgeInsets.all(10),
-              trailing: null,
               onTap: () async {
                 try {
-                  final GoogleSignInAccount googleUser =
+                  final GoogleSignInAccount? googleUser =
                       await GoogleSignIn().signIn();
 
-                  final GoogleSignInAuthentication googleAuth =
+                  final GoogleSignInAuthentication? googleAuth =
                       await googleUser?.authentication;
 
                   final credential = GoogleAuthProvider.credential(
@@ -64,10 +51,6 @@ class _GoogleOnbardingState extends State<GoogleOnbarding> {
                             textColor: Colors.white,
                             pdHorizontal: 30,
                             pdVertical: 20);
-                        return Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const Render()));
                       });
                     } else {
                       VxToast.show(context,
@@ -90,13 +73,13 @@ class _GoogleOnbardingState extends State<GoogleOnbarding> {
               },
               leading: Image.asset('assets/icons/google-95-128.png',
                   width: 50, height: 50),
-              title: const Text('Sign in with Google to continue',
-                  style: popblack),
+              title: Text('Sign in with Google ',
+                  style: Theme.of(context).textTheme.titleSmall),
             )
           ],
           crossAlignment: CrossAxisAlignment.start,
         ).p32()),
-      ),
+      ).animate().slideX(duration: 300.milliseconds, delay: 100.milliseconds),
     );
   }
 

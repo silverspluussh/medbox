@@ -3,16 +3,16 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 import '../../domain/models/vitalsmodel.dart';
 
 class RadialBarAngle extends StatefulWidget {
-  const RadialBarAngle({Key key, this.model}) : super(key: key);
   final List<VModel> model;
+
+  const RadialBarAngle({super.key, required this.model});
 
   @override
   State<RadialBarAngle> createState() => _RadialBarAngleState();
 }
 
 class _RadialBarAngleState extends State<RadialBarAngle> {
-  _RadialBarAngleState();
-  TooltipBehavior _tooltipBehavior;
+  TooltipBehavior? _tooltipBehavior;
 
   @override
   void initState() {
@@ -30,11 +30,11 @@ class _RadialBarAngleState extends State<RadialBarAngle> {
               const TextStyle(fontFamily: 'Pop', fontWeight: FontWeight.w500)),
       tooltipBehavior: _tooltipBehavior,
       series: _getRadialBarSeries(
-        t: double.parse(widget.model[0].temperature),
-        bp: double.parse(widget.model[0].bloodpressure),
-        hr: double.parse(widget.model[0].heartrate),
-        ox: double.parse(widget.model[0].oxygenlevel),
-        rr: double.parse(widget.model[0].respiration),
+        t: double.parse(widget.model[0].temperature!),
+        bp: double.parse(widget.model[0].bloodpressure!),
+        hr: double.parse(widget.model[0].heartrate!),
+        ox: double.parse(widget.model[0].oxygenlevel!),
+        rr: double.parse(widget.model[0].respiration!),
       ),
     );
   }
@@ -112,29 +112,29 @@ class ChartSampleData {
 
   final dynamic x;
 
-  final num y;
+  final num? y;
 
   final dynamic xValue;
 
-  final num yValue;
+  final num? yValue;
 
-  final num secondSeriesYValue;
+  final num? secondSeriesYValue;
 
-  final num thirdSeriesYValue;
+  final num? thirdSeriesYValue;
 
-  final Color pointColor;
+  final Color? pointColor;
 
-  final num size;
+  final num? size;
 
-  final String text;
+  final String? text;
 
-  final num open;
+  final num? open;
 
-  final num close;
+  final num? close;
 
-  final num low;
+  final num? low;
 
-  final num high;
+  final num? high;
 
-  final num volume;
+  final num? volume;
 }

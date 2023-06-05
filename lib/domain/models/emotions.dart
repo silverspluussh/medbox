@@ -3,9 +3,9 @@ class Emotions {
   final String emojiname;
   final String description;
   Emotions({
-    this.image,
-    this.emojiname,
-    this.description,
+    required this.image,
+    required this.emojiname,
+    required this.description,
   });
 }
 

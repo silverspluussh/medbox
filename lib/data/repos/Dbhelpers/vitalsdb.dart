@@ -5,7 +5,7 @@ import '../../../domain/sharedpreferences/sharedprefs.dart';
 import '../../../main.dart';
 
 class VitalsDB {
-  static Database _database;
+  static Database? _database;
   static const int _version = 2;
   static const String _colname = 'vitals';
 
@@ -47,11 +47,11 @@ class VitalsDB {
 
   Future<List<Map<String, dynamic>>> queryvital() async {
     log('retrieving vitals');
-    return await _database.query(_colname);
+    return await _database!.query(_colname);
   }
 
   Future<List<VModel>> getvitals() async {
-    var result = await _database.query(_colname);
+    var result = await _database!.query(_colname);
     return List.generate(result.length, (i) {
       return VModel.fromJson(result[i]);
     });
@@ -59,50 +59,50 @@ class VitalsDB {
 
   final model = VModel();
 
-  Future<int> updatetemperature({String temp}) async {
-    return await _database.update(_colname, {'temperature': temp},
+  Future<int> updatetemperature({String? temp}) async {
+    return await _database!.update(_colname, {'temperature': temp},
         where: 'id=?', whereArgs: [model.id]);
   }
 
-  Future<int> updatebmi({String bmi}) async {
-    return await _database.update(_colname, {'bmi': bmi},
+  Future<int> updatebmi({String? bmi}) async {
+    return await _database!
+        .update(_colname, {'bmi': bmi}, where: 'id=?', whereArgs: [model.id]);
+  }
+
+  Future<int> updaterespiration({String? respiration}) async {
+    return await _database!.update(_colname, {'respiration': respiration},
         where: 'id=?', whereArgs: [model.id]);
   }
 
-  Future<int> updaterespiration({String respiration}) async {
-    return await _database.update(_colname, {'respiration': respiration},
+  Future<int> updateheartrate({String? heartrate}) async {
+    return await _database!.update(_colname, {'heartrate': heartrate},
         where: 'id=?', whereArgs: [model.id]);
   }
 
-  Future<int> updateheartrate({String heartrate}) async {
-    return await _database.update(_colname, {'heartrate': heartrate},
+  Future<int> updateolevel({String? oxygenlevel}) async {
+    return await _database!.update(_colname, {'oxygenlevel': oxygenlevel},
         where: 'id=?', whereArgs: [model.id]);
   }
 
-  Future<int> updateolevel({String oxygenlevel}) async {
-    return await _database.update(_colname, {'oxygenlevel': oxygenlevel},
-        where: 'id=?', whereArgs: [model.id]);
-  }
-
-  Future<int> updatepressure({String bloodpressure}) async {
-    return await _database.update(_colname, {'bloodpressure': bloodpressure},
+  Future<int> updatepressure({String? bloodpressure}) async {
+    return await _database!.update(_colname, {'bloodpressure': bloodpressure},
         where: 'id=?', whereArgs: [model.id]);
   }
 
   Future<List<Map<String, dynamic>>> avgquery() async {
     initDatabase();
-    return _database.rawQuery(
+    return _database!.rawQuery(
         'SELECT AVG(temperature) AS temperature, AVG(bloodpressure) AS bloodpressure, AVG(heartrate) AS heartrate,  AVG(oxygenlevel) AS oxygenlevel,AVG(respiration) AS respiration  FROM  $_colname;');
   }
 
   Future<List<Map<String, dynamic>>> maxquery() async {
     initDatabase();
-    return _database.rawQuery(
+    return _database!.rawQuery(
         'SELECT MAX(temperature) AS temperature, MAX(bloodpressure) AS bloodpressure, MAX(heartrate) AS heartrate,  MAX(oxygenlevel) AS oxygenlevel,MAX(respiration) AS respiration  FROM $_colname;');
   }
 
   Future<List<Map<String, dynamic>>> minquery() async {
-    return _database.rawQuery('''SELECT 
+    return _database!.rawQuery('''SELECT 
               MIN(temperature) AS temperature,
               MIN(bloodpressure) AS bloodpressure, 
               MIN(heartrate) AS heartrate,  
@@ -114,7 +114,7 @@ class VitalsDB {
   }
 
   Future<List<Map<String, dynamic>>> weeklyreadings({day}) async {
-    return _database.rawQuery(
+    return _database!.rawQuery(
       '''
        SELECT 
           temperature,bloodpressure,oxygenlevel,respiration,heartrate,day

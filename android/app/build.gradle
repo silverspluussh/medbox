@@ -57,8 +57,8 @@ android {
         minSdkVersion 23
         targetSdkVersion 31
         multiDexEnabled true
-        versionCode 6
-        versionName '2.3'
+        versionCode 7
+        versionName '2.4'
     }
 
    signingConfigs {
@@ -83,6 +83,7 @@ flutter {
 
 dependencies {
     implementation 'com.google.android.material:material:1.8.0'
+    implementation 'com.google.firebase:firebase-messaging'
     implementation 'androidx.window:window:1.0.0'
     implementation 'com.google.firebase:firebase-appcheck-playintegrity'
     implementation 'androidx.window:window-java:1.0.0'
