@@ -33,12 +33,11 @@ Future<void> main() async {
   await FirebaseAppCheck.instance.activate(
     androidProvider: AndroidProvider.playIntegrity,
   );
-
+  await NotifConsole().initnotifs();
   await FirebaseMessaging.instance.getInitialMessage();
 
   prefs = await SharedPreferences.getInstance();
 
-  await NotifConsole().initnotifs();
   await _configureLocalTimeZone();
   runApp(const MedBox());
 }
@@ -151,17 +150,18 @@ class _MedBoxState extends State<MedBox> {
         ],
         builder: (context, child) {
           return MaterialApp(
-              title: 'Med Box',
-              debugShowCheckedModeBanner: false,
-              theme: mythemedata,
-              home: StreamBuilder<User?>(
-                  stream: FirebaseAuth.instance.authStateChanges(),
-                  builder: ((context, user) {
-                    if (user.hasData) {
-                      return const Render();
-                    }
-                    return const GoogleOnbarding();
-                  })));
+            title: 'Med Box',
+            debugShowCheckedModeBanner: false,
+            theme: mythemedata,
+            home: StreamBuilder<User?>(
+                stream: FirebaseAuth.instance.authStateChanges(),
+                builder: ((context, user) {
+                  if (user.hasData) {
+                    return const Render();
+                  }
+                  return const GoogleOnbarding();
+                })),
+          );
         });
   }
 }

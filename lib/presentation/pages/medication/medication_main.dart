@@ -41,17 +41,6 @@ class _MedicationsState extends State<Medications> {
             return Stack(
               children: [
                 CustomScrollView(slivers: [
-                  // SliverToBoxAdapter(
-                  //   child: DatePicker(
-                  //     DateTime.now(),
-                  //     height: size.height * 0.18,
-                  //     width: 50,
-                  //     initialSelectedDate: DateTime.now(),
-                  //     selectionColor: kprimary,
-                  //     dateTextStyle: Theme.of(context).textTheme.bodySmall!,
-                  //     onDateChange: (e) {},
-                  //   ),
-                  // ),
                   medication.isNotEmpty
                       ? SliverList(
                           delegate: SliverChildBuilderDelegate(
@@ -343,6 +332,36 @@ class _MedicationsState extends State<Medications> {
                                 ],
                               ),
                               child: ListTile(
+                                onTap: () => showDialog(
+                                  context: context,
+                                  builder: (context) => Dialog(
+                                    backgroundColor: kBackgroundColor,
+                                    elevation: 10,
+                                    child: SizedBox(
+                                      height: 200,
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(medication[index].medicinename!,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodySmall),
+                                          const SizedBox(height: 10),
+                                          Text(medication[index].medicinetype!,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodySmall),
+                                          const SizedBox(height: 10),
+                                          Text(medication[index].dose!,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodySmall),
+                                        ],
+                                      ).p8(),
+                                    ),
+                                  ),
+                                ),
                                 leading: Container(
                                   margin: const EdgeInsets.only(left: 5),
                                   height: 40,

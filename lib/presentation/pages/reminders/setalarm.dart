@@ -1,4 +1,5 @@
 import 'package:MedBox/constants/colors.dart';
+import 'package:MedBox/presentation/pages/renderer.dart';
 import 'package:MedBox/utils/extensions/notification.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -84,7 +85,8 @@ class _SetAlarmState extends State<SetAlarm> {
                   setState(() {
                     time = TimeOfDay.now();
                   });
-                }).then((value) => Navigator.pop(context));
+                }).then((value) => Navigator.pushReplacement(context,
+                        MaterialPageRoute(builder: (_) => const Render())));
               },
               child: Container(
                 width: 150,

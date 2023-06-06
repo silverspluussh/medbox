@@ -19,15 +19,17 @@ class _RapidTestsState extends State<RapidTests> {
 
     return StreamBuilder(
             stream: FirebaseFirestore.instance
-                .collection('rapidtests')
-                .where('patientcontact', isEqualTo: SharedCli().getemail())
+                .collection('profiles')
+                .doc(SharedCli().getuserID())
+                .collection('rapidtest')
+                .doc(SharedCli().getuserID())
                 .snapshots(),
             builder: ((context, tests) {
               if (tests.hasData) {
                 return CustomScrollView(
                   slivers: [
                     _titlebox(size, context),
-                    tests.data!.docs.isNotEmpty
+                    tests.data!.data()!.isNotEmpty
                         ? SliverList(
                             delegate:
                                 SliverChildBuilderDelegate((context, index) {
@@ -47,17 +49,17 @@ class _RapidTestsState extends State<RapidTests> {
                                 title: Card(
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(1)),
-                                  color: tests.data!.docs.first['testresults']
+                                  color: tests.data!.data()![0]['testresults']
                                               [index] ==
                                           true
                                       ? Colors.red
                                       : Colors.green,
                                   child: Text(
-                                    tests.data!.docs[0]['results'][index],
+                                    tests.data!.data()![0]['results'][index],
                                   ).centered().py8(),
                                 ),
                                 subtitle: Text(
-                                    tests.data!.docs[0]['testname'][index],
+                                    tests.data!.data()![0]['testname'][index],
                                     style:
                                         Theme.of(context).textTheme.bodySmall),
                                 trailing: const SizedBox(width: 70),
