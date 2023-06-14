@@ -1,5 +1,4 @@
 import 'package:MedBox/domain/sharedpreferences/sharedprefs.dart';
-import 'package:MedBox/presentation/pages/bodyvitals/history_analysis.dart';
 import 'package:MedBox/presentation/pages/bodyvitals/vscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -73,44 +72,23 @@ class _VitalsDashboardState extends State<VitalsDashboard> {
                             alignment: Alignment.topRight,
                             child: SizedBox(
                               height: 50,
-                              child: Row(
-                                children: [
-                                  Card(
-                                      color: Colors.green,
-                                      child: Semantics(
-                                        button: true,
-                                        child: InkWell(
-                                          onTap: () => Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      const Vitalshistory())),
-                                          child: Text('View stats',
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .bodySmall)
-                                              .p12(),
-                                        ),
-                                      )),
-                                  Card(
-                                      color: Colors.green,
-                                      child: Semantics(
-                                        button: true,
-                                        child: InkWell(
-                                          onTap: () => Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      const AddVitals())),
-                                          child: Text('Add new entry',
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .bodySmall)
-                                              .p12(),
-                                        ),
-                                      )),
-                                ],
-                              ),
+                              child: Card(
+                                  color: Colors.green,
+                                  child: Semantics(
+                                    button: true,
+                                    child: InkWell(
+                                      onTap: () => Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const AddVitals())),
+                                      child: Text('Add new entry',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodySmall)
+                                          .p12(),
+                                    ),
+                                  )),
                             ),
                           ),
                         ),
