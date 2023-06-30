@@ -11,26 +11,9 @@ ThemeData mythemedata = ThemeData(
       padding: const EdgeInsets.symmetric(horizontal: 10),
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15), side: BorderSide.none),
-      buttonColor: kbtn.withOpacity(0.7),
+      buttonColor: kwhite,
       minWidth: 150),
   scaffoldBackgroundColor: kBackgroundColor,
-  bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-    backgroundColor: kwhite,
-    elevation: 0,
-    type: BottomNavigationBarType.shifting,
-    selectedItemColor: Color.fromARGB(255, 111, 223, 59),
-    showSelectedLabels: true,
-    showUnselectedLabels: false,
-    unselectedItemColor: Colors.black,
-    selectedIconTheme: IconThemeData(size: 25),
-    unselectedIconTheme: IconThemeData(size: 20),
-  ),
-  listTileTheme: ListTileThemeData(
-    tileColor: kprimary.withOpacity(0.1),
-    shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-        side: const BorderSide(color: kprimary, width: 1)),
-  ),
   dropdownMenuTheme: const DropdownMenuThemeData(
       inputDecorationTheme:
           InputDecorationTheme(contentPadding: EdgeInsets.all(5))),
@@ -53,24 +36,13 @@ ThemeData mythemedata = ThemeData(
       elevation: 15,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       shadowColor: kshadowe),
-  textButtonTheme: TextButtonThemeData(
+  elevatedButtonTheme: ElevatedButtonThemeData(
       style: ButtonStyle(
           padding: MaterialStateProperty.all(
             const EdgeInsets.all(10),
           ),
-          shape: MaterialStateProperty.all<OutlinedBorder>(
-              RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15),
-                  side: BorderSide.none)),
-          backgroundColor:
-              MaterialStateProperty.all<Color>(kbtn.withOpacity(0.6)),
-          elevation: MaterialStateProperty.all<double>(10),
-          shadowColor: MaterialStateProperty.all<Color>(kshadowe))),
-  elevatedButtonTheme: ElevatedButtonThemeData(
-      style: ButtonStyle(
-          padding: MaterialStateProperty.all(
-            const EdgeInsets.all(15),
-          ),
+          textStyle: MaterialStateProperty.all<TextStyle>(const TextStyle(
+              color: kwhite, fontSize: 15, fontWeight: FontWeight.w500)),
           foregroundColor: MaterialStateProperty.all<Color>(kwhite),
           backgroundColor: MaterialStateProperty.all<Color>(kbtn),
           elevation: MaterialStateProperty.all<double>(5),

@@ -1,64 +1,73 @@
 // ignore_for_file: depend_on_referenced_packages
+
 import 'dart:developer';
 import 'dart:io';
 import 'package:MedBox/constants/theme.dart';
-import 'package:MedBox/domain/sharedpreferences/sharedprefs.dart';
-import 'package:MedBox/presentation/pages/onboarding.dart';
-import 'package:MedBox/utils/extensions/notification.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:MedBox/version2/firebase/tokenfire.dart';
+import 'package:MedBox/version2/sqflite/reminderlocal.dart';
+import 'package:MedBox/version2/utilites/sharedprefs.dart';
+import 'package:MedBox/l10n/langprovider.dart';
+import 'package:MedBox/l10n/l10n.dart';
+import 'package:MedBox/version2/UI/authpage.dart';
+import 'package:MedBox/version2/UI/render.dart';
+import 'package:MedBox/version2/UI/tour.dart';
+import 'package:MedBox/version2/utilites/pushnotifications.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:MedBox/presentation/providers/vitalsprovider.dart';
-import 'package:flutter_timezone/flutter_timezone.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'firebase_options.dart';
-import 'presentation/pages/renderer.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
+import 'package:flutter_timezone/flutter_timezone.dart';
+import 'package:flutter_gen/gen_l10n/app_localization.dart';
+import 'firebase_options.dart';
 
 late SharedPreferences prefs;
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
-  await FirebaseAppCheck.instance.activate(
-    androidProvider: AndroidProvider.playIntegrity,
-  );
-  await NotifConsole().initnotifs();
-  await FirebaseMessaging.instance.getInitialMessage();
-
   prefs = await SharedPreferences.getInstance();
 
-  await _configureLocalTimeZone();
-  runApp(const MedBox());
+  await FirebaseAppCheck.instance.activate(
+      androidProvider: AndroidProvider.playIntegrity,
+      webRecaptchaSiteKey: 'AIzaSyC1ZR4jPKRohSDf633c78Yzj7WWj4u7g-I');
+  await NotificationBundle().initialzeNotification();
+
+  await FirebaseMessaging.instance.getInitialMessage();
+
+  await configureLocalTimeZone();
+
+  runApp(const ProviderScope(child: MedBox()));
 }
 
-Future<void> _configureLocalTimeZone() async {
+Future<void> configureLocalTimeZone() async {
   tz.initializeTimeZones();
   final timezone = await FlutterTimezone.getLocalTimezone();
   tz.setLocalLocation(tz.getLocation(timezone));
 }
 
-class MedBox extends StatefulWidget {
+class MedBox extends ConsumerStatefulWidget {
   const MedBox({super.key});
 
   @override
-  State<MedBox> createState() => _MedBoxState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _MedBoxState();
 }
 
-class _MedBoxState extends State<MedBox> {
+class _MedBoxState extends ConsumerState<MedBox> {
   bool notificationEnabled = false;
   String? devicetoken = prefs.getString('devicetoken');
 
+  bool? tourbool;
   @override
   void initState() {
     super.initState();
@@ -66,28 +75,9 @@ class _MedBoxState extends State<MedBox> {
     isAndroidPermissionGranted();
     requestPermissions();
     getoken();
-  }
 
-  void getoken() async {
-    if (devicetoken == null) {
-      await FirebaseMessaging.instance.getToken().then((value) {
-        setState(() {
-          prefs.setString('devicetoken', value!);
-          log(value);
-        });
-        savedtoken(value!);
-      });
-    }
-    return null;
-  }
-
-  void savedtoken(String token) async {
-    await FirebaseFirestore.instance
-        .collection('profiles')
-        .doc(SharedCli().getuserID()!)
-        .collection('usertokens')
-        .doc(SharedCli().getuserID()!)
-        .set({'token': token});
+    RemindersDb().remindersInit();
+    tourbool = SharedCli().tourbool();
   }
 
   void requestFirebasePermissions() async {
@@ -112,56 +102,77 @@ class _MedBoxState extends State<MedBox> {
     }
   }
 
-  Future<void> isAndroidPermissionGranted() async {
-    if (Platform.isAndroid) {
-      final bool granted = await flutterLocalNotificationsPlugin
-              .resolvePlatformSpecificImplementation<
-                  AndroidFlutterLocalNotificationsPlugin>()
-              ?.areNotificationsEnabled() ??
-          false;
+  void getoken() async {
+    try {
+      if (devicetoken == null) {
+        await FirebaseMessaging.instance.getToken().then((value) {
+          setState(() {
+            prefs.setString('devicetoken', value!);
+            log('device token:$value');
+          });
+          TokenSave.savetoken(token: value!);
+        });
+      }
+    } catch (e) {
+      log(e.toString());
+    }
+  }
 
-      setState(() {
-        notificationEnabled = granted;
-      });
+  Future<void> isAndroidPermissionGranted() async {
+    try {
+      if (Platform.isAndroid) {
+        await flutterLocalNotificationsPlugin
+                .resolvePlatformSpecificImplementation<
+                    AndroidFlutterLocalNotificationsPlugin>()
+                ?.areNotificationsEnabled() ??
+            false;
+
+        setState(() {
+          notificationEnabled = true;
+        });
+      }
+    } catch (e) {
+      log(e.toString());
     }
   }
 
   Future<void> requestPermissions() async {
-    final AndroidFlutterLocalNotificationsPlugin? androidImplementation =
-        flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>();
+    try {
+      final AndroidFlutterLocalNotificationsPlugin? androidImplementation =
+          flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
+              AndroidFlutterLocalNotificationsPlugin>();
 
-    final bool? granted = await androidImplementation?.requestPermission();
-    setState(() {
-      notificationEnabled = granted ?? false;
-    });
+      final bool? granted = await androidImplementation?.requestPermission();
+      setState(() {
+        notificationEnabled = granted ?? false;
+      });
+    } catch (e) {
+      log(e.toString());
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-        providers: [
-          ChangeNotifierProvider(
-              create: (context) => VitalsProvider(Vv.pressure)),
-          StreamProvider<User?>.value(
-            value: FirebaseAuth.instance.authStateChanges(),
-            initialData: FirebaseAuth.instance.currentUser,
-          ),
-        ],
-        builder: (context, child) {
-          return MaterialApp(
-            title: 'Med Box',
-            debugShowCheckedModeBanner: false,
-            theme: mythemedata,
-            home: StreamBuilder<User?>(
-                stream: FirebaseAuth.instance.authStateChanges(),
-                builder: ((context, user) {
-                  if (user.hasData) {
-                    return const Render();
-                  }
-                  return const GoogleOnbarding();
-                })),
-          );
-        });
+    return MaterialApp(
+      title: 'Med Box',
+      locale: ref.watch(languageProvider).locale,
+      supportedLocales: L10n.all,
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      debugShowCheckedModeBanner: false,
+      theme: mythemedata,
+      home: StreamBuilder<User?>(
+          stream: FirebaseAuth.instance.authStateChanges(),
+          builder: ((context, user) {
+            if (user.hasData) {
+              return tourbool == true ? const MyRender() : const Apptour();
+            }
+            return const AuthPage();
+          })),
+    );
   }
 }
