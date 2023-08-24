@@ -12,62 +12,65 @@ class Rapidtest extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return SingleChildScrollView(
-      child: VStack([
-        Ltxt(text: AppLocalizations.of(context)!.itest).py12().centered(),
-        ...rtests.map((e) => ListTile(
-              contentPadding: const EdgeInsets.symmetric(horizontal: 10),
-              title: Text(
-                e,
-                style:
-                    const TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
-              ),
-              subtitle: Btxt(text: '$e  is available '),
-              trailing: PopupMenuButton(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
-                icon: const Icon(
-                  Icons.menu_open,
-                  color: kprimary,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      child: SingleChildScrollView(
+        child: VStack([
+          ...rtests.map((e) => ListTile(
+                contentPadding: const EdgeInsets.symmetric(horizontal: 10),
+                title: Text(
+                  e,
+                  style: const TextStyle(
+                      fontSize: 15, fontWeight: FontWeight.w500),
                 ),
-                itemBuilder: (context) => [
-                  PopupMenuItem(
-                      child: InkWell(
-                    onTap: () {
-                      context.pop();
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => RtestResult(e)));
-                    },
-                    child: Card(
-                        color: kgreen.withOpacity(0.7),
-                        child: Itxt(text: AppLocalizations.of(context)!.vtests)
-                            .p8()),
-                  )),
-                  PopupMenuItem(
-                      child: InkWell(
-                    onTap: () {
-                      context.pop();
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => RtestSchedule(e)));
-                    },
-                    child: Card(
-                            color: kprimary.withOpacity(0.7),
-                            child:
-                                Itxt(text: AppLocalizations.of(context)!.stest)
-                                    .p8())
-                        .p8(),
-                  )),
-                ],
-              ),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                  side: const BorderSide(width: 1.2, color: kprimary)),
-            ).py8())
-      ]).p16(),
+                subtitle: Btxt(text: '$e  is available '),
+                trailing: PopupMenuButton(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                  icon: const Icon(
+                    Icons.menu_open,
+                    color: kprimary,
+                  ),
+                  itemBuilder: (context) => [
+                    PopupMenuItem(
+                        child: InkWell(
+                      onTap: () {
+                        context.pop();
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => RtestResult(e)));
+                      },
+                      child: Card(
+                          color: kgreen.withOpacity(0.7),
+                          child:
+                              Itxt(text: AppLocalizations.of(context)!.vtests)
+                                  .p8()),
+                    )),
+                    PopupMenuItem(
+                        child: InkWell(
+                      onTap: () {
+                        context.pop();
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => RtestSchedule(e)));
+                      },
+                      child: Card(
+                              color: kprimary.withOpacity(0.7),
+                              child: Itxt(
+                                      text: AppLocalizations.of(context)!.stest)
+                                  .p8())
+                          .p8(),
+                    )),
+                  ],
+                ),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                    side: const BorderSide(width: 1.2, color: kprimary)),
+              ).py8())
+        ]).p16(),
+      ),
     );
   }
 }

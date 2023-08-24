@@ -30,7 +30,7 @@ class FormfieldX extends StatelessWidget {
       child: TextFormField(
         controller: controller,
         validator: validator,
-        style: Theme.of(context).textTheme.bodySmall,
+        style: Theme.of(context).textTheme.bodyMedium,
         keyboardType: inputType,
         readOnly: readonly!,
         decoration: InputDecoration(
@@ -51,9 +51,11 @@ class FormfieldX extends StatelessWidget {
                 borderRadius: BorderRadius.circular(15),
                 borderSide: const BorderSide(width: 0, color: Colors.white)),
             contentPadding: const EdgeInsets.all(10),
-            suffix: suffix,
+            suffixIcon: suffix,
             prefixIcon: prefixicon,
             prefixIconColor: kprimary,
+            errorStyle:
+                const TextStyle(fontFamily: 'Pop', fontSize: 8, color: kred),
             filled: true),
       ).px20().py8(),
     );

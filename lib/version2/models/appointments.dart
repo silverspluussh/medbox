@@ -9,6 +9,7 @@ class ApModel {
   String? number;
   String? time;
   bool? status;
+  String createdAt;
 
   ApModel(
       {this.aid,
@@ -17,20 +18,23 @@ class ApModel {
       this.date,
       this.note,
       this.time,
+      required this.createdAt,
       this.status,
       this.number});
 
   factory ApModel.fromJson(Map<String, dynamic> json, {required APID aid}) {
-    final testtype = json['testtype'] ?? 'none';
-    final p = json['pharmacy'] ?? 'none';
-    final d = json['date'] ?? 'none';
-    final n = json['note'] ?? 'none';
-    final num = json['number'] ?? 'none';
-    final t = json['time'] ?? 'none';
-    final s = json['status'] ?? 'none';
+    final testtype = json['testtype'];
+    final p = json['pharmacy'];
+    final d = json['date'];
+    final n = json['note'];
+    final num = json['number'];
+    final t = json['time'];
+    final s = json['status'];
+    final ca = json['createdAt'];
 
     return ApModel(
         aid: aid,
+        createdAt: ca,
         testtype: testtype,
         pharmacy: p,
         date: d,

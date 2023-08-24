@@ -22,7 +22,7 @@ class Apptour extends ConsumerWidget {
             crossAlignment: CrossAxisAlignment.center,
             [
               const Spacer(),
-              Ltxt(text: AppLocalizations.of(context)!.welcome),
+              Ttxt(text: AppLocalizations.of(context)!.welcome),
               const Spacer(),
               BBtn(
                   icon: const Icon(Icons.health_and_safety_rounded),
@@ -48,6 +48,7 @@ class Apptour extends ConsumerWidget {
               Container(
                 height: size.height * 0.25,
                 width: size.width,
+                padding: const EdgeInsets.all(10),
                 decoration: const BoxDecoration(
                     color: kprimary,
                     borderRadius: BorderRadius.only(

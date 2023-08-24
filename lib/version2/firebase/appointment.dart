@@ -36,12 +36,14 @@ class AppointmentFirebase {
       .snapshots()
       .map((event) => event.docs.map((e) => e.data()).toList());
 
-  Query<ApModel> queryAps({required String uid}) =>
-      _firestore.collection(apspath(uid)).withConverter(
-            fromFirestore: (snapshot, _) =>
-                ApModel.fromJson(snapshot.data()!, aid: snapshot.id),
-            toFirestore: (job, _) => job.toJson(),
-          );
+  Query<ApModel> queryAps({required String uid}) => _firestore
+      .collection(apspath(uid))
+      .withConverter(
+        fromFirestore: (snapshot, _) =>
+            ApModel.fromJson(snapshot.data()!, aid: snapshot.id),
+        toFirestore: (job, _) => job.toJson(),
+      )
+      .orderBy('date');
 
   Future<List<ApModel>> fetchAps({required String uid}) async {
     final apps = await queryAps(uid: uid).get();

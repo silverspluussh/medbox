@@ -37,19 +37,20 @@ class BarChartSample2State extends ConsumerState<BarChartSample2> {
     final barGroup2 = makeGroupData(
         1,
         double.parse(widget.vitals.first.hr.toString()),
-        double.parse(widget.vitals.first.hr.toString()));
+        double.parse(widget.vitals.last.hr.toString()));
     final barGroup3 = makeGroupData(
-        2,
-        double.parse(widget.vitals.first.bp.toString()),
-        double.parse(widget.vitals.first.bp.toString()));
+      2,
+      double.parse(widget.vitals.first.bp.toString().split('/').first),
+      double.parse(widget.vitals.last.bp.toString().split('/').first),
+    );
     final barGroup4 = makeGroupData(
         3,
         double.parse(widget.vitals.first.bmi.toString()),
-        double.parse(widget.vitals.first.bmi.toString()));
+        double.parse(widget.vitals.last.bmi.toString()));
     final barGroup5 = makeGroupData(
         4,
         double.parse(widget.vitals.first.hr.toString()),
-        double.parse(widget.vitals.first.hr.toString()));
+        double.parse(widget.vitals.last.hr.toString()));
 
     final items = [barGroup1, barGroup2, barGroup3, barGroup4, barGroup5];
 

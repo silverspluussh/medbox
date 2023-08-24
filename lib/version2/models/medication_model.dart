@@ -16,10 +16,10 @@ class MModel {
   });
 
   factory MModel.fromJson(Map<String, dynamic> json, {required MedID mid}) {
-    final medicinename = json['medicinename'] ?? 'none';
-    final dose = json['dose'] ?? 'none';
-    final medicinetype = json['medicinetype'] ?? 'none';
-    final image = json['image'] ?? 'none';
+    final medicinename = json['medicinename'];
+    final dose = json['dose'];
+    final medicinetype = json['medicinetype'];
+    final image = json['image'];
 
     return MModel(
         mid: mid,

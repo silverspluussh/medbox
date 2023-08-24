@@ -1,3 +1,4 @@
+import 'package:MedBox/version2/UI/rtest/rapidtest.dart';
 import 'package:MedBox/version2/firebase/appointment.dart';
 import 'package:MedBox/version2/models/appointments.dart';
 import 'package:MedBox/version2/providers.dart/authprovider.dart';
@@ -13,18 +14,18 @@ import '../../wiis/txt.dart';
 import 'package:flutter_gen/gen_l10n/app_localization.dart';
 import 'package:timezone/timezone.dart' as tz;
 
-class RtestSchedule extends ConsumerStatefulWidget {
-  const RtestSchedule(this.testtype, {super.key});
-  final String testtype;
+class PSchedule extends ConsumerStatefulWidget {
+  const PSchedule(this.pharmacy, {super.key});
+  final String pharmacy;
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _RtestScheduleState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _PScheduleState();
 }
 
-class _RtestScheduleState extends ConsumerState<RtestSchedule> {
+class _PScheduleState extends ConsumerState<PSchedule> {
   @override
   void initState() {
-    rapidtest.text = widget.testtype;
+    pharmacy.text = widget.pharmacy;
     super.initState();
   }
 
@@ -51,8 +52,6 @@ class _RtestScheduleState extends ConsumerState<RtestSchedule> {
   tz.TZDateTime? alarmTime;
   tz.TZDateTime? alarmDate;
 
-  bool loader = false;
-
   @override
   Widget build(BuildContext context) {
     final aps = ref.watch(appointmentFirebaseProvider);
@@ -74,7 +73,7 @@ class _RtestScheduleState extends ConsumerState<RtestSchedule> {
                         color: kprimary,
                       )),
                   const Spacer(),
-                  Ttxt(text: 'Schedule ${widget.testtype}'),
+                  const Ttxt(text: 'Schedule test'),
                   const Spacer()
                 ],
               ),
@@ -88,7 +87,7 @@ class _RtestScheduleState extends ConsumerState<RtestSchedule> {
                   inputType: TextInputType.datetime,
                   controller: date,
                   validator: (value) {
-                    if (value!.isEmpty) {
+                    if (value == null) {
                       return 'field cannot be empty';
                     }
                     return null;
@@ -103,7 +102,7 @@ class _RtestScheduleState extends ConsumerState<RtestSchedule> {
                                 DateTime.now().add(const Duration(days: 730)));
 
                         if (selectedate != null) {
-                          final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
+                          final now = tz.TZDateTime.now(tz.local);
                           var selectedDateTime = tz.TZDateTime(
                               tz.local,
                               selectedate.year,
@@ -125,7 +124,7 @@ class _RtestScheduleState extends ConsumerState<RtestSchedule> {
                   controller: time,
                   inputType: TextInputType.number,
                   validator: (value) {
-                    if (value!.isEmpty) {
+                    if (value == null) {
                       return 'field cannot be empty';
                     }
                     return null;
@@ -156,18 +155,27 @@ class _RtestScheduleState extends ConsumerState<RtestSchedule> {
               Row(
                 children: [
                   FormfieldX(
-                    controller: rapidtest,
-                    label: '',
-                    readonly: true,
-                    hinttext: AppLocalizations.of(context)!.mmtest,
-                    inputType: TextInputType.name,
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'field cannot be empty';
-                      }
-                      return null;
-                    },
-                  ),
+                      controller: rapidtest,
+                      label: 'Rapid test type',
+                      readonly: true,
+                      hinttext: AppLocalizations.of(context)!.mmtest,
+                      inputType: TextInputType.name,
+                      validator: (value) {
+                        if (value == null) {
+                          return 'field cannot be empty';
+                        }
+                        return null;
+                      },
+                      suffix: DropdownButton(
+                        underline: const SizedBox(),
+                        items: [
+                          ...rtests.map((e) =>
+                              DropdownMenuItem(value: e, child: Btxt(text: e)))
+                        ],
+                        onChanged: (e) {
+                          rapidtest.text = e!;
+                        },
+                      )),
                 ],
               ),
               const SizedBox(height: 20),
@@ -175,32 +183,17 @@ class _RtestScheduleState extends ConsumerState<RtestSchedule> {
               Row(
                 children: [
                   FormfieldX(
-                    label: AppLocalizations.of(context)!.pp,
-                    readonly: false,
+                    label: '',
+                    readonly: true,
                     controller: pharmacy,
                     hinttext: 'eg. hale pharmacy',
                     inputType: TextInputType.name,
                     validator: (value) {
-                      if (value!.isEmpty) {
+                      if (value == null) {
                         return 'field cannot be empty';
                       }
                       return null;
                     },
-                    suffix: DropdownButton(
-                        underline: const SizedBox(),
-                        items: [
-                          ...[
-                            'Hale pharmacy',
-                            'Espat pharmacy',
-                            'Raydos pharmacy',
-                            'Nekassa pharmacy',
-                            'klad pharmacy',
-                          ].map((e) =>
-                              DropdownMenuItem(value: e, child: Btxt(text: e)))
-                        ],
-                        onChanged: (e) {
-                          pharmacy.text = e!;
-                        }),
                   ),
                 ],
               ),
@@ -215,7 +208,7 @@ class _RtestScheduleState extends ConsumerState<RtestSchedule> {
                     hinttext: 'write a short note for description',
                     inputType: TextInputType.multiline,
                     validator: (value) {
-                      if (value!.isEmpty) {
+                      if (value == null) {
                         return 'field cannot be empty';
                       }
                       return null;
@@ -234,7 +227,7 @@ class _RtestScheduleState extends ConsumerState<RtestSchedule> {
                     hinttext: 'eg 0200394483',
                     inputType: TextInputType.phone,
                     validator: (value) {
-                      if (value!.isEmpty) {
+                      if (value == null) {
                         return 'field cannot be empty';
                       }
                       return null;
@@ -285,17 +278,12 @@ class _RtestScheduleState extends ConsumerState<RtestSchedule> {
                                               MainAxisAlignment.center,
                                           children: [
                                             TextButton(
-                                              onPressed: () {
-                                                context.pop();
-
+                                              onPressed: () async {
                                                 final bool vdate = formkey
                                                     .currentState!
                                                     .validate();
 
                                                 if (vdate == true) {
-                                                  setState(() {
-                                                    loader = true;
-                                                  });
                                                   final model = ApModel(
                                                       createdAt: DateTime.now()
                                                           .millisecondsSinceEpoch
@@ -307,54 +295,56 @@ class _RtestScheduleState extends ConsumerState<RtestSchedule> {
                                                       testtype: rapidtest.text,
                                                       time: time.text,
                                                       status: true);
-                                                  aps.addAppointment(uid: user.currentUser!.uid, med: model).then((v) =>
-                                                      NotificationBundle()
-                                                          .dateAlarm(
-                                                              components:
-                                                                  DateTimeComponents
-                                                                      .dateAndTime,
-                                                              alarmTime:
-                                                                  tz.TZDateTime(
-                                                                      tz.local,
-                                                                      alarmDate!
-                                                                          .year,
-                                                                      alarmDate!
-                                                                          .month,
-                                                                      alarmDate!
-                                                                          .day,
-                                                                      alarmTime!
-                                                                          .hour,
-                                                                      alarmTime!
-                                                                          .minute),
-                                                              body:
-                                                                  'Medbox wants to remind you of your ${rapidtest.text} with ${pharmacy.text} today!',
-                                                              id: model.aid,
-                                                              title:
-                                                                  '${rapidtest.text.toUpperCase()} REMINDER.')
-                                                          .whenComplete(() => VxToast.show(
-                                                              context,
-                                                              textSize: 11,
-                                                              msg:
-                                                                  'Appointment added successfully.',
-                                                              bgColor: const Color
-                                                                      .fromARGB(
-                                                                  255, 38, 99, 40),
-                                                              textColor:
-                                                                  Colors.white,
-                                                              pdHorizontal: 30,
-                                                              pdVertical: 20))
-                                                          .then((value) {
-                                                        setState(() {
-                                                          loader = false;
-                                                        });
-                                                        context.pop();
-                                                        rapidtest.clear();
-                                                        pharmacy.clear();
-                                                        date.clear();
-                                                        note.clear();
-                                                        time.clear();
-                                                        number.clear();
-                                                      }));
+                                                  await aps
+                                                      .addAppointment(
+                                                          uid: user
+                                                              .currentUser!.uid,
+                                                          med: model)
+                                                      .whenComplete(() async {
+                                                    await NotificationBundle()
+                                                        .dateAlarm(
+                                                            components:
+                                                                DateTimeComponents
+                                                                    .dateAndTime,
+                                                            alarmTime: tz.TZDateTime(
+                                                                tz.local,
+                                                                alarmDate!.year,
+                                                                alarmDate!
+                                                                    .month,
+                                                                alarmDate!.day,
+                                                                alarmTime!.hour,
+                                                                alarmTime!
+                                                                    .minute),
+                                                            body:
+                                                                'Medbox wants to remind you of your ${rapidtest.text} with ${pharmacy.text} today!',
+                                                            id: model.aid,
+                                                            title:
+                                                                '${rapidtest.text.toUpperCase()} REMINDER.')
+                                                        .whenComplete(() => VxToast.show(
+                                                            context,
+                                                            textSize: 11,
+                                                            msg:
+                                                                'Appointment added successfully.',
+                                                            bgColor: const Color
+                                                                    .fromARGB(
+                                                                255,
+                                                                38,
+                                                                99,
+                                                                40),
+                                                            textColor:
+                                                                Colors.white,
+                                                            pdHorizontal: 30,
+                                                            pdVertical: 20))
+                                                        .then((value) {
+                                                      context.pop();
+                                                      rapidtest.clear();
+                                                      pharmacy.clear();
+                                                      date.clear();
+                                                      note.clear();
+                                                      time.clear();
+                                                      number.clear();
+                                                    });
+                                                  });
                                                 }
                                               },
                                               child: Text(

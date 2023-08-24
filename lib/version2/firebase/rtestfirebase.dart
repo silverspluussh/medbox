@@ -17,14 +17,12 @@ class RtestFirebse {
           .snapshots()
           .map((event) => event.docs.map((e) => e.data()).toList());
 
-  Query<RapidtestModel> queryTests({required String uid}) => _firestore
-      .collection(rsPath(uid))
-      .withConverter(
-        fromFirestore: (snapshot, _) =>
-            RapidtestModel.fromJson(snapshot.data()!, tid: snapshot.id),
-        toFirestore: (job, _) => job.toJson(),
-      )
-      .orderBy('id');
+  Query<RapidtestModel> queryTests({required String uid}) =>
+      _firestore.collection(rsPath(uid)).withConverter(
+            fromFirestore: (snapshot, _) =>
+                RapidtestModel.fromJson(snapshot.data()!, tid: snapshot.id),
+            toFirestore: (job, _) => job.toJson(),
+          );
 }
 
 @Riverpod(keepAlive: true)

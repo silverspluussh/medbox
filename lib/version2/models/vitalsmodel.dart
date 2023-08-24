@@ -19,25 +19,25 @@ class VModel {
       this.weight});
 
   VModel.fromJson(Map<String, dynamic> json, {required String tid}) {
-    br = json['breathRate'] ?? '0';
-    bp = json['bloodPressure'] ?? '0';
-    hr = json['heartRate'] ?? '0';
-    temp = json['temp'] ?? '0';
-    bmi = json['bmi'] ?? '0';
-    weight = json['weight'] ?? '0';
-    date = json['date'];
+    br = json['breathRate'];
+    bp = json['bloodPressure'];
+    hr = json['heartRate'];
+    temp = json['temp'];
+    bmi = json['bmi'];
+    weight = json['weight'];
+    date = json['createdAt'];
     vid = tid;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['date'] = date ?? '0';
-    data['bloodPressure'] = bp ?? '0';
-    data['breathRate'] = br ?? '0';
-    data['heartRate'] = hr ?? '0';
-    data['bmi'] = bmi ?? '0';
-    data['weight'] = weight ?? '0';
-    data['temp'] = temp ?? '0';
+    data['createdAt'] = date;
+    data['bloodPressure'] = bp;
+    data['breathRate'] = br;
+    data['heartRate'] = hr;
+    data['bmi'] = bmi;
+    data['weight'] = weight;
+    data['temp'] = temp;
 
     return data;
   }

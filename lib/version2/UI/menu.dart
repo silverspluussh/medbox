@@ -18,126 +18,126 @@ class Menu extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     Size size = MediaQuery.sizeOf(context);
-    return CustomScrollView(
-      slivers: [
-        SliverToBoxAdapter(
-          child:
-              Ltxt(text: AppLocalizations.of(context)!.menu).centered().py12(),
-        ),
-        SliverToBoxAdapter(
-          child: Container(
-            // height: size.height * 0.3,
-            width: size.width,
-            margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
-            decoration: BoxDecoration(boxShadow: [
-              BoxShadow(
-                  color: kprimary.withOpacity(0.2),
-                  blurRadius: 2,
-                  spreadRadius: 2)
-            ], borderRadius: BorderRadius.circular(20), color: kwhite),
-            child: VStack([
-              ListTile(
-                onTap: () => Navigator.push(context,
-                    MaterialPageRoute(builder: (_) => const Profile())),
-                leading: const Icon(Icons.person, color: kprimary),
-                title:
-                    Ltxt(text: AppLocalizations.of(context)!.mprof).centered(),
-              ),
-              const Divider(),
-              ListTile(
-                onTap: () => Navigator.push(context,
-                    MaterialPageRoute(builder: (_) => const Reminders())),
-                leading: const ImageIcon(
-                    AssetImage('assets/icons/reminders-15-64.png'),
-                    color: kprimary),
-                title:
-                    Ltxt(text: AppLocalizations.of(context)!.mrem).centered(),
-              ),
-              const Divider(),
-              ListTile(
-                onTap: () => Navigator.push(context,
-                    MaterialPageRoute(builder: (_) => const Pharmacy())),
-                leading: const Icon(Icons.local_pharmacy, color: kprimary),
-                title:
-                    Ltxt(text: AppLocalizations.of(context)!.pharm).centered(),
-              ),
-            ]),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      child: CustomScrollView(
+        slivers: [
+          SliverToBoxAdapter(
+            child: Container(
+              // height: size.height * 0.3,
+              width: size.width,
+              margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+              decoration: BoxDecoration(boxShadow: [
+                BoxShadow(
+                    color: kprimary.withOpacity(0.2),
+                    blurRadius: 2,
+                    spreadRadius: 2)
+              ], borderRadius: BorderRadius.circular(20), color: kwhite),
+              child: VStack([
+                ListTile(
+                  onTap: () => Navigator.push(context,
+                      MaterialPageRoute(builder: (_) => const Profile())),
+                  leading: const Icon(Icons.person, color: kprimary),
+                  title: Ltxt(text: AppLocalizations.of(context)!.mprof)
+                      .centered(),
+                ),
+                const Divider(),
+                ListTile(
+                  onTap: () => Navigator.push(context,
+                      MaterialPageRoute(builder: (_) => const Reminders())),
+                  leading: const ImageIcon(
+                      AssetImage('assets/icons/reminders-15-64.png'),
+                      color: kprimary),
+                  title:
+                      Ltxt(text: AppLocalizations.of(context)!.mrem).centered(),
+                ),
+                const Divider(),
+                ListTile(
+                  onTap: () => Navigator.push(context,
+                      MaterialPageRoute(builder: (_) => const Pharmacy())),
+                  leading: const Icon(Icons.local_pharmacy, color: kprimary),
+                  title: Ltxt(text: AppLocalizations.of(context)!.pharm)
+                      .centered(),
+                ),
+              ]),
+            ),
           ),
-        ),
-        SliverList(
-            delegate: SliverChildListDelegate([
-          const SizedBox(height: 30),
-          ListTile(
-            onTap: () => launchUrl(Uri.parse('https://www.medboxdata.com')),
-            leading: const ImageIcon(AssetImage('assets/icons/manual.png'),
-                color: kprimary),
-            title: Ltxt(text: AppLocalizations.of(context)!.help).centered(),
-            tileColor: kwhite,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-                side: const BorderSide(width: 0.4, color: kprimary)),
-          ).px16().py2(),
-          ListTile(
-            onTap: () => Share.share('text',
-                subject:
-                    'https://play.google.com/store/apps/details?id=com.datasus.medbox Hi there, kindly download Medbox for easy health management.'),
-            leading: const ImageIcon(
-                AssetImage(
-                    'assets/icons/sharing-wireless-bluetooth-sharing-4-512.png'),
-                color: kprimary),
-            title: Ltxt(text: AppLocalizations.of(context)!.share).centered(),
-            tileColor: kwhite,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-                side: const BorderSide(width: 0.4, color: kprimary)),
-          ).px16().py8(),
-          SwitchListTile(
-            onChanged: (e) {},
-            value: true,
+          SliverList(
+              delegate: SliverChildListDelegate([
+            const SizedBox(height: 30),
+            ListTile(
+              onTap: () => launchUrl(Uri.parse('https://www.medboxdata.com')),
+              leading: const ImageIcon(AssetImage('assets/icons/manual.png'),
+                  color: kprimary),
+              title: Ltxt(text: AppLocalizations.of(context)!.help).centered(),
+              tileColor: kwhite,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  side: const BorderSide(width: 0.4, color: kprimary)),
+            ).px16().py2(),
+            ListTile(
+              onTap: () => Share.share(
+                  'https://play.google.com/store/apps/details?id=com.datasus.medbox Hi there,can I share this amazing application called medbox with you?',
+                  subject: 'Medbox for easy health management'),
+              leading: const ImageIcon(
+                  AssetImage(
+                      'assets/icons/sharing-wireless-bluetooth-sharing-4-512.png'),
+                  color: kprimary),
+              title: Ltxt(text: AppLocalizations.of(context)!.share).centered(),
+              tileColor: kwhite,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  side: const BorderSide(width: 0.4, color: kprimary)),
+            ).px16().py8(),
+            SwitchListTile(
+              onChanged: (e) {},
+              value: true,
 
-            // leading: const Icon(Icons.local_pharmacy, color: kprimary),
-            title: const Ltxt(text: 'Theme').centered(),
-            tileColor: kwhite,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-                side: const BorderSide(width: 0.4, color: kprimary)),
-          ).px16(),
-          const SizedBox(height: 20),
-          ListTile(
-            onTap: () => showDialog(
-                context: context, builder: (_) => _dialogue(size, context)),
-            leading: Image.asset('assets/icons/log-out-54-512.png',
-                width: 30, height: 30, color: kred),
-            title: Ltxt(text: AppLocalizations.of(context)!.lout).centered(),
-          ),
-          const SizedBox(height: 20),
-          ListTile(
-            onTap: () => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              duration: 500.milliseconds,
-              showCloseIcon: true,
-              backgroundColor: Colors.green[300],
-              content: SizedBox(
-                height: 50,
-                width: 200,
-                child: TextButton(
-                    style: ButtonStyle(
-                        shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10))),
-                        backgroundColor:
-                            MaterialStateProperty.all<Color>(Colors.red[300]!)),
-                    onPressed: () {
-                      SystemNavigator.pop();
-                    },
-                    child: Ltxt(text: AppLocalizations.of(context)!.ext)),
-              ).px12(),
-            )),
-            leading: Image.asset('assets/icons/sign-out-243-512.png',
-                width: 30, height: 30, color: kred),
-            title: Ltxt(text: AppLocalizations.of(context)!.ext).centered(),
-          ),
-        ]))
-      ],
-    ).centered();
+              // leading: const Icon(Icons.local_pharmacy, color: kprimary),
+              title: const Ltxt(text: 'Theme').centered(),
+              tileColor: kwhite,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  side: const BorderSide(width: 0.4, color: kprimary)),
+            ).px16(),
+            const SizedBox(height: 20),
+            ListTile(
+              onTap: () => showDialog(
+                  context: context, builder: (_) => _dialogue(size, context)),
+              leading: Image.asset('assets/icons/log-out-54-512.png',
+                  width: 30, height: 30, color: kred),
+              title: Ltxt(text: AppLocalizations.of(context)!.lout).centered(),
+            ),
+            const SizedBox(height: 20),
+            ListTile(
+              onTap: () => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                duration: 500.milliseconds,
+                showCloseIcon: true,
+                backgroundColor: Colors.green[300],
+                content: SizedBox(
+                  height: 50,
+                  width: 200,
+                  child: TextButton(
+                      style: ButtonStyle(
+                          shape: MaterialStateProperty.all(
+                              RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10))),
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              Colors.red[300]!)),
+                      onPressed: () {
+                        SystemNavigator.pop();
+                      },
+                      child: Ltxt(text: AppLocalizations.of(context)!.ext)),
+                ).px12(),
+              )),
+              leading: Image.asset('assets/icons/sign-out-243-512.png',
+                  width: 30, height: 30, color: kred),
+              title: Ltxt(text: AppLocalizations.of(context)!.ext).centered(),
+            ),
+          ]))
+        ],
+      ).centered(),
+    );
   }
 
   Dialog _dialogue(Size size, BuildContext context) {

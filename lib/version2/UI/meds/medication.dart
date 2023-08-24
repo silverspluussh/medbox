@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:MedBox/constants/colors.dart';
 import 'package:MedBox/version2/UI/meds/addmed.dart';
 import 'package:MedBox/version2/models/reminders_model.dart';
@@ -9,13 +8,18 @@ import 'package:MedBox/version2/utilites/pushnotifications.dart';
 import 'package:MedBox/version2/utilites/randomgen.dart';
 import 'package:MedBox/version2/wiis/txt.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
+import 'package:lottie/lottie.dart';
 import 'package:velocity_x/velocity_x.dart';
 import '../../firebase/medicfirebase.dart';
 import '../../models/medication_model.dart';
 import '../../utilites/photos_extension.dart';
 import '../../wiis/async_value_widget.dart';
 import '../../wiis/formfieldwidget.dart';
+import '../../wiis/shimmer.dart';
+import 'package:timezone/timezone.dart' as tz;
 
 class Medications extends ConsumerWidget {
   const Medications({super.key});
@@ -26,34 +30,43 @@ class Medications extends ConsumerWidget {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
           mini: true,
+          tooltip: 'Add medication',
           shape:
               const CircleBorder(side: BorderSide(width: 0.1, color: kprimary)),
           onPressed: () => Navigator.push(
               context, MaterialPageRoute(builder: (context) => const AddMed())),
           child: const Icon(
             Icons.add,
+            size: 30,
             color: kprimary,
           )),
-      body: CustomScrollView(
-        slivers: [
-          SliverToBoxAdapter(
-              child: const Ttxt(text: 'Medications').py16().centered()),
-          SliverList.builder(
-            itemCount: meds.value!.isNotEmpty ? meds.value!.length : 1,
-            itemBuilder: (context, index) {
-              return AsyncValueWidget(
-                  value: meds,
-                  data: (m) => m.isNotEmpty
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        child: AsyncValueWidget(
+          loading: ListView.builder(
+              itemCount: 8,
+              itemBuilder: (con, index) =>
+                  const ShimmerWidget.rectangular(height: 80)).centered(),
+          value: meds,
+          data: (m) => CustomScrollView(
+            slivers: [
+              SliverList.builder(
+                itemCount: m.isNotEmpty ? m.length : 1,
+                itemBuilder: (context, index) {
+                  return m.isNotEmpty
                       ? Medcard(index: index, meds: m)
-                      : const SizedBox(
-                          child: Center(
-                            child: Ltxt(text: 'No medications added yet.'),
-                          ),
-                        ));
-            },
-          )
-        ],
-      ).p12(),
+                      : SizedBox(
+                          height: 300,
+                          width: 500,
+                          child: Lottie.asset('assets/lottie/empty.json')
+                              .centered(),
+                        );
+                },
+              )
+            ],
+          ).p12(),
+        ),
+      ),
     );
   }
 }
@@ -73,6 +86,8 @@ class _MedcardState extends ConsumerState<Medcard> {
   TextEditingController dose = TextEditingController();
   TextEditingController time = TextEditingController();
 
+  tz.TZDateTime? _alarmTime;
+
   @override
   void dispose() {
     name.dispose();
@@ -81,8 +96,6 @@ class _MedcardState extends ConsumerState<Medcard> {
     time.dispose();
     super.dispose();
   }
-
-  TimeOfDay tod = TimeOfDay.now();
 
   @override
   Widget build(BuildContext context) {
@@ -93,9 +106,22 @@ class _MedcardState extends ConsumerState<Medcard> {
           radius: 15,
           backgroundColor: kprimary.withOpacity(0.5),
         ),
-        title: Ttxt(text: widget.meds[widget.index].medicinename!),
-        subtitle: Btxt(text: widget.meds[widget.index].medicinetype!),
-        shape: BeveledRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        title: Card(
+            color: Colors.indigo.withOpacity(0.1),
+            child:
+                Ttxt(text: widget.meds[widget.index].medicinename!.capitalized)
+                    .p4()
+                    .centered()),
+        subtitle: Text(
+          widget.meds[widget.index].medicinetype!.capitalized,
+          style: TextStyle(
+              fontSize: 11,
+              color: widget.meds[widget.index].medicinetype == 'medication'
+                  ? kgreen
+                  : kred,
+              fontWeight: FontWeight.w400),
+        ),
+        shape: BeveledRectangleBorder(borderRadius: BorderRadius.circular(10)),
         tileColor: kwhite,
         trailing: PopupMenuButton(
           shape:
@@ -290,14 +316,26 @@ class _MedcardState extends ConsumerState<Medcard> {
                             return;
                           },
                           suffix: IconButton(
-                              onPressed: () => showTimePicker(
-                                          context: context,
-                                          initialTime: TimeOfDay.now())
-                                      .then((value) {
-                                    tod = value!;
-                                    time.text = value.format(context) +
-                                        value.period.toString().split('.').last;
-                                  }),
+                              onPressed: () async {
+                                var selecTime = await showTimePicker(
+                                    context: context,
+                                    initialTime: TimeOfDay.now());
+                                if (selecTime != null) {
+                                  final tz.TZDateTime now =
+                                      tz.TZDateTime.now(tz.local);
+
+                                  var selectedDateTime = tz.TZDateTime(
+                                      tz.local,
+                                      now.year,
+                                      now.month,
+                                      now.day,
+                                      selecTime.hour,
+                                      selecTime.minute);
+                                  _alarmTime = selectedDateTime;
+                                  time.text = DateFormat('HH:mm')
+                                      .format(selectedDateTime);
+                                }
+                              },
                               icon: const Icon(Icons.alarm_add_rounded)),
                         ),
                         ElevatedButton(
@@ -351,10 +389,10 @@ class _MedcardState extends ConsumerState<Medcard> {
                                                           ref.watch(
                                                               remindersDbProvider);
                                                       final rmodel = RModel(
-                                                        date: DateTime.now()
-                                                            .toString()
-                                                            .split(' ')
-                                                            .first,
+                                                        date: DateFormat(
+                                                                'yyyy-MM-dd')
+                                                            .format(
+                                                                DateTime.now()),
                                                         id: idg(),
                                                         medicinename: widget
                                                             .meds[widget.index]
@@ -367,23 +405,38 @@ class _MedcardState extends ConsumerState<Medcard> {
                                                       rcontroller
                                                           .addReminder(rmodel)
                                                           .whenComplete(() {
-                                                        log(rmodel.id
-                                                            .toString());
                                                         NotificationBundle()
-                                                            .setreminder(
-                                                              body: rmodel.body,
-                                                              hour: tod.hour,
-                                                              minute:
-                                                                  tod.minute,
-                                                              id: rmodel.id
-                                                                  .toString(),
-                                                              title: widget
-                                                                  .meds[widget
-                                                                      .index]
-                                                                  .medicinename,
-                                                            )
-                                                            .whenComplete(() =>
-                                                                context.pop());
+                                                            .onSaveAlarm(
+                                                          components:
+                                                              DateTimeComponents
+                                                                  .time,
+                                                          alarmTime: _alarmTime,
+                                                          body: rmodel.body,
+                                                          id: rmodel.id
+                                                              .toString(),
+                                                          title: widget
+                                                              .meds[
+                                                                  widget.index]
+                                                              .medicinename,
+                                                        );
+                                                      }).then((value) {
+                                                        context.pop(context);
+                                                        time.clear();
+                                                        return VxToast.show(
+                                                            context,
+                                                            textSize: 11,
+                                                            msg:
+                                                                'reminder added successfully.',
+                                                            bgColor: const Color
+                                                                    .fromARGB(
+                                                                255,
+                                                                38,
+                                                                99,
+                                                                40),
+                                                            textColor:
+                                                                Colors.white,
+                                                            pdHorizontal: 30,
+                                                            pdVertical: 20);
                                                       });
                                                     },
                                                     child: const Text(
@@ -423,16 +476,19 @@ class _MedcardState extends ConsumerState<Medcard> {
             )),
           ],
           child: Btxt(text: 'Dosage: ${widget.meds[widget.index].dose!}'),
-        ));
+        )).py8();
   }
 }
 
 bottomPop(context, double h, {required Widget child}) {
-  showModalBottomSheet(
+  return showModalBottomSheet(
       context: context,
       builder: (context) => SizedBox(
             height: h,
             width: MediaQuery.of(context).size.width,
-            child: child,
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: child,
+            ),
           ));
 }

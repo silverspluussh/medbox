@@ -1,9 +1,7 @@
-import 'package:MedBox/version2/wiis/txt.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import '../../constants/colors.dart';
 import '../models/vitalsmodel.dart';
-import 'package:flutter_gen/gen_l10n/app_localization.dart';
 
 class LineChartx extends StatelessWidget {
   const LineChartx(
@@ -157,11 +155,11 @@ class LineChartx extends StatelessWidget {
         belowBarData: BarAreaData(show: true),
         spots: [
           const FlSpot(0, 0),
-          FlSpot(2, double.parse(vitals.first.temp.toString())),
-          FlSpot(4, double.parse(vitals.first.hr.toString())),
-          FlSpot(6, double.parse(vitals.first.bp.toString())),
-          FlSpot(8, double.parse(vitals.first.br.toString())),
-          FlSpot(10, double.parse(vitals.first.bmi.toString())),
+          FlSpot(2, double.parse(vitals.last.temp.toString())),
+          FlSpot(4, double.parse(vitals.last.hr.toString())),
+          FlSpot(6, double.parse(vitals.last.bp.toString().split('/').first)),
+          FlSpot(8, double.parse(vitals.last.br.toString())),
+          FlSpot(10, double.parse(vitals.last.bmi.toString())),
           const FlSpot(11, 0),
         ],
       );
@@ -183,7 +181,7 @@ class LineChartx extends StatelessWidget {
           const FlSpot(0, 0),
           FlSpot(2, double.parse(vitals.first.temp.toString())),
           FlSpot(4, double.parse(vitals.first.hr.toString())),
-          FlSpot(6, double.parse(vitals.first.bp.toString())),
+          FlSpot(6, double.parse(vitals.first.bp.toString().split('/').first)),
           FlSpot(8, double.parse(vitals.first.br.toString())),
           FlSpot(10, double.parse(vitals.first.bmi.toString())),
           const FlSpot(11, 0),
@@ -214,11 +212,9 @@ class LineChartSample1State extends State<VitalsLineChart> {
       aspectRatio: 1.7,
       child: Stack(
         children: <Widget>[
-          Expanded(
-            child: LineChartx(
-              vitals: widget.vitals,
-              isShowingMainData: isShowingMainData,
-            ),
+          LineChartx(
+            vitals: widget.vitals,
+            isShowingMainData: isShowingMainData,
           ),
           Row(
             children: [
@@ -234,8 +230,6 @@ class LineChartSample1State extends State<VitalsLineChart> {
                   });
                 },
               ),
-              const Spacer(),
-              Ltxt(text: AppLocalizations.of(context)!.bvitals),
               const Spacer(),
             ],
           )

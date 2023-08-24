@@ -11,13 +11,16 @@ import 'package:MedBox/version2/utilites/pushnotifications.dart';
 import 'package:MedBox/version2/utilites/randomgen.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:velocity_x/velocity_x.dart';
 import 'package:flutter_gen/gen_l10n/app_localization.dart';
 import '../../../constants/colors.dart';
 import '../../utilites/photos_extension.dart';
 import '../../wiis/formfieldwidget.dart';
 import '../../wiis/txt.dart';
+import 'package:timezone/timezone.dart' as tz;
 
 class AddMed extends ConsumerStatefulWidget {
   const AddMed({super.key});
@@ -35,6 +38,8 @@ class _AddMedState extends ConsumerState<AddMed> {
   TextEditingController type = TextEditingController();
   TextEditingController dose = TextEditingController();
 
+  bool loader = false;
+
   @override
   void dispose() {
     time.dispose();
@@ -47,7 +52,6 @@ class _AddMedState extends ConsumerState<AddMed> {
 
   String? imagepath;
   Uint8List? imagepickedd;
-  String date = DateTime.now().toString().split(' ').first;
 
   pickImageFromLocal() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
@@ -65,13 +69,14 @@ class _AddMedState extends ConsumerState<AddMed> {
     } else {}
   }
 
+  tz.TZDateTime? _alarmTime;
+
   @override
   Widget build(BuildContext context) {
-    TimeOfDay timeOfDay = TimeOfDay.now();
-
     return Scaffold(
       body: SafeArea(
-        child: SizedBox(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           child: Form(
             key: formkey,
             child: SingleChildScrollView(
@@ -90,82 +95,100 @@ class _AddMedState extends ConsumerState<AddMed> {
                     const Spacer()
                   ],
                 ),
-                SizedBox(
-                  height: 80,
-                  width: MediaQuery.of(context).size.width,
-                  child: FormfieldX(
-                    label: AppLocalizations.of(context)!.medname,
-                    controller: name,
-                    readonly: false,
-                    hinttext: 'eg. paracetamol',
-                    inputType: TextInputType.name,
-                    validator: (value) {
-                      return;
-                    },
-                  ),
+                Row(
+                  children: [
+                    FormfieldX(
+                      label: AppLocalizations.of(context)!.medname,
+                      controller: name,
+                      readonly: false,
+                      hinttext: 'eg. paracetamol',
+                      inputType: TextInputType.name,
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'field cannot be empty';
+                        }
+                        return null;
+                      },
+                    ),
+                  ],
                 ),
-                SizedBox(
-                  height: 80,
-                  width: MediaQuery.of(context).size.width,
-                  child: FormfieldX(
-                      label: AppLocalizations.of(context)!.medtype,
-                      readonly: true,
-                      controller: type,
-                      hinttext: 'eg. medication',
+                const SizedBox(height: 10),
+                Row(
+                  children: [
+                    FormfieldX(
+                        label: AppLocalizations.of(context)!.medtype,
+                        readonly: true,
+                        controller: type,
+                        hinttext: 'eg. medication',
+                        inputType: TextInputType.number,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'field cannot be empty';
+                          }
+                          return null;
+                        },
+                        suffix: DropdownButton(
+                            underline: const SizedBox(),
+                            items: [
+                              ...['medication', 'prescription'].map((e) =>
+                                  DropdownMenuItem(
+                                      value: e, child: Btxt(text: e)))
+                            ],
+                            onChanged: (e) {
+                              type.text = e ?? 'Medication';
+                            })),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                Row(
+                  children: [
+                    FormfieldX(
+                      label: AppLocalizations.of(context)!.dose,
+                      readonly: false,
+                      hinttext: 'eg. 2',
+                      controller: dose,
                       inputType: TextInputType.number,
                       validator: (value) {
-                        return;
+                        if (value!.isEmpty) {
+                          return 'field cannot be empty';
+                        }
+                        return null;
                       },
-                      suffix: DropdownButton(
-                          underline: const SizedBox(),
-                          items: [
-                            ...['medication', 'prescription'].map((e) =>
-                                DropdownMenuItem(
-                                    value: e, child: Btxt(text: e)))
-                          ],
-                          onChanged: (e) {
-                            type.text = e ?? 'Medication';
-                          })),
+                    ),
+                  ],
                 ),
-                SizedBox(
-                  height: 80,
-                  width: MediaQuery.of(context).size.width,
-                  child: FormfieldX(
-                    label: AppLocalizations.of(context)!.dose,
-                    readonly: false,
-                    hinttext: 'eg. 2',
-                    controller: dose,
-                    inputType: TextInputType.number,
-                    validator: (value) {
-                      return;
-                    },
-                  ),
-                ),
-                SizedBox(
-                  height: 80,
-                  width: MediaQuery.of(context).size.width,
-                  child: FormfieldX(
-                    label: AppLocalizations.of(context)!.t,
-                    controller: time,
-                    readonly: true,
-                    hinttext:
-                        '${timeOfDay.format(context)} ${timeOfDay.period.toString().split('.').last}',
-                    inputType: TextInputType.text,
-                    validator: (value) {
-                      return;
-                    },
-                    suffix: IconButton(
-                        onPressed: () => showTimePicker(
-                                    context: context,
-                                    initialTime: TimeOfDay.now())
-                                .then((value) {
+                const SizedBox(height: 10),
+                Row(
+                  children: [
+                    FormfieldX(
+                      label: AppLocalizations.of(context)!.t,
+                      controller: time,
+                      readonly: true,
+                      hinttext: time.text.isEmpty ? '0:00' : time.text,
+                      inputType: TextInputType.text,
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'field cannot be empty';
+                        }
+                        return null;
+                      },
+                      suffix: IconButton(
+                          onPressed: () async {
+                            var selecTime = await showTimePicker(
+                                context: context, initialTime: TimeOfDay.now());
+                            if (selecTime != null) {
+                              var selectedDateTime = tz.TZDateTime(
+                                  tz.local, selecTime.hour, selecTime.minute);
+                              _alarmTime = selectedDateTime;
                               time.text =
-                                  '${value!.format(context)} ${value.period.toString().split('.').last}';
-                              timeOfDay = value;
-                            }),
-                        icon: const Icon(Icons.alarm_add_sharp)),
-                  ),
+                                  DateFormat('HH:mm').format(selectedDateTime);
+                            }
+                          },
+                          icon: const Icon(Icons.alarm_add_sharp)),
+                    ),
+                  ],
                 ),
+                const SizedBox(height: 10),
                 Container(
                   height: MediaQuery.of(context).size.height * 0.23,
                   width: MediaQuery.of(context).size.width,
@@ -208,28 +231,35 @@ class _AddMedState extends ConsumerState<AddMed> {
                         final val = formkey.currentState!.validate();
 
                         if (val == true) {
+                          setState(() {
+                            loader = true;
+                          });
                           try {
                             mcontroller
                                 .addMedication(uid: user!.uid, med: mmodel)
-                                .whenComplete(() {
+                                .then((val) async {
                               final rmodel = RModel(
-                                  date: date,
-                                  time:
-                                      '${timeOfDay.format(context)} ${TimeOfDay.now().period.toString().split('.').last}',
+                                  date: DateFormat('yyyy-MM-dd')
+                                      .format(DateTime.now()),
+                                  time: time.text,
                                   body: '${dose.text} dose(s) of ${name.text}',
                                   medicinename: name.text,
                                   id: idg());
-                              rcontroller.addReminder(rmodel).whenComplete(() {
-                                NotificationBundle()
-                                    .setreminder(
+                              await rcontroller
+                                  .addReminder(rmodel)
+                                  .then((value) async {
+                                await NotificationBundle()
+                                    .onSaveAlarm(
+                                        components: DateTimeComponents.time,
+                                        alarmTime: _alarmTime,
                                         id: rmodel.id.toString(),
                                         body:
                                             '${dose.text} dose(s) of ${name.text}',
-                                        title: mmodel.medicinename,
-                                        hour: timeOfDay.hour,
-                                        minute: timeOfDay.minute,
-                                        payload: name.text)
+                                        title: mmodel.medicinename)
                                     .whenComplete(() {
+                                  setState(() {
+                                    loader = false;
+                                  });
                                   context.pop();
                                   return VxToast.show(context,
                                       textSize: 11,
@@ -243,6 +273,9 @@ class _AddMedState extends ConsumerState<AddMed> {
                               });
                             });
                           } catch (e) {
+                            setState(() {
+                              loader = false;
+                            });
                             log(e.toString());
                           }
                         }

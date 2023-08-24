@@ -14,6 +14,7 @@ dependencies:
   date_picker_timeline: null
   file_picker: ^5.2.5
   firebase_app_check: ^0.1.1+12
+  cached_network_image: ^3.2.3
   firebase_auth: null
   firebase_core: ^2.4.1
   firebase_messaging: ^14.6.1
@@ -48,10 +49,11 @@ dependencies:
   syncfusion_flutter_charts: ^21.1.41
   url_launcher: ^6.1.10
   velocity_x: null
+  flutter_cache_manager: ^3.3.1
+
 
 dev_dependencies:
   flutter_lints: ^2.0.0
-  flutter_native_splash: ^2.2.19
   flutter_test:
     sdk: flutter
   riverpod_generator: 2.2.3

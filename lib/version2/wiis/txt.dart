@@ -8,7 +8,12 @@ class Btxt extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(text, style: Theme.of(context).textTheme.bodySmall);
+    return Text(text,
+        style: const TextStyle(
+            fontSize: 14,
+            fontFamily: 'Pop',
+            fontWeight: FontWeight.w300,
+            color: kblack));
   }
 }
 
@@ -19,7 +24,12 @@ class Ttxt extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(text, style: Theme.of(context).textTheme.titleSmall);
+    return Text(text,
+        style: const TextStyle(
+            fontSize: 15,
+            fontFamily: 'Pop',
+            fontWeight: FontWeight.w500,
+            color: kblack));
   }
 }
 
@@ -32,9 +42,9 @@ class Stxt extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(text,
         style: const TextStyle(
-            fontSize: 11,
+            fontSize: 13,
             fontFamily: 'Pop',
-            fontWeight: FontWeight.w500,
+            fontWeight: FontWeight.w400,
             color: kblack));
   }
 }
@@ -48,7 +58,7 @@ class Itxt extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(text,
         style: const TextStyle(
-            fontSize: 12,
+            fontSize: 14,
             fontFamily: 'Pop',
             fontWeight: FontWeight.w400,
             color: kwhite));
@@ -62,6 +72,11 @@ class Ltxt extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(text, style: Theme.of(context).textTheme.labelMedium);
+    return Text(text,
+        style: const TextStyle(
+            fontSize: 14,
+            fontFamily: 'Pop',
+            fontWeight: FontWeight.w500,
+            color: kblack));
   }
 }

@@ -1,4 +1,4 @@
-import 'package:MedBox/version2/UI/rtest/rtestschedule.dart';
+import 'package:MedBox/constants/pdata.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -6,6 +6,7 @@ import 'package:velocity_x/velocity_x.dart';
 import 'package:flutter_gen/gen_l10n/app_localization.dart';
 import '../../constants/colors.dart';
 import '../wiis/txt.dart';
+import 'rtest/pharmacyschedule.dart';
 
 class Pharmacy extends ConsumerWidget {
   const Pharmacy({super.key});
@@ -14,36 +15,29 @@ class Pharmacy extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     Size size = MediaQuery.sizeOf(context);
     return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+            onPressed: () => context.pop(),
+            icon: const Icon(
+              Icons.arrow_back_ios_new,
+              color: kprimary,
+            )),
+        centerTitle: true,
+        title: Ltxt(text: AppLocalizations.of(context)!.avaipharmacies),
+      ),
       body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           child: CustomScrollView(
-        slivers: [
-          SliverToBoxAdapter(
-            child: Row(
-              children: [
-                IconButton(
-                    onPressed: () => context.pop(),
-                    icon: const Icon(
-                      Icons.arrow_back_ios_new,
-                      color: kprimary,
-                    )),
-                const Spacer(),
-                Ltxt(
-                  text: AppLocalizations.of(context)!.avaipharmacies,
-                ),
-                const Spacer()
-              ],
-            ),
+            slivers: [
+              SliverList.builder(
+                  itemCount: pharmacies.length,
+                  itemBuilder: (context, index) =>
+                      PharmacyCard(size: size, index: index, pharm: pharmacies))
+            ],
           ),
-          SliverList(
-              delegate: SliverChildListDelegate([
-            PharmacyCard(size: size),
-            PharmacyCard(size: size),
-            PharmacyCard(size: size),
-            PharmacyCard(size: size),
-            PharmacyCard(size: size),
-          ]))
-        ],
-      )),
+        ),
+      ),
     );
   }
 }
@@ -52,9 +46,14 @@ class PharmacyCard extends StatelessWidget {
   const PharmacyCard({
     super.key,
     required this.size,
+    required this.pharm,
+    required this.index,
   });
 
   final Size size;
+
+  final List<Pharm> pharm;
+  final int index;
 
   @override
   Widget build(BuildContext context) {
@@ -70,29 +69,27 @@ class PharmacyCard extends StatelessWidget {
       child: VStack([
         HStack([
           Image.asset('assets/images/banner.png',
-              width: size.width * 0.3, height: size.height * 0.1),
+              width: size.width * 0.2, height: size.height * 0.1),
           const Spacer(),
           VStack([
-            const Ltxt(text: 'Hale Pharmacy'),
+            Ltxt(text: pharm[index].name),
             Card(
               child: InkWell(
                 onTap: () {
-                  launchUrl(
-                      Uri.parse(
-                          'https://www.google.com/maps/dir//Hale+Pharmacy,+Achimota/@5.6309121,-0.289137,12z/data=!3m1!4b1!4m8!4m7!1m0!1m5!1m1!1s0xfdf9b35b2944d79:0xe18bf68f56439b36!2m2!1d-0.2190964!2d5.6309163?hl=en&entry=ttu'),
+                  launchUrl(Uri.parse(pharm[index].urllocation),
                       mode: LaunchMode.inAppWebView,
                       webViewConfiguration: const WebViewConfiguration(
                           headers: <String, String>{'key': 'value'}));
                 },
-                child: const Row(
+                child: Row(
                   children: [
-                    Icon(
+                    const Icon(
                       Icons.location_on,
                       size: 20,
                       color: kwhite,
                     ),
-                    SizedBox(width: 5),
-                    Stxt(text: 'Pokuase'),
+                    const SizedBox(width: 5),
+                    Stxt(text: pharm[index].location),
                   ],
                 ).px8().py4(),
               ),
@@ -113,7 +110,7 @@ class PharmacyCard extends StatelessWidget {
           const SizedBox(width: 10),
           Card(
             color: Colors.yellow,
-            child: const Stxt(text: '6:00- 12:00 am').p4(),
+            child: const Stxt(text: '8:00- 10:00 pm').p4(),
           )
         ]),
         const Spacer(),
@@ -125,7 +122,7 @@ class PharmacyCard extends StatelessWidget {
                   backgroundColor:
                       MaterialStateProperty.all<Color>(Colors.indigo[300]!)),
               onPressed: () {
-                launchUrl(Uri(scheme: 'tel', path: '0570590714'));
+                launchUrl(Uri(scheme: 'tel', path: pharm[index].servicenumber));
               },
               icon: const Icon(Icons.call, color: kwhite, size: 20),
               label: const Stxt(text: 'Call now')),
@@ -139,7 +136,7 @@ class PharmacyCard extends StatelessWidget {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const RtestSchedule('test')));
+                        builder: (context) => PSchedule(pharm[index].name)));
               },
               icon: const Icon(Icons.book, color: kwhite, size: 20),
               label: Stxt(text: AppLocalizations.of(context)!.btest)),

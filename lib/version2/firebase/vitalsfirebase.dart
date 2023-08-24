@@ -25,12 +25,14 @@ class VitalsFirebase {
           .snapshots()
           .map((event) => event.docs.map((e) => e.data()).toList());
 
-  Query<VModel> queryVitals({required String uid}) =>
-      _firestore.collection(rsPath(uid)).withConverter(
-            fromFirestore: (snapshot, options) =>
-                VModel.fromJson(snapshot.data()!, tid: snapshot.id),
-            toFirestore: (job, options) => job.toJson(),
-          );
+  Query<VModel> queryVitals({required String uid}) => _firestore
+      .collection(rsPath(uid))
+      .withConverter(
+        fromFirestore: (snapshot, options) =>
+            VModel.fromJson(snapshot.data()!, tid: snapshot.id),
+        toFirestore: (job, options) => job.toJson(),
+      )
+      .orderBy('createdAt', descending: true);
   Future<List<VModel>> fetchVitals({required String uid}) async {
     final p = await queryVitals(uid: uid).get();
     return p.docs.map((doc) => doc.data()).toList();

@@ -111,10 +111,10 @@ class AuthPage extends ConsumerWidget {
                 crossAlignment: CrossAxisAlignment.center,
                 [
                   const Spacer(),
-                  Ltxt(text: AppLocalizations.of(context)!.signin),
+                  Ttxt(text: AppLocalizations.of(context)!.signin),
                   const Spacer(),
                   Image.asset(
-                    'assets/images/mdlogo.png',
+                    'assets/images/mddlogo.png',
                   ),
                   const Spacer(),
                   Semantics(
@@ -137,17 +137,20 @@ class AuthPage extends ConsumerWidget {
                               .signInWithCredential(credential)
                               .then((value) async {
                             if (value.user != null) {
-                              await preferences(value: value).then((value) {
+                              await preferences(value: value).whenComplete(() {
                                 return VxToast.show(context,
-                                    msg: AppLocalizations.of(context)!.cess,
+                                    msg:
+                                        'Signed in as ${value.user!.displayName}',
                                     bgColor: Colors.green,
                                     textColor: Colors.white,
+                                    textSize: 12,
                                     pdHorizontal: 30,
                                     pdVertical: 20);
                               });
                             } else {
                               return VxToast.show(context,
                                   msg: 'Acount could not be verified',
+                                  textSize: 12,
                                   bgColor:
                                       const Color.fromARGB(255, 245, 36, 29),
                                   textColor: Colors.white,
@@ -175,7 +178,7 @@ class AuthPage extends ConsumerWidget {
                     ),
                   ),
                   const Spacer(),
-                  Btxt(text: AppLocalizations.of(context)!.agreement)
+                  Btxt(text: AppLocalizations.of(context)!.agreement).py8(),
                 ]),
           ).animate().fadeIn(duration: 500.milliseconds)
         ],
@@ -184,8 +187,6 @@ class AuthPage extends ConsumerWidget {
   }
 
   Future preferences({value}) async {
-    await SharedCli().setgpfp(value: value.user.photoURL);
-    await SharedCli().setgmailstatus(value: true);
     await SharedCli().setuserID(value: value.user.uid);
   }
 
@@ -197,7 +198,7 @@ class AuthPage extends ConsumerWidget {
           borderRadius: BorderRadius.circular(30),
           border: Border.all(width: 1.5, color: kprimary)),
       child: HStack([
-        Spacer(),
+        const Spacer(),
         const Text(
           'G',
           style: TextStyle(

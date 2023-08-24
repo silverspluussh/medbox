@@ -1,13 +1,15 @@
-import 'dart:developer';
 import 'package:MedBox/version2/firebase/appointment.dart';
 import 'package:MedBox/version2/models/reminders_model.dart';
 import 'package:MedBox/version2/sqflite/reminderlocal.dart';
+import 'package:MedBox/version2/utilites/pushnotifications.dart';
 import 'package:MedBox/version2/wiis/async_value_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:lottie/lottie.dart';
 import 'package:velocity_x/velocity_x.dart';
 import '../../constants/colors.dart';
 import '../providers.dart/authprovider.dart';
+import '../wiis/shimmer.dart';
 import '../wiis/txt.dart';
 
 class Reminders extends ConsumerStatefulWidget {
@@ -44,61 +46,86 @@ class _RemindersState extends ConsumerState<Reminders> {
               ])),
         ),
         body: TabBarView(children: [
-          FutureBuilder(
-              future: reminders.fetchReminders(),
-              builder: (context, stream) {
-                if (stream.hasData) {
-                  List<RModel> r = stream.data!;
-                  log(r.length.toString());
-                  return ListView.builder(
-                      itemCount: r.length,
-                      itemBuilder: (context, index) {
-                        log(r[index].id.toString());
-                        return MedCard(
-                          color: medColor[index % 4],
-                          child: ListTile(
-                              title: Ttxt(text: r[index].medicinename!),
-                              subtitle: Stxt(text: '${r[index].body}'),
-                              leading: CircleAvatar(
-                                radius: 10,
-                                foregroundColor: medColor[index % 4],
-                                child: const Icon(Icons.check_circle, size: 21)
-                                    .centered(),
-                              ),
-                              trailing: PopupMenuButton(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10)),
-                                  child: Card(
-                                    color: kwhite,
-                                    child:
-                                        Ttxt(text: r[index].time!).px4().py4(),
-                                  ),
-                                  itemBuilder: (context) => [
-                                        PopupMenuItem(
-                                            child: InkWell(
-                                          onTap: () {
-                                            reminders
-                                                .delReminder(r[index].id!)
-                                                .then((v) {
-                                              setState(() {
-                                                log('deleted');
-                                              });
-                                            });
-                                          },
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            child: FutureBuilder(
+                future: reminders.fetchReminders(),
+                builder: (context, stream) {
+                  if (stream.hasData) {
+                    List<RModel> r = stream.data!;
+                    return ListView.builder(
+                        itemCount: r.isNotEmpty ? r.length : 1,
+                        itemBuilder: (context, index) {
+                          return r.isNotEmpty
+                              ? MedCard(
+                                  color: medColor[index % 4],
+                                  child: ListTile(
+                                      title: Ttxt(text: r[index].medicinename!),
+                                      subtitle: Stxt(text: '${r[index].body}'),
+                                      leading: CircleAvatar(
+                                        radius: 10,
+                                        foregroundColor: medColor[index % 4],
+                                        child: const Icon(Icons.check_circle,
+                                                size: 21)
+                                            .centered(),
+                                      ),
+                                      trailing: PopupMenuButton(
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(10)),
                                           child: Card(
-                                              color: kred.withOpacity(0.7),
-                                              child: const Btxt(
-                                                      text: 'Delete reminder')
-                                                  .p8()),
-                                        )),
-                                      ])),
-                        );
-                      });
-                }
-                return const SizedBox(
-                    child: Ltxt(text: 'No reminders set atm.'));
-              }),
+                                            color: kwhite,
+                                            child: Ttxt(text: r[index].time!)
+                                                .px4()
+                                                .py4(),
+                                          ),
+                                          itemBuilder: (context) => [
+                                                PopupMenuItem(
+                                                    child: InkWell(
+                                                  onTap: () {
+                                                    context.pop(context);
+                                                    reminders
+                                                        .delReminder(
+                                                            r[index].id!)
+                                                        .whenComplete(() {
+                                                      NotificationBundle()
+                                                          .deleteAlarm(
+                                                              id: r[index].id)
+                                                          .whenComplete(() {
+                                                        setState(() {});
+                                                      });
+                                                    });
+                                                  },
+                                                  child: Card(
+                                                      color:
+                                                          kred.withOpacity(0.7),
+                                                      child: const Btxt(
+                                                              text:
+                                                                  'Delete reminder')
+                                                          .p8()),
+                                                )),
+                                              ])),
+                                )
+                              : SizedBox(
+                                  height: 300,
+                                  width: 500,
+                                  child:
+                                      Lottie.asset('assets/lottie/empty.json')
+                                          .centered(),
+                                );
+                        });
+                  }
+                  return const SizedBox(
+                      child: Ltxt(text: 'No reminders set atm.'));
+                }),
+          ),
           AsyncValueWidget(
+              loading: ListView.builder(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  itemCount: 5,
+                  itemBuilder: (con, index) =>
+                      const ShimmerWidget.rectangular(height: 50)),
               value: aps,
               data: (ap) => ap.isNotEmpty
                   ? ListView.builder(
@@ -110,10 +137,11 @@ class _RemindersState extends ConsumerState<Reminders> {
                         return MedCard(
                           color: medColor[index % 4],
                           child: ListTile(
-                            title: Ttxt(text: ap[index].testtype!),
+                            title: Ttxt(text: ap[index].testtype ?? ''),
                             subtitle: Card(
                                 color: kwhite,
-                                child: Stxt(text: ap[index].pharmacy!).p4()),
+                                child:
+                                    Stxt(text: ap[index].pharmacy ?? '').p4()),
                             leading: CircleAvatar(
                               radius: 10,
                               foregroundColor: medColor[index % 4],
@@ -123,16 +151,26 @@ class _RemindersState extends ConsumerState<Reminders> {
                             trailing: PopupMenuButton(
                                 child: Card(
                                   color: kwhite,
-                                  child:
-                                      Btxt(text: ap[index].date!).px4().py4(),
+                                  child: Btxt(text: ap[index].date ?? '')
+                                      .px4()
+                                      .py4(),
                                 ),
                                 itemBuilder: (context) => [
                                       PopupMenuItem(
                                           child: InkWell(
                                         onTap: () {
-                                          apps.deleteAp(
-                                              uid: user!.uid,
-                                              aid: ap[index].aid!);
+                                          context.pop(context);
+                                          apps
+                                              .deleteAp(
+                                                  uid: user!.uid,
+                                                  aid: ap[index].aid ?? '')
+                                              .whenComplete(() {
+                                            NotificationBundle()
+                                                .deleteAlarm(id: ap[index].aid)
+                                                .whenComplete(() {
+                                              setState(() {});
+                                            });
+                                          });
                                         },
                                         child: Card(
                                             color: kred.withOpacity(0.7),
@@ -144,9 +182,7 @@ class _RemindersState extends ConsumerState<Reminders> {
                           ),
                         );
                       })
-                  : const Center(
-                      child: Ltxt(text: 'No appointments available'),
-                    )),
+                  : Lottie.asset('assets/lottie/empty.json').centered()),
         ]),
       ),
     );
