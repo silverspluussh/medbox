@@ -6,7 +6,6 @@ import 'package:velocity_x/velocity_x.dart';
 import 'package:flutter_gen/gen_l10n/app_localization.dart';
 import '../../constants/colors.dart';
 import '../wiis/txt.dart';
-import 'rtest/pharmacyschedule.dart';
 
 class Pharmacy extends ConsumerWidget {
   const Pharmacy({super.key});
@@ -16,26 +15,19 @@ class Pharmacy extends ConsumerWidget {
     Size size = MediaQuery.sizeOf(context);
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-            onPressed: () => context.pop(),
-            icon: const Icon(
-              Icons.arrow_back_ios_new,
-              color: kprimary,
-            )),
+        toolbarHeight: 40,
         centerTitle: true,
-        title: Ltxt(text: AppLocalizations.of(context)!.avaipharmacies),
+        title: Ltxt(
+            text: AppLocalizations.of(context)!.avaipharmacies.toUpperCase()),
       ),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          child: CustomScrollView(
-            slivers: [
-              SliverList.builder(
-                  itemCount: pharmacies.length,
-                  itemBuilder: (context, index) =>
-                      PharmacyCard(size: size, index: index, pharm: pharmacies))
-            ],
-          ),
+        child: CustomScrollView(
+          slivers: [
+            SliverList.builder(
+                itemCount: pharmacies.length,
+                itemBuilder: (context, index) =>
+                    PharmacyCard(size: size, index: index, pharm: pharmacies))
+          ],
         ),
       ),
     );
@@ -63,8 +55,8 @@ class PharmacyCard extends StatelessWidget {
         BoxShadow(
             color: kprimary.withOpacity(0.2), blurRadius: 3, spreadRadius: 2)
       ], color: Colors.white, borderRadius: BorderRadius.circular(15)),
-      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      height: size.height * 0.29,
+      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+      height: size.height * 0.23,
       width: size.width * 0.9,
       child: VStack([
         HStack([
@@ -89,7 +81,7 @@ class PharmacyCard extends StatelessWidget {
                       color: kwhite,
                     ),
                     const SizedBox(width: 5),
-                    Stxt(text: pharm[index].location),
+                    Itxt(text: pharm[index].location),
                   ],
                 ).px8().py4(),
               ),
@@ -97,20 +89,11 @@ class PharmacyCard extends StatelessWidget {
           ]).px4()
         ]),
         HStack([
-          Stxt(text: AppLocalizations.of(context)!.itest),
-          const SizedBox(width: 20),
-          Card(
-            color: Colors.green,
-            child:
-                Stxt(text: AppLocalizations.of(context)!.available).px4().py4(),
-          )
-        ]),
-        HStack([
-          Stxt(text: AppLocalizations.of(context)!.whours),
+          Btxt(text: AppLocalizations.of(context)!.whours),
           const SizedBox(width: 10),
           Card(
             color: Colors.yellow,
-            child: const Stxt(text: '8:00- 10:00 pm').p4(),
+            child: const Itxt(text: '8:00- 10:00 pm').p4(),
           )
         ]),
         const Spacer(),
@@ -125,21 +108,8 @@ class PharmacyCard extends StatelessWidget {
                 launchUrl(Uri(scheme: 'tel', path: pharm[index].servicenumber));
               },
               icon: const Icon(Icons.call, color: kwhite, size: 20),
-              label: const Stxt(text: 'Call now')),
+              label: const Itxt(text: 'Call now')),
           const Spacer(),
-          TextButton.icon(
-              style: ButtonStyle(
-                  shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10))),
-                  backgroundColor: MaterialStateProperty.all<Color>(kprimary)),
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => PSchedule(pharm[index].name)));
-              },
-              icon: const Icon(Icons.book, color: kwhite, size: 20),
-              label: Stxt(text: AppLocalizations.of(context)!.btest)),
         ])
       ]),
     );

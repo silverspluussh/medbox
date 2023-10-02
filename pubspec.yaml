@@ -12,7 +12,6 @@ dependencies:
   cloud_firestore: ^4.3.1
   cupertino_icons: ^1.0.2
   date_picker_timeline: null
-  file_picker: ^5.2.5
   firebase_app_check: ^0.1.1+12
   cached_network_image: ^3.2.3
   firebase_auth: null
@@ -31,7 +30,6 @@ dependencies:
   gallery_saver: null
   google_sign_in: ^5.4.4
   http: ^0.13.5
-  image_picker: ^0.8.6+3
   intl: any
   json_annotation: ^4.8.1
   json_serializable: ^6.6.2
@@ -50,6 +48,7 @@ dependencies:
   url_launcher: ^6.1.10
   velocity_x: null
   flutter_cache_manager: ^3.3.1
+  flutter_native_splash: ^2.3.2
 
 
 dev_dependencies:
@@ -68,6 +67,7 @@ flutter:
     - assets/images/
     - assets/icons/
     - assets/lottie/
+    - assets/meds/
     - lib/l10n/
 
   fonts:

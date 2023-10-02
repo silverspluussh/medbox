@@ -75,7 +75,7 @@ class VCard extends ConsumerWidget {
         ),
         const Spacer(),
       ]).px8(),
-    );
+    ).scale95();
   }
 }
 
@@ -152,6 +152,6 @@ class VCardL extends ConsumerWidget {
           ),
         ],
       ),
-    );
+    ).scale95();
   }
 }

@@ -13,6 +13,8 @@ class Pharm {
       required this.services});
 }
 
+const medtests =
+    'Experience the future of healthcare with our "Instant Medical Test Results Delivery" feature. Now, you can receive your rapid medical test results conveniently via SMS or directly into your Medbox app from your trusted health center. Stay informed, stay healthy, and take control of your well-being like never before.';
 List<Pharm> pharmacies = [
   Pharm(
       location: 'Santa Maria',
@@ -69,4 +71,13 @@ List<Pharm> pharmacies = [
         'Cholesterol level test',
         'Hepatitis B test'
       ])
+];
+
+const rtest = [
+  'Malaria test',
+  'Typhoid test',
+  'Anaemia test',
+  'Pregnancy test',
+  'Cholesterol level test',
+  'Hepatitis B test'
 ];

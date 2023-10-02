@@ -12,7 +12,7 @@ class Btxt extends StatelessWidget {
         style: const TextStyle(
             fontSize: 14,
             fontFamily: 'Pop',
-            fontWeight: FontWeight.w300,
+            fontWeight: FontWeight.w400,
             color: kblack));
   }
 }
@@ -26,7 +26,7 @@ class Ttxt extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(text,
         style: const TextStyle(
-            fontSize: 15,
+            fontSize: 16,
             fontFamily: 'Pop',
             fontWeight: FontWeight.w500,
             color: kblack));
@@ -44,8 +44,8 @@ class Stxt extends StatelessWidget {
         style: const TextStyle(
             fontSize: 13,
             fontFamily: 'Pop',
-            fontWeight: FontWeight.w400,
-            color: kblack));
+            fontWeight: FontWeight.w500,
+            color: Colors.grey));
   }
 }
 
@@ -60,7 +60,7 @@ class Itxt extends StatelessWidget {
         style: const TextStyle(
             fontSize: 14,
             fontFamily: 'Pop',
-            fontWeight: FontWeight.w400,
+            fontWeight: FontWeight.w500,
             color: kwhite));
   }
 }
@@ -76,7 +76,7 @@ class Ltxt extends StatelessWidget {
         style: const TextStyle(
             fontSize: 14,
             fontFamily: 'Pop',
-            fontWeight: FontWeight.w500,
+            fontWeight: FontWeight.w600,
             color: kblack));
   }
 }

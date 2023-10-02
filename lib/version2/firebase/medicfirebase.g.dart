@@ -22,7 +22,7 @@ final medicationFirebaseProvider = Provider<MedicationFirebase>.internal(
 );
 
 typedef MedicationFirebaseRef = ProviderRef<MedicationFirebase>;
-String _$streamMedicationsHash() => r'1136c7eb880358c1dc8605af3c5ec5c19365d611';
+String _$streamMedicationsHash() => r'170bca249a6f1015489ea55de36f03b888778b83';
 
 /// See also [streamMedications].
 @ProviderFor(streamMedications)

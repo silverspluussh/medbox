@@ -5,9 +5,7 @@ class BottomNav {
 }
 
 List<BottomNav> navitems = [
-  BottomNav(icon: 'assets/icons/Home.png', title: 'Home'),
-  BottomNav(icon: 'assets/icons/Statistics.png', title: 'Vitals'),
-  BottomNav(icon: 'assets/icons/test.png', title: 'Rapid tests'),
-  BottomNav(icon: 'assets/icons/pills-3.png', title: 'Medications'),
-  BottomNav(icon: 'assets/icons/set-up-950-512.png', title: 'Menu'),
+  BottomNav(icon: 'assets/icons/heart-rate.png', title: 'Health tracker'),
+  BottomNav(icon: 'assets/icons/first-aid-kit.png', title: 'Medication'),
+  BottomNav(icon: 'assets/icons/shield.png', title: 'Medical Tests'),
 ];

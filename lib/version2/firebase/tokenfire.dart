@@ -8,9 +8,12 @@ class TokenSave {
       await FirebaseFirestore.instance
           .collection('users')
           .doc(FirebaseAuth.instance.currentUser!.uid)
-          .collection('usertokens')
-          .doc(FirebaseAuth.instance.currentUser!.uid)
-          .set({'token': token}).then((value) => log('token saved'));
+          .set({
+        "pEmail": FirebaseAuth.instance.currentUser!.email,
+        "fullname": FirebaseAuth.instance.currentUser!.displayName,
+        "token": token,
+        "id": FirebaseAuth.instance.currentUser!.uid
+      }).then((value) => log('token saved'));
     } catch (e) {
       log(e.toString());
     }

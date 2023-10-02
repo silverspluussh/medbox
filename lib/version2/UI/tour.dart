@@ -1,6 +1,6 @@
 import 'package:MedBox/constants/colors.dart';
+import 'package:MedBox/version2/UI/myrender.dart';
 import 'package:MedBox/version2/utilites/sharedprefs.dart';
-import 'package:MedBox/version2/UI/render.dart';
 import 'package:MedBox/version2/wiis/borderbtn.dart';
 import 'package:MedBox/version2/wiis/txt.dart';
 import 'package:flutter/material.dart';
@@ -78,7 +78,7 @@ class Apptour extends ConsumerWidget {
                       Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const MyRender()));
+                              builder: (context) => const Myrender()));
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,

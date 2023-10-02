@@ -6,7 +6,6 @@ import 'package:MedBox/version2/utilites/sharedprefs.dart';
 import 'package:MedBox/l10n/langprovider.dart';
 import 'package:MedBox/l10n/l10n.dart';
 import 'package:MedBox/version2/UI/authpage.dart';
-import 'package:MedBox/version2/UI/render.dart';
 import 'package:MedBox/version2/UI/tour.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -22,8 +21,11 @@ import 'package:timezone/timezone.dart' as tz;
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:flutter_gen/gen_l10n/app_localization.dart';
 import 'firebase_options.dart';
+import 'version2/UI/myrender.dart';
 
 late SharedPreferences prefs;
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -113,13 +115,12 @@ class _MedBoxState extends ConsumerState<MedBox> {
       theme: mythemedata,
       home: StreamBuilder<User?>(
           stream: FirebaseAuth.instance.authStateChanges(),
-          builder: ((context, user) {
+          builder: (context, user) {
             if (user.hasData) {
-              return tourbool == true ? const MyRender() : const Apptour();
+              return tourbool == true ? const Myrender() : const Apptour();
             }
-
             return const AuthPage();
-          })),
+          }),
     );
   }
 }

@@ -160,7 +160,7 @@ class Menu extends ConsumerWidget {
             const SizedBox(height: 10),
             Text(AppLocalizations.of(context)!.sure,
                 textAlign: TextAlign.justify,
-                style: Theme.of(context).textTheme.bodySmall),
+                style: Theme.of(context).textTheme.bodyLarge),
             const SizedBox(height: 15),
             SizedBox(
               height: 40,
@@ -170,13 +170,16 @@ class Menu extends ConsumerWidget {
                 children: [
                   TextButton(
                     onPressed: () async {
-                      context.pop();
+                      Navigator.pop(context);
                       FirebaseAuth.instance.signOut();
                     },
                     child: Text(
                       AppLocalizations.of(context)!.yes,
                       style: const TextStyle(
-                          color: Colors.red, fontSize: 13, fontFamily: 'Pop'),
+                          color: Colors.red,
+                          fontSize: 15,
+                          fontFamily: 'Pop',
+                          fontWeight: FontWeight.w500),
                     ),
                   ),
                   const Spacer(),
@@ -187,7 +190,10 @@ class Menu extends ConsumerWidget {
                     child: Text(
                       AppLocalizations.of(context)!.no,
                       style: const TextStyle(
-                          color: Colors.black, fontSize: 13, fontFamily: 'Pop'),
+                          color: Colors.black,
+                          fontSize: 15,
+                          fontFamily: 'Pop',
+                          fontWeight: FontWeight.w500),
                     ),
                   ),
                 ],

@@ -17,3 +17,11 @@ const medColor = [
   Colors.green,
   kprimary,
 ];
+
+const mColor = [
+  Color.fromARGB(255, 251, 229, 255),
+  Color.fromARGB(255, 255, 246, 234),
+  Color.fromARGB(255, 255, 234, 241),
+  Color.fromARGB(255, 238, 255, 238),
+  Color.fromARGB(255, 236, 247, 254)
+];

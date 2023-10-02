@@ -1,12 +1,8 @@
 import 'package:MedBox/constants/colors.dart';
-import 'package:MedBox/version2/wiis/txt.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:velocity_x/velocity_x.dart';
-
 import '../models/vitalsmodel.dart';
-import '../providers.dart/navprovider.dart';
 import 'package:flutter_gen/gen_l10n/app_localization.dart';
 
 class BarChartSample2 extends ConsumerStatefulWidget {
@@ -71,7 +67,6 @@ class BarChartSample2State extends ConsumerState<BarChartSample2> {
             Row(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                const Spacer(),
                 Image.asset(
                   'assets/icons/Statistics.png',
                   width: 30,
@@ -86,14 +81,6 @@ class BarChartSample2State extends ConsumerState<BarChartSample2> {
                       fontSize: 13,
                       fontWeight: FontWeight.w500,
                       fontFamily: 'Pop'),
-                ),
-                const Spacer(),
-                InkWell(
-                  onTap: () => ref.read(navIndexProvider.notifier).state = 1,
-                  child: Card(
-                    color: kwhite,
-                    child: const Ttxt(text: 'view vitals').px4().py4(),
-                  ),
                 ),
                 const Spacer(),
               ],

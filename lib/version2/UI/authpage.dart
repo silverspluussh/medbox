@@ -1,6 +1,8 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:MedBox/constants/colors.dart';
 import 'package:MedBox/version2/wiis/cricles.dart';
-import 'package:MedBox/version2/wiis/txt.dart';
+import 'package:MedBox/version2/wiis/dialogs.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -10,11 +12,18 @@ import 'package:velocity_x/velocity_x.dart';
 import 'package:flutter_gen/gen_l10n/app_localization.dart';
 import '../utilites/sharedprefs.dart';
 
-class AuthPage extends ConsumerWidget {
+class AuthPage extends ConsumerStatefulWidget {
   const AuthPage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<AuthPage> createState() => _AuthPageState();
+}
+
+class _AuthPageState extends ConsumerState<AuthPage> {
+  final GlobalKey<State> googlekey = GlobalKey<State>();
+
+  @override
+  Widget build(BuildContext context) {
     Size size = MediaQuery.sizeOf(context);
     return Scaffold(
       body: Stack(
@@ -111,7 +120,9 @@ class AuthPage extends ConsumerWidget {
                 crossAlignment: CrossAxisAlignment.center,
                 [
                   const Spacer(),
-                  Ttxt(text: AppLocalizations.of(context)!.signin),
+                  Text(AppLocalizations.of(context)!.signin,
+                      style: const TextStyle(
+                          fontSize: 20, fontWeight: FontWeight.w700)),
                   const Spacer(),
                   Image.asset(
                     'assets/images/mddlogo.png',
@@ -121,6 +132,11 @@ class AuthPage extends ConsumerWidget {
                     button: true,
                     child: InkWell(
                       onTap: () async {
+                        Dialogs.showLoadingDialog(context, googlekey,
+                            text: 'Signing in with google',
+                            child: const CircularProgressIndicator(
+                              color: kprimary,
+                            ));
                         try {
                           final GoogleSignInAccount? googleUser =
                               await GoogleSignIn().signIn();
@@ -137,40 +153,22 @@ class AuthPage extends ConsumerWidget {
                               .signInWithCredential(credential)
                               .then((value) async {
                             if (value.user != null) {
-                              await preferences(value: value).whenComplete(() {
-                                return VxToast.show(context,
-                                    msg:
-                                        'Signed in as ${value.user!.displayName}',
-                                    bgColor: Colors.green,
-                                    textColor: Colors.white,
-                                    textSize: 12,
-                                    pdHorizontal: 30,
-                                    pdVertical: 20);
-                              });
-                            } else {
-                              return VxToast.show(context,
-                                  msg: 'Acount could not be verified',
-                                  textSize: 12,
-                                  bgColor:
-                                      const Color.fromARGB(255, 245, 36, 29),
-                                  textColor: Colors.white,
-                                  pdHorizontal: 30,
-                                  pdVertical: 20);
+                              Navigator.of(googlekey.currentContext!,
+                                      rootNavigator: true)
+                                  .pop();
+
+                              await preferences(value: value);
                             }
-                          }).catchError((e) {
-                            return VxToast.show(context,
-                                msg: e.toString(),
-                                bgColor: const Color.fromARGB(255, 245, 36, 29),
-                                textColor: Colors.white,
-                                pdHorizontal: 30,
-                                pdVertical: 20);
                           });
                         } catch (e) {
+                          Navigator.of(googlekey.currentContext!,
+                                  rootNavigator: true)
+                              .pop();
                           return VxToast.show(context,
                               msg: AppLocalizations.of(context)!.errorq,
                               bgColor: const Color.fromARGB(255, 245, 36, 29),
                               textColor: Colors.white,
-                              pdHorizontal: 30,
+                              pdHorizontal: 15,
                               pdVertical: 20);
                         }
                       },
@@ -178,9 +176,14 @@ class AuthPage extends ConsumerWidget {
                     ),
                   ),
                   const Spacer(),
-                  Btxt(text: AppLocalizations.of(context)!.agreement).py8(),
+                  Text(AppLocalizations.of(context)!.agreement,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                              fontSize: 12, fontWeight: FontWeight.w300))
+                      .px8()
+                      .py12()
                 ]),
-          ).animate().fadeIn(duration: 500.milliseconds)
+          ).animate().fadeIn(duration: 400.ms)
         ],
       ),
     );

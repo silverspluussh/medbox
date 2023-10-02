@@ -21,7 +21,7 @@ final vitalsFirebaseProvider = Provider<VitalsFirebase>.internal(
 );
 
 typedef VitalsFirebaseRef = ProviderRef<VitalsFirebase>;
-String _$vitalsStreamHash() => r'ecdb700e76415a8a0f51906b4c74025b5220143f';
+String _$vitalsStreamHash() => r'5cd7d597afcc34c6309c2ee9525d136a598e88b5';
 
 /// See also [vitalsStream].
 @ProviderFor(vitalsStream)

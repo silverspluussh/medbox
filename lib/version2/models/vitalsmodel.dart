@@ -38,6 +38,7 @@ class VModel {
     data['bmi'] = bmi;
     data['weight'] = weight;
     data['temp'] = temp;
+    data["vid"] = vid;
 
     return data;
   }

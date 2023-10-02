@@ -22,7 +22,7 @@ class ShimmerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Shimmer.fromColors(
       baseColor: Colors.grey,
-      highlightColor: Colors.black.withOpacity(0.5),
+      highlightColor: Colors.black.withOpacity(0.4),
       child: Container(
         margin: const EdgeInsets.all(10),
         height: height,

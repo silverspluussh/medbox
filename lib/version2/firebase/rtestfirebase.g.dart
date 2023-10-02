@@ -21,7 +21,7 @@ final rtestFirebaseProvider = Provider<RtestFirebse>.internal(
 );
 
 typedef RtestFirebaseRef = ProviderRef<RtestFirebse>;
-String _$streamTestsHash() => r'bc2e9adadabc1612025aa5e3a838028ad834e636';
+String _$streamTestsHash() => r'20874a1eb3b71a0b13220bb57f8f7d40afb3a4a8';
 
 /// See also [streamTests].
 @ProviderFor(streamTests)

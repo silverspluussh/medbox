@@ -50,14 +50,71 @@ class FormfieldX extends StatelessWidget {
             border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(15),
                 borderSide: const BorderSide(width: 0, color: Colors.white)),
-            contentPadding: const EdgeInsets.all(10),
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
             suffixIcon: suffix,
             prefixIcon: prefixicon,
             prefixIconColor: kprimary,
             errorStyle:
                 const TextStyle(fontFamily: 'Pop', fontSize: 8, color: kred),
             filled: true),
-      ).px20().py8(),
+      ).px12().py8(),
     );
+  }
+}
+
+// ignore: must_be_immutable
+class Customfield extends StatelessWidget {
+  Customfield(
+      {super.key,
+      this.suffix,
+      this.prefixicon,
+      this.validator,
+      this.readonly,
+      this.hinttext,
+      this.inputType,
+      this.controller});
+
+  TextEditingController? controller;
+  FormFieldValidator? validator;
+  bool? readonly;
+  Widget? suffix;
+  Icon? prefixicon;
+  String? hinttext;
+  TextInputType? inputType;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      controller: controller,
+      validator: validator,
+      style: Theme.of(context).textTheme.bodyMedium,
+      keyboardType: inputType,
+      readOnly: readonly!,
+      decoration: InputDecoration(
+          hintText: hinttext,
+          labelStyle: Theme.of(context).textTheme.labelMedium,
+          fillColor: Colors.white,
+          disabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(15),
+              borderSide: const BorderSide(width: 0, color: Colors.white)),
+          enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(15),
+              borderSide: const BorderSide(width: 0, color: Colors.white)),
+          focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(15),
+              borderSide: const BorderSide(width: 0, color: Colors.white)),
+          border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(15),
+              borderSide: const BorderSide(width: 0, color: Colors.white)),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+          suffixIcon: suffix,
+          prefixIcon: prefixicon,
+          prefixIconColor: kprimary,
+          errorStyle:
+              const TextStyle(fontFamily: 'Pop', fontSize: 8, color: kred),
+          filled: true),
+    ).px12().py8();
   }
 }

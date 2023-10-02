@@ -6,6 +6,7 @@ ThemeData mythemedata = ThemeData(
   brightness: Brightness.light,
   primaryColor: kprimary,
   fontFamily: 'Pop',
+  expansionTileTheme: ExpansionTileThemeData(),
   buttonTheme: ButtonThemeData(
       height: 50,
       padding: const EdgeInsets.symmetric(horizontal: 10),
